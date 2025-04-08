@@ -1,13 +1,152 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Quicksand', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.home-container {
+  width: 100%;
+  background: #fff;
+  color: #333;
+}
+
+/* Header */
+.header-image img {
+  width: 100%;
+  height: auto;
+}
+
+/* Bienvenida */
+.welcome-section {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+}
+
+.logo-box h2 {
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.logo-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #f48fb1;
+  margin: 1rem 0;
+}
+
+.icon-frutilla {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
+
+/* Carrusel categorías */
+.categories-scroll {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.category-item {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #f48fb1;
+}
+
+.category-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.add-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fce4ec;
+  font-size: 1.5rem;
+  color: #e91e63;
+}
+
+/* Productos */
+.products-section {
+  padding: 2rem;
+  background: #fff;
+}
+
+.products-section h3 {
+  color: #e91e63;
+  margin-bottom: 1rem;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.product-card {
+  background: #fff0f5;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.product-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.product-card h4 {
+  font-size: 1rem;
+  margin: 0.3rem 0;
+}
+
+.product-card p {
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.see-more {
+  margin-top: 1rem;
+  padding: 0.5rem 1.5rem;
+  background: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  background: #fce4ec;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e91e63;
+  margin-bottom: 0.5rem;
+}
+
+.footer-contact {
+  text-align: center;
+}
+
+.social-icons a {
+  margin: 0 0.5rem;
+  color: #e91e63;
+  font-size: 1.2rem;
 }

@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
-import api from './api/axios';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+
+import Home from './api/pages/Home'
+import Login from './api/pages/Login'
+import PublicLayout from './api/layouts/PublicLayout'
+// import Dashboard from './api/pages/Dashboard'
 
 function App() {
-  useEffect(() => {
-    api.get('http://127.0.0.1:8000/admin/login/?next=/admin/') 
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
   return (
-    <div>
-      <h1>Conexión React + Django</h1>
-    </div>
-  );
+    <Routes>
+      {/* Rutas públicas */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+
+      {/* Rutas anidadas con layout */}
+      <Route path="/admin" element={<PublicLayout />}>
+        {/* <Route path="dashboard" element={<Dashboard />} /> */}
+      </Route>
+    </Routes>
+  )
 }
 
-export default App;
+export default App
