@@ -1,21 +1,24 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-
 import Home from './api/pages/Home'
-import Login from './api/pages/Login'
 import PublicLayout from './api/layouts/PublicLayout'
-// import Dashboard from './api/pages/Dashboard'
+import AdminLayout from './api/layouts/AdminLayout'
+import CreateCategoriaArticulo from './api/pages/admin/CreateCategoriaArticulo';
+import SignIn from './api/pages/login/SignIn'
+import SignUp from './api/pages/login/SignUp'
 
 function App() {
   return (
     <Routes>
-      {/* Rutas públicas */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-
-      {/* Rutas anidadas con layout */}
-      <Route path="/admin" element={<PublicLayout />}>
-        {/* <Route path="dashboard" element={<Dashboard />} /> */}
+      <Route path="/" element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        {/* añadir más rutas públicas */}
+      </Route>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="crear-categoria-articulo" element={<CreateCategoriaArticulo />} />
+        {/* Agrega más rutas admin aquí si necesitas */}
       </Route>
     </Routes>
   )
