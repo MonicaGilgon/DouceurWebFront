@@ -5,10 +5,10 @@ import AdminSidebar from '../components/AdminSidebar';
 
 const AdminLayout = () => {
     return (
-      <div style={{ display: 'flex', height: '100vh', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', height: '100vh', flexDirection: 'column'}}>
         <AdminHeader />
   
-        <div style={{ display: 'flex', flex: 1 }}>
+        <div style={{ paddingTop: '80px', display: 'flex', flex: 1 }}>
           <AdminSidebar />
           <main style={{ padding: '2rem', flex: 1, overflowY: 'auto' }}>
             <Outlet />

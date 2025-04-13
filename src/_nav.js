@@ -1,34 +1,17 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilSpeedometer,
-  cilClipboard,
   cilList,
-  cilPeople,
-  cilUserFollow,
-  cilCart,  
-
 } from '@coreui/icons'
-import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-//import './scss/AppSidebar.scss';
+import { CNavItem } from '@coreui/react'
+import { NavLink } from 'react-router-dom'
 
-const _nav = [  
-  {
-    component: CNavTitle,
-    name: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <CIcon icon={cilCart} className="nav-icon" />
-        <span style={{ marginLeft: '8px' }} className="nav-text">Productos</span>
-      </div>
-    ),
-  },
-  
+const _nav = [
   {
     component: CNavItem,
-    name: 'Categorías Producto Base',
-    to: '/admin/categoria-producto-base',
-    icon: <CIcon icon={cilList} className="nav-icon"/>, 
+    name: 'Categorías Artículo',
+    to: '/admin/listar-categoria-articulo',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
     className: 'categoria-articulo-nav'
   },
 ]

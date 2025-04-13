@@ -1,58 +1,57 @@
 .app-sidebar {
-    position: fixed;
-    top: 92px;
-    left: 0;
-    width: 250px;
-    height: calc(100% - 92px);
-    background-color: rgba(240, 234, 234, 0.979); // Color semi-transparente
-    overflow-y: auto;
-    transition: transform 0.3s ease-in-out; // Transición para animación de deslizamiento
-    transform: translateX(-100%); // Oculto por defecto
-  
-    &.visible {
-        transform: translateX(0); // Mostrar sidebar al deslizar
-    }
+  position: fixed;
+  top: 92px;
+  left: 0;
+  width: 250px;
+  height: calc(100% - 92px);
+  background-color: rgba(240, 234, 234, 0.979); // Color semi-transparente
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out; // Transición para animación de deslizamiento
+  transform: translateX(-100%); // Oculto por defecto
+
+  &.visible {
+      transform: translateX(0); // Mostrar sidebar al deslizar
   }
-  
-  .toggle-sidebar-icon {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    color: #000000;
-    cursor:pointer;
-    z-index: 1000;
-    box-shadow: 0px 4px 8px rgb(84, 84, 84);
-  
-    &:hover {
-        color: #000000;
-        box-shadow: 0px 6px 12px rgb(116, 116, 116);
-    }
+}
+
+.toggle-sidebar-icon {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 2rem;
+  color: #000000;
+  cursor:pointer;
+  z-index: 1000;
+  box-shadow: 0px 4px 8px rgb(84, 84, 84);
+
+  &:hover {
+      color: #000000;
+      box-shadow: 0px 6px 12px rgb(116, 116, 116);
   }
-  
-  .sidebar-header {
-    border-bottom: 1px solid #ff0000;
-  }
-  
-  .sidebar-footer {
-    border-top: 1px solid #d10000;
-    padding: 10px;
-  }
-  
-  .nav-icon, .nav-text, .categoria-articulo-nav {
-    color: #000000 !important;
-  }
-  
-  .nav-link {
-    color: black;
-  }
-  
-  .nav-link.active {
-    background-color: pink !important;
-  }
-  
-  .nav-link:hover {
-    background-color: rgb(245, 222, 226) !important;
-    color: black;
-  }
-  
+}
+
+.sidebar-header {
+  border-bottom: 1px solid #ff0000;
+}
+
+.sidebar-footer {
+  border-top: 1px solid #d10000;
+  padding: 10px;
+}
+
+.nav-icon, .nav-text, .categoria-articulo-nav {
+  color: #000000 !important;
+}
+
+.nav-link {
+  color: black;
+}
+
+.nav-link.active {
+  background-color: pink !important;
+}
+
+.nav-link:hover {
+  background-color: rgb(245, 222, 226) !important;
+  color: black;
+}

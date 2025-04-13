@@ -14,7 +14,7 @@ const CreateCategoriaArticulo = () => {
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/categoria-articulo/');
+                const response = await axios.get('http://127.0.0.1:8000/listar-categoria-articulo/');
                 setCategoriasExistentes(response.data); 
             } catch (err) {
                 toast.error('Error al cargar las categorías. Intenta de nuevo más tarde.');
@@ -39,19 +39,19 @@ const CreateCategoriaArticulo = () => {
 
         try {
             toast.success('Categoría creada correctamente.');
-            await axios.post('http://127.0.0.1:8000/categoria-articulo/', {
+            await axios.post('http://127.0.0.1:8000/listar-categoria-articulo/', {
                 nombre: nombre.trim(),
                 estado,
             });
             
-            navigate('/admin/categoria-articulo'); 
+            navigate('/admin/listar-categoria-articulo'); 
         } catch (err) {
             toast.error('Error al crear la categoría. Intenta de nuevo.');
         }
     };
 
     const handleCancel = () => {
-        navigate('/admin/categoria-articulo'); 
+        navigate('/admin/listar-categoria-articulo'); 
     };
 
     return (
