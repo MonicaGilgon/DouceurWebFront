@@ -12,7 +12,7 @@ import SignIn from './api/pages/login/SignIn';
 import SignUp from './api/pages/login/SignUp';
 import RecoverPassword from './api/pages/login/RecoverPassword';
 import ResetPassword from './api/pages/login/ResetPassword';
-
+import Profile from './api/pages/Profile';
 function App() {
   return (
     <>
@@ -32,6 +32,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="recover-password" element={<RecoverPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
         </Route>

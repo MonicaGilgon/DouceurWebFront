@@ -1,0 +1,130 @@
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 20px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .profile-details {
+        .form-group {
+            margin-bottom: 10px;
+
+            label {
+                font-size: 16px;
+                color: #333;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+                background-color: #f5f5f5;
+                font-size: 16px;
+                color: #333;
+
+                &[type="password"] {
+                    letter-spacing: 2px;
+                }
+            }
+        }
+    }
+
+    .orders-section {
+        margin-top: 20px;
+    }
+
+    .orders-list {
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+
+            .order-name {
+                font-size: 16px;
+                color: #333;
+                flex: 1; // Ocupa el espacio disponible
+            }
+
+            .order-total {
+                font-size: 16px;
+                color: #333;
+                flex: 1;
+                text-align: center; // Centra el total
+            }
+
+            .delete-btn {
+                padding: 5px 10px;
+                background-color: #f8d7da;
+                color: black;
+                border: none;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+                flex-shrink: 0; // Evita que el botón se deforme
+            }
+        }
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background-color: #d3d3d3;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #f8d7da;
+            color: black;
+        }
+    }
+}
+.order-item {
+    padding: 10px 15px; // Aumenta el padding horizontal si es necesario
+
+    @media (max-width: 600px) {
+        flex-wrap: wrap; // Permite que los elementos se envuelvan en pantallas pequeñas
+        .order-name, .order-total {
+            flex: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+        .delete-btn {
+            margin-left: auto;
+        }
+    }
+}

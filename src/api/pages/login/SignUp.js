@@ -1,6 +1,6 @@
 // src/views/pages/RegisterCliente.js
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { useNavigate } from 'react-router-dom'
 import '../scss/sign.scss'
 import 'boxicons/css/boxicons.min.css'
@@ -29,7 +29,7 @@ const SignUp = () => {
       return
     }
     try {
-      const res = await axios.post('http://localhost:8000/sign-up/', form)
+      const res = await api.post('/sign-up/', form)
       setSuccess(res.data.success)
       setTimeout(() => {
         navigate('/sign-in')
