@@ -2,12 +2,11 @@ import axios from 'axios';
 import { refreshToken } from '../utils/auth';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/',
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: 'http://127.0.0.1:8000/api/', // URL del backend
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
-
 // Interceptor para añadir el token a las solicitudes
 api.interceptors.request.use(
     (config) => {
