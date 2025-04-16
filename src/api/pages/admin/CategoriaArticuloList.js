@@ -1,11 +1,10 @@
-
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import 'antd/dist/reset.css'
-import esES from 'antd/es/locale/es_ES'
+import React, { useEffect, useState } from "react";
+import api from "../../../api/axios";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "antd/dist/reset.css";
+import esES from "antd/es/locale/es_ES";
 import {
   Layout,
   Table,
@@ -17,106 +16,119 @@ import {
   Space,
   ConfigProvider,
   Divider,
-} from 'antd'
+} from "antd";
 
 const CategoriaArticuloList = () => {
-  const { Content, Header } = Layout
-  const { Title } = Typography
-  const [categorias, setCategorias] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({})
-  const [articulosAsociados, setArticulosAsociados] = useState({})
-  const navigate = useNavigate()
+  const { Content, Header } = Layout;
+  const { Title } = Typography;
+  const [categorias, setCategorias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
+  const [articulosAsociados, setArticulosAsociados] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/listar-categoria-articulo/')
-        setCategorias(response.data)
+        const response = await api.get(
+          "http://localhost:8000/listar-categoria-articulo/"
+        );
+        setCategorias(response.data);
 
-        const disabledStates = {}
-        const articulos = {}
+        const disabledStates = {};
+        const articulos = {};
         for (const categoria of response.data) {
-          disabledStates[categoria.id] = !(await puedeDesactivarCategoria(categoria.id))
-          articulos[categoria.id] = await obtenerArticulosPorCategoria(categoria.id)
+          disabledStates[categoria.id] = !(await puedeDesactivarCategoria(
+            categoria.id
+          ));
+          articulos[categoria.id] = await obtenerArticulosPorCategoria(
+            categoria.id
+          );
         }
-        setEstadoDeshabilitado(disabledStates)
-        setArticulosAsociados(articulos)
+        setEstadoDeshabilitado(disabledStates);
+        setArticulosAsociados(articulos);
       } catch (error) {
-        console.error('Error al cargar las categorías', error)
+        console.error("Error al cargar las categorías", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchCategorias()
-  }, [])
+    };
+    fetchCategorias();
+  }, []);
 
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`,
-      )
-      const articulos = response.data
-      return articulos.every((articulo) => !articulo.estado)
+      const response = await api.get(
+        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+      );
+      const articulos = response.data;
+      return articulos.every((articulo) => !articulo.estado);
     } catch (error) {
-      console.error('Error al verificar los artículos asociados', error)
-      return false
+      console.error("Error al verificar los artículos asociados", error);
+      return false;
     }
-  }
+  };
 
   const obtenerArticulosPorCategoria = async (categoriaId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`,
-      )
-      return response.data.map((articulo) => articulo.nombre)
+      const response = await api.get(
+        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+      );
+      return response.data.map((articulo) => articulo.nombre);
     } catch (error) {
-      console.error('Error al obtener los artículos asociados', error)
-      return []
+      console.error("Error al obtener los artículos asociados", error);
+      return [];
     }
-  }
+  };
 
   const toggleEstado = async (categoriaId, estado) => {
     try {
       if (!estado) {
-        const puedeDesactivar = await puedeDesactivarCategoria(categoriaId)
+        const puedeDesactivar = await puedeDesactivarCategoria(categoriaId);
         if (!puedeDesactivar) {
           toast.error(
-            'No se puede desactivar esta categoría porque tiene artículos activos asociados.',
-          )
-          return
+            "No se puede desactivar esta categoría porque tiene artículos activos asociados."
+          );
+          return;
         }
       }
 
       setCategorias((prevCategorias) =>
         prevCategorias.map((categoria) =>
-          categoria.id === categoriaId ? { ...categoria, estado: !estado } : categoria,
-        ),
-      )
+          categoria.id === categoriaId
+            ? { ...categoria, estado: !estado }
+            : categoria
+        )
+      );
 
-      toast.success(`Categoría ${!estado ? 'activada' : 'desactivada'} correctamente`)
-      await axios.patch(`http://localhost:8000/cambiar-estado-categoria-articulo/${categoriaId}/`, {
-        estado: !estado,
-      })
+      toast.success(
+        `Categoría ${!estado ? "activada" : "desactivada"} correctamente`
+      );
+      await api.patch(
+        `http://localhost:8000/cambiar-estado-categoria-articulo/${categoriaId}/`,
+        {
+          estado: !estado,
+        }
+      );
     } catch (error) {
-      console.error('Error al cambiar el estado activo de la categoría', error)
+      console.error("Error al cambiar el estado activo de la categoría", error);
     }
-  }
+  };
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
     },
     {
-      title: 'Nombre',
-      dataIndex: 'nombre',
-      key: 'nombre',
+      title: "Nombre",
+      dataIndex: "nombre",
+      key: "nombre",
     },
     {
-      title: 'Estado',
-      key: 'estado',
+      title: "Estado",
+      key: "estado",
       render: (_, record) => (
         <Switch
           checked={record.estado}
@@ -126,44 +138,47 @@ const CategoriaArticuloList = () => {
       ),
     },
     {
-      title: 'Artículos Asociados',
-      key: 'articulos',
+      title: "Artículos Asociados",
+      key: "articulos",
       render: (_, record) =>
-        articulosAsociados[record.id] && articulosAsociados[record.id].length > 0
-          ? articulosAsociados[record.id].join(', ')
-          : 'Sin artículos',
+        articulosAsociados[record.id] &&
+        articulosAsociados[record.id].length > 0
+          ? articulosAsociados[record.id].join(", ")
+          : "Sin artículos",
     },
     {
-      title: 'Acciones',
-      key: 'acciones',
+      title: "Acciones",
+      key: "acciones",
       render: (_, record) => (
         <Link to={`/admin/editar-categoria-articulo/${record.id}`}>
           <Button type="primary">Editar</Button>
         </Link>
       ),
     },
-  ]
+  ];
 
   return (
     <ConfigProvider locale={esES}>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{ background: '#001529', padding: '10px 20px', color: '#fff' }}>
+      <Layout style={{ minHeight: "100vh" }}>
+        <Header
+          style={{ background: "#001529", padding: "10px 20px", color: "#fff" }}
+        >
           <div>
-            <Title level={3} style={{ color: '#fff' }}>
+            <Title level={3} style={{ color: "#fff" }}>
               Lista de Categorias Articulo
             </Title>
           </div>
         </Header>
         <Content
           style={{
-            background: '#fff',
-            margin: '20px',
-            borderRadius: '100px',
-            boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
+            background: "#fff",
+            margin: "20px",
+            borderRadius: "100px",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
           }}
         >
           <div className="categorias-list">
-            <div style={{ display: 'flex', gap: '50px', marginBottom: '20px'}}>
+            <div style={{ display: "flex", gap: "50px", marginBottom: "20px" }}>
               <Link to="/admin">
                 <Button type="default">Regresar</Button>
               </Link>
@@ -180,17 +195,17 @@ const CategoriaArticuloList = () => {
               pagination={{
                 pageSize: 10,
                 showSizeChanger: true,
-                pageSizeOptions: ['10', '20', '30'],
+                pageSizeOptions: ["10", "20", "30"],
               }}
-              locale={{ emptyText: 'No hay datos' }}
-              scroll={{ x: 'max-content' }} // Desplazamiento horizontal
+              locale={{ emptyText: "No hay datos" }}
+              scroll={{ x: "max-content" }} // Desplazamiento horizontal
             />
             <ToastContainer />
           </div>
         </Content>
       </Layout>
     </ConfigProvider>
-  )
-}
+  );
+};
 
-export default CategoriaArticuloList
+export default CategoriaArticuloList;
