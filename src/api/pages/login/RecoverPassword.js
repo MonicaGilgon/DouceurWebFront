@@ -1,21 +1,26 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../../../api/axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "../scss/Reset.scss";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Añadido para consistencia con el original
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import api from '../../../api/axios';
+import '../scss/RecoverPassword.scss';
+import douxceurLogo from '../../images/logo.png'; // Asegúrate de que la ruta sea correcta
 
 const RecoverPassword = () => {
-  const [correo, setCorreo] = useState("");
+  const [correo, setCorreo] = useState(''); // Cambiado a 'correo' para coincidir con el original
   const [loading, setLoading] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+
+
     try {
-      const response = await api.post("/recover-password/", { correo });
+      const response = await api.post('/recover-password/', { correo }); // Usar 'correo' en la solicitud
       toast.success(response.data.message);
+      setIsEmailSent(true);
     } catch (err) {
       toast.error(err.response?.data?.error || "Error al enviar el correo");
     } finally {
@@ -25,41 +30,52 @@ const RecoverPassword = () => {
 
   return (
     <section id="auth-section" className="auth-container">
-      <div className="left-side">
-        <div className="form-container">
-          <div className="form login">
-            <div className="form-content">
-              <header>Recuperar Contraseña</header>
-
+      <div className="recover-content">
+        <div className="form-content">
+          <header>Recuperar Contraseña</header>
+          {!isEmailSent ? (
+            <>
+              <p className="instructions">
+                Digite su correo electrónico al cual será enviado el enlace para recuperar tu contraseña:
+              </p>
               <form onSubmit={handleSubmit}>
                 <div className="field input-field">
                   <input
                     type="email"
                     name="correo"
                     placeholder="Correo electrónico"
-                    className="input"
-                    required
+                    className="email"
+                    required // Mantener 'required' para validación básica
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
                   />
                 </div>
                 <div className="field button-field">
                   <button type="submit" disabled={loading}>
-                    {loading ? "Enviando..." : "Enviar enlace"}
+                    {loading ? 'Enviando...' : 'Enviar'}
                   </button>
                 </div>
               </form>
-
               <div className="form-link">
                 <span>
-                  ¿Ya tienes una cuenta?{" "}
-                  <Link to="/sign-in" className="link signup-link">
+                  ¿Ya tienes una cuenta?{' '}
+                  <Link to="/sign-in" className="link signin-link">
                     Iniciar sesión
                   </Link>
                 </span>
               </div>
+            </>
+          ) : (
+            <div className="confirmation">
+              <p className="confirmation-message">
+                Se ha enviado el enlace a tu dirección de correo registrada, revisa tu bandeja de entrada.
+              </p>
+              <p className="email-sent">{correo}</p>
             </div>
-          </div>
+          )}
+        </div>
+        <div className="logo-container">
+          <img src={douxceurLogo} alt="Douxceur Logo" className="logo" />
         </div>
       </div>
     </section>

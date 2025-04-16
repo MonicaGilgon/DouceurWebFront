@@ -32,19 +32,19 @@ const SignIn = () => {
     input.type = input.type === "password" ? "text" : "password";
   };
 
-  return (
-    <section id="auth-section" className="auth-container">
-      <div className="left-side">
-        <div className="form-container">
-          <div className="form login">
-            <div className="form-content">
-              <header>Iniciar Sesión</header>
-
-              {error && (
-                <div className="alert alert-danger">
-                  <strong>{error}</strong>
-                </div>
-              )}
+     return (
+      <section id="auth-section" className="auth-container">
+         
+              <div className="form-container">
+                  <div className="form login">
+                      <div className="form-content">
+                          <header>Iniciar Sesión</header>
+                          
+                             {error && (
+                                 <div className="alert alert-danger">
+                                     <strong>{error}</strong>
+                                 </div>
+                             )}
 
               <form onSubmit={handleSubmit}>
                 <div className="field input-field">
@@ -85,18 +85,14 @@ const SignIn = () => {
                 </div>
               </form>
 
-              <div className="form-link">
-                <span>
-                  ¿No tienes una cuenta?{" "}
-                  <Link to="/sign-up" className="link signup-link">
-                    Crear cuenta
-                  </Link>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                             <div className="form-link">
+                                 <span>¿No tienes una cuenta? <Link to="/sign-up" className="link signup-link">Crear cuenta</Link></span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 
+
     </section>
   );
 };
