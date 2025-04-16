@@ -15,6 +15,8 @@ import ResetPassword from "./api/pages/login/ResetPassword";
 import ClienteList from "./api/pages/admin/ClienteList";
 import ClienteEdit from "./api/pages/admin/ClienteEdit";
 import Profile from "./api/pages/Profile";
+import CategoriaProductoBaseList from "./api/pages/admin/CategoriaProductoBaseList";
+import CategoriaProductoBaseEdit from "./api/pages/admin/CategoriaProductoBaseEdit";
 
 function App() {
   return (
@@ -51,6 +53,14 @@ function App() {
           <Route
             path="listar-categoria-articulo"
             element={<CategoriaArticuloList />}
+          />
+          <Route
+            path="listar-categoria-producto-base"
+            element={<CategoriaProductoBaseList />}
+          />
+          <Route
+            path="editar-categoria-producto-base/:categoriaId"
+            element={<CategoriaProductoBaseEdit />}
           />
           <Route path="listar-clientes" element={<ClienteList />} />
           <Route path="editar-cliente/:clienteId" element={<ClienteEdit />} />

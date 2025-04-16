@@ -13,6 +13,13 @@ const _nav = [
     className: "categoria-articulo-nav",
   },
   {
+    component: CNavItem,
+    name: "Categorías Producto Base",
+    to: "/admin/listar-categoria-producto-base",
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    className: "categoria-producto-base-nav",
+  },
+  {
     component: CNavTitle,
     name: "Clientes",
   },
@@ -21,14 +28,7 @@ const _nav = [
     name: "Lista de clientes",
     to: "/admin/listar-clientes",
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    className: "clientes-nav",
-  },
-  {
-    component: CNavItem,
-    name: "Categorías Producto Base",
-    to: "/admin/listar-categoria-producto-base",
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    className: "categoria-producto-base-nav",
+    className: "listar-clientes-nav",
   },
 ];
 
