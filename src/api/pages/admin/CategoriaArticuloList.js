@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -31,7 +31,7 @@ const CategoriaArticuloList = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/listar-categoria-articulo/')
+        const response = await api.get('listar-categoria-articulo/')
         setCategorias(response.data)
 
         const disabledStates = {}
@@ -53,8 +53,8 @@ const CategoriaArticuloList = () => {
 
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`,
+      const response = await api.get(
+        `articulos_por_categoria/${categoriaId}/`,
       )
       const articulos = response.data
       return articulos.every((articulo) => !articulo.estado)
@@ -66,8 +66,8 @@ const CategoriaArticuloList = () => {
 
   const obtenerArticulosPorCategoria = async (categoriaId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`,
+      const response = await api.get(
+        `articulos_por_categoria/${categoriaId}/`,
       )
       return response.data.map((articulo) => articulo.nombre)
     } catch (error) {
@@ -95,7 +95,7 @@ const CategoriaArticuloList = () => {
       )
 
       toast.success(`Categoría ${!estado ? 'activada' : 'desactivada'} correctamente`)
-      await axios.patch(`http://localhost:8000/cambiar-estado-categoria-articulo/${categoriaId}/`, {
+      await api.patch(`cambiar-estado-categoria-articulo/${categoriaId}/`, {
         estado: !estado,
       })
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom'
 import { TextField, Button, Typography, CircularProgress } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
@@ -17,8 +17,8 @@ const CategoriaArticuloEdit = () => {
     const fetchCategoria = async () => {
       try {
         const [categoriaResponse, categoriasResponse] = await Promise.all([
-          axios.get(`http://localhost:8000/editar-categoria-articulo/${categoriaId}/`),
-          axios.get('http://localhost:8000/listar-categoria-articulo/'),
+          api.get(`editar-categoria-articulo/${categoriaId}/`),
+          api.get('listar-categoria-articulo/'),
         ])
 
         setCategoria(categoriaResponse.data)
@@ -64,7 +64,7 @@ const CategoriaArticuloEdit = () => {
 
     try {
       toast.success('Categoría editada correctamente.')
-      await axios.put(`http://localhost:8000/editar-categoria-articulo/${categoriaId}/`, {
+      await api.put(`editar-categoria-articulo/${categoriaId}/`, {
         nombre: categoria.nombre.trim(),
       })
       navigate('/admin/listar-categoria-articulo')

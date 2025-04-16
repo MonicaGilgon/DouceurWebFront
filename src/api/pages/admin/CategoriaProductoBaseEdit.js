@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom'
 import { TextField, Button, Typography, CircularProgress } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
@@ -15,8 +15,8 @@ const CategoriaProductoBaseEdit = () => {
   useEffect(() => {
     const fetchCategoria = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/editar-categoria-producto-base/${categoriaId}/`,
+        const response = await api.get(
+          `editar-categoria-producto-base/${categoriaId}/`,
         )
         setCategoria(response.data)
       } catch (error) {
@@ -29,7 +29,7 @@ const CategoriaProductoBaseEdit = () => {
 
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/listar-categoria-producto-base/')
+        const response = await api.get('listar-categoria-producto-base/')
         setCategoriasExistentes(response.data)
       } catch (error) {
         console.error('Error al cargar las categorías existentes', error)
@@ -65,7 +65,7 @@ const CategoriaProductoBaseEdit = () => {
 
     try {
       toast.success('Categoría editada correctamente')
-      await axios.put(`http://localhost:8000/editar-categoria-producto-base/${categoriaId}/`, {
+      await api.put(`editar-categoria-producto-base/${categoriaId}/`, {
         nombre: categoria.nombre.trim(),
       })
       navigate('/admin/listar-categoria-producto-base')

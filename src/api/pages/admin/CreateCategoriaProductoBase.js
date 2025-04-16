@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { useNavigate } from 'react-router-dom'
 import { TextField, Button, Typography } from '@mui/material'
 import { ToastContainer, toast } from 'react-toastify'
@@ -14,7 +14,7 @@ const CreateCategoriaProductoBase = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/listar-categoria-producto-base/')
+        const response = await api.get('listar-categoria-producto-base/')
         setCategoriasExistentes(response.data)
       } catch (err) {
         toast.error('Error al cargar las categorías existentes.')
@@ -39,7 +39,7 @@ const CreateCategoriaProductoBase = () => {
     formData.append('estado', estado)
 
     try {
-      await axios.post('http://127.0.0.1:8000/crear-categoria-producto-base/', formData, {
+      await api.post('crear-categoria-producto-base/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       toast.success('Categoría creada correctamente.')

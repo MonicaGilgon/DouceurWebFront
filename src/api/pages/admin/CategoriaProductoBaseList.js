@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../../../api/axios';
 import { Link, useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import 'antd/dist/reset.css'
@@ -27,7 +27,7 @@ const CategoriaProductoBaseList = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/listar-categoria-producto-base/')
+        const response = await api.get('listar-categoria-producto-base/')
         setCategorias(response.data)
 
         // Precomputar estado deshabilitado
@@ -49,8 +49,8 @@ const CategoriaProductoBaseList = () => {
 
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
-      const response = await axios.get(
-        //`http://localhost:8000/productos_por_categoria/${categoriaId}/`,
+      const response = await api.get(
+        //`productos_por_categoria/${categoriaId}/`,
       )
       const productos = response.data
       return productos.every((producto) => !producto.estado)
@@ -81,8 +81,8 @@ const CategoriaProductoBaseList = () => {
 
       // Actualizar el estado en el servidor
       toast.success(`Categoría ${!estado ? 'activada' : 'desactivada'} correctamente`)
-      await axios.patch(
-        `http://localhost:8000/cambiar-estado-categoria-producto-base/${categoriaId}/`,
+      await api.patch(
+        `cambiar-estado-categoria-producto-base/${categoriaId}/`,
         { estado: !estado },
         { headers: { 'Content-Type': 'application/json' } },
       )
