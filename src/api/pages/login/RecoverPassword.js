@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../../../api/axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import '../scss/Reset.scss';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../../../api/axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../scss/Reset.scss";
 
 const RecoverPassword = () => {
-  const [correo, setCorreo] = useState('');
+  const [correo, setCorreo] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -14,10 +14,10 @@ const RecoverPassword = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/recover-password/', { correo });
+      const response = await api.post("/recover-password/", { correo });
       toast.success(response.data.message);
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Error al enviar el correo');
+      toast.error(err.response?.data?.error || "Error al enviar el correo");
     } finally {
       setLoading(false);
     }
@@ -45,14 +45,17 @@ const RecoverPassword = () => {
                 </div>
                 <div className="field button-field">
                   <button type="submit" disabled={loading}>
-                    {loading ? 'Enviando...' : 'Enviar enlace'}
+                    {loading ? "Enviando..." : "Enviar enlace"}
                   </button>
                 </div>
               </form>
 
               <div className="form-link">
                 <span>
-                  ¿Ya tienes una cuenta? <Link to="/sign-in" className="link signup-link">Iniciar sesión</Link>
+                  ¿Ya tienes una cuenta?{" "}
+                  <Link to="/sign-in" className="link signup-link">
+                    Iniciar sesión
+                  </Link>
                 </span>
               </div>
             </div>

@@ -14,6 +14,7 @@ import RecoverPassword from "./api/pages/login/RecoverPassword";
 import ResetPassword from "./api/pages/login/ResetPassword";
 import ClienteList from "./api/pages/admin/ClienteList";
 import ClienteEdit from "./api/pages/admin/ClienteEdit";
+import Profile from "./api/pages/Profile";
 
 function App() {
   return (
