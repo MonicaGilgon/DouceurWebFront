@@ -8,9 +8,14 @@ import AdminLayout from './api/layouts/AdminLayout';
 import CreateCategoriaArticulo from './api/pages/admin/CreateCategoriaArticulo';
 import CategoriaArticuloList from './api/pages/admin/CategoriaArticuloList';
 import CategoriaArticuloEdit from './api/pages/admin/CategoriaArticuloEdit';
+import CreateArticulo from './api/pages/admin/CreateArticulo';
+import ArticuloList from './api/pages/admin/ArticuloList';
 import CreateCategoriaProductoBase from './api/pages/admin/CreateCategoriaProductoBase';
 import CategoriaProductoBaseList from './api/pages/admin/CategoriaProductoBaseList';
 import CategoriaProductoBaseEdit from './api/pages/admin/CategoriaProductoBaseEdit';
+import CreateProductoBase from './api/pages/admin/CreateProductoBase';
+import ProductoBaseList from './api/pages/admin/ProductoBaseList';
+import ProductoBaseEdit from './api/pages/admin/ProductoBaseEdit';
 import SignIn from './api/pages/login/SignIn';
 import SignUp from './api/pages/login/SignUp';
 import RecoverPassword from './api/pages/login/RecoverPassword';
@@ -46,9 +51,18 @@ function App() {
         <Route path="listar-categoria-articulo" element={<CategoriaArticuloList />} />
         <Route path="editar-categoria-articulo/:categoriaId" element={<CategoriaArticuloEdit />} />
 
+        <Route path="crear-articulo" element={<CreateArticulo />} />
+        <Route path="listar-articulos" element={<ArticuloList />} />
+        {/* <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} /> */}
+
         <Route path="crear-categoria-producto-base" element={<CreateCategoriaProductoBase />} />
         <Route path="listar-categoria-producto-base" element={<CategoriaProductoBaseList />} />
         <Route path="editar-categoria-productoBase/:categoriaId" element={<CategoriaProductoBaseEdit />} />  
+
+        <Route path="crear-producto-base" element={<CreateProductoBase />} />
+        <Route path="listar-producto-base" element={<ProductoBaseList />} />
+        <Route path="editar-productoBase/:productoId" element={<ProductoBaseEdit />} />  
+
       </Route>
 
     </Routes>
