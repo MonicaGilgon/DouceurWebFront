@@ -4,6 +4,7 @@ import api from '../../../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../scss/Reset.scss';
+import douxceurLogo from '../../images/logo.png'; // Asegúrate de que la ruta sea correcta
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -25,7 +26,6 @@ const ResetPassword = () => {
       return;
     }
 
-    // Validar la fuerza de la contraseña
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
       toast.error('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número');
@@ -51,43 +51,44 @@ const ResetPassword = () => {
 
   return (
     <section id="auth-section" className="auth-container">
-      <div className="left-side">
-        <div className="form-container">
-          <div className="form login">
-            <div className="form-content">
-              <header>Restablecer Contraseña</header>
-
-              <form onSubmit={handleSubmit}>
-                <div className="field input-field">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Nueva contraseña"
-                    className="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="field input-field">
-                  <input
-                    type="password"
-                    name="password_confirm"
-                    placeholder="Confirmar contraseña"
-                    className="password"
-                    required
-                    value={passwordConfirm}
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                  />
-                </div>
-                <div className="field button-field">
-                  <button type="submit" disabled={loading}>
-                    {loading ? 'Guardando...' : 'Guardar'}
-                  </button>
-                </div>
-              </form>
+      <div className="recover-content">
+        <div className="form-content">
+          <header>Restablecer Contraseña</header>
+          <p className="instructions">
+            Por favor digita tu nueva contraseña:
+          </p>
+          <form onSubmit={handleSubmit}>
+            <div className="field input-field">
+              <input
+                type="password"
+                name="password"
+                placeholder="Nueva contraseña"
+                className="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-          </div>
+            <div className="field input-field">
+              <input
+                type="password"
+                name="password_confirm"
+                placeholder="Confirmar contraseña"
+                className="password"
+                required
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+              />
+            </div>
+            <div className="field button-field">
+              <button type="submit" disabled={loading}>
+                {loading ? 'Guardando...' : 'Guardar'}
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="logo-container">
+          <img src={douxceurLogo} alt="Douxceur Logo" className="logo" />
         </div>
       </div>
     </section>

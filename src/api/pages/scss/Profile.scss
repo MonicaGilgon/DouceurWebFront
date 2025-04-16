@@ -1,268 +1,318 @@
-.profile-container {
-    max-width: 600px;
+// src/api/pages/scss/Profile.scss
+.profile-page {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
     margin: 0 auto;
+    justify-content: center; // Centra todo el contenido horizontalmente por defecto
+  }
+  
+  .profile-container {
     padding: 20px;
     background-color: white;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
+    width: 100%;
+    max-width: 600px; // Limita el ancho máximo de la tabla de información
+  
+    &.client-view {
+      // Cuando el usuario es cliente, la tabla de información se muestra a la izquierda
+      flex: 1;
+      min-width: 300px;
+    }
+  
+    &.non-client-view {
+      // Cuando el usuario no es cliente (admin o vendedor), la tabla se centra
+      margin: 0 auto; // Centra horizontalmente
+    }
+  
     h2 {
-        font-size: 24px;
-        color: #333;
-        text-align: center;
-        margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
     }
-
+  
     h3 {
-        font-size: 20px;
-        color: #333;
-        text-align: center;
-        margin-bottom: 15px;
+      font-size: 20px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 15px;
     }
-
+  
     .profile-details {
-        .form-group {
-            margin-bottom: 10px;
-
-            label {
-                font-size: 16px;
-                color: #333;
-                margin-bottom: 5px;
-                display: block;
-            }
-
-            input {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #e0e0e0;
-                border-radius: 5px;
-                background-color: #f5f5f5;
-                font-size: 16px;
-                color: #333;
-
-                &:not(:disabled) {
-                    background-color: white;
-                    border-color: #ccc;
-                }
-
-                &.input-error {
-                    border-color: #e74c3c;
-                }
-            }
-
-            .error {
-                color: #e74c3c;
-                font-size: 14px;
-                margin-top: 5px;
-                display: block;
-            }
+      .form-group {
+        margin-bottom: 10px;
+  
+        label {
+          font-size: 16px;
+          color: #333;
+          margin-bottom: 5px;
+          display: block;
         }
+  
+        input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #e0e0e0;
+          border-radius: 5px;
+          background-color: #f5f5f5;
+          font-size: 16px;
+          color: #333;
+  
+          &:not(:disabled) {
+            background-color: white;
+            border-color: #ccc;
+          }
+  
+          &.input-error {
+            border-color: #e74c3c;
+          }
+  
+          &:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+          }
+        }
+  
+        .error {
+          color: #e74c3c;
+          font-size: 14px;
+          margin-top: 5px;
+          display: block;
+        }
+      }
     }
-
+  
     .general-error {
+      color: #e74c3c;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  
+    .profile-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+  
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+  
+        &:disabled {
+          background-color: #cccccc;
+          cursor: not-allowed;
+        }
+      }
+  
+      .cancel-btn {
+        background-color: #d3d3d3;
+        color: white;
+      }
+  
+      .edit-btn {
+        background-color: #f8d7da;
+        color: black;
+  
+        &:hover:not(:disabled) {
+          background-color: #f5c6cb;
+        }
+      }
+    }
+  }
+  
+  .password-form {
+    margin-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+  
+    .form-group {
+      margin-bottom: 10px;
+  
+      label {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+        display: block;
+      }
+  
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 16px;
+        color: #333;
+  
+        &.input-error {
+          border-color: #e74c3c;
+        }
+  
+        &:disabled {
+          background-color: #f0f0f0;
+          cursor: not-allowed;
+        }
+      }
+  
+      .error {
         color: #e74c3c;
         font-size: 14px;
-        text-align: center;
-        margin-bottom: 15px;
+        margin-top: 5px;
+        display: block;
+      }
     }
-
-    .password-form {
-        margin-top: 20px;
-        border-top: 1px solid #e0e0e0;
-        padding-top: 20px;
-
-        .form-group {
-            margin-bottom: 10px;
-
-            label {
-                font-size: 16px;
-                color: #333;
-                margin-bottom: 5px;
-                display: block;
-            }
-
-            input {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #e0e0e0;
-                border-radius: 5px;
-                font-size: 16px;
-                color: #333;
-
-                &.input-error {
-                    border-color: #e74c3c;
-                }
-
-                &:disabled {
-                    background-color: #f0f0f0;
-                    cursor: not-allowed;
-                }
-            }
-
-            .error {
-                color: #e74c3c;
-                font-size: 14px;
-                margin-top: 5px;
-                display: block;
-            }
-        }
+  }
+  
+  .orders-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+    h3 {
+      font-size: 20px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 15px;
     }
-
-    .orders-section {
-        margin-top: 20px;
-    }
-
+  
     .orders-list {
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 10px;
-
-            .order-date {
-                font-size: 16px;
-                color: #333;
-                flex: 1;
-            }
-
-            .order-name {
-                font-size: 16px;
-                color: #333;
-                flex: 2;
-            }
-
-            .order-total {
-                font-size: 16px;
-                color: #333;
-                flex: 1;
-                text-align: center;
-            }
-
-            .order-status {
-                font-size: 16px;
-                flex: 1;
-                text-align: center;
-                padding: 5px;
-                border-radius: 5px;
-                color: white;
-
-                &.pendiente {
-                    background-color: #f39c12;
-                }
-
-                &.enviado {
-                    background-color: #3498db;
-                }
-
-                &.entregado {
-                    background-color: #2ecc71;
-                }
-
-                &.cancelado {
-                    background-color: #e74c3c;
-                }
-            }
-        }
-    }
-
-    .profile-actions {
+      .order-item {
         display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &:disabled {
-                background-color: #cccccc;
-                cursor: not-allowed;
-            }
-        }
-
-        .cancel-btn {
-            background-color: #d3d3d3;
-            color: white;
-        }
-
-        .edit-btn {
-            background-color: #f8d7da;
-            color: black;
-
-            &:hover:not(:disabled) {
-                background-color: #f5c6cb;
-            }
-        }
-    }
-
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
         align-items: center;
-        z-index: 1000;
-    }
-
-    .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        max-width: 400px;
-        width: 90%;
-
-        h3 {
-            color: #2ecc71;
-            margin-bottom: 15px;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        margin-bottom: 10px;
+  
+        .order-date {
+          font-size: 16px;
+          color: #333;
+          width: 20%; /* Aumentado para ocupar más espacio */
         }
-
-        p {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 20px;
+  
+        .order-name {
+          font-size: 16px;
+          color: #333;
+          width: 35%; /* Aumentado para ocupar más espacio */
         }
-
-        .modal-close-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
+  
+        .order-total {
+          font-size: 16px;
+          color: #333;
+          width: 20%; /* Aumentado para ocupar más espacio */
+          text-align: center;
+        }
+  
+        .order-status {
+          font-size: 16px;
+          width: 25%; /* Aumentado para ocupar más espacio */
+          text-align: center;
+          padding: 5px;
+          border-radius: 5px;
+          color: white;
+  
+          &.pendiente {
+            background-color: #f39c12;
+          }
+  
+          &.enviado {
+            background-color: #3498db;
+          }
+  
+          &.entregado {
             background-color: #2ecc71;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #27ae60;
-            }
+          }
+  
+          &.cancelado {
+            background-color: #e74c3c;
+          }
         }
+      }
     }
-}
-
-@media (max-width: 600px) {
-    .order-item {
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+  
+    h3 {
+      color: #2ecc71;
+      margin-bottom: 15px;
+    }
+  
+    p {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  
+    .modal-close-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2ecc71;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #27ae60;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .profile-page {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .orders-list {
+      .order-item {
         flex-wrap: wrap;
+        gap: 5px;
+  
         .order-date,
         .order-name,
         .order-total,
         .order-status {
-            flex: 100%;
-            text-align: left;
-            margin-bottom: 5px;
+          width: 100%;
+          text-align: left;
+          margin-bottom: 5px;
         }
+      }
     }
-}
+  }

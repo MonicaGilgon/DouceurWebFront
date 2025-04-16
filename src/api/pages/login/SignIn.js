@@ -35,7 +35,7 @@ const SignIn = () => {
 
      return (
       <section id="auth-section" className="auth-container">
-          <div className="left-side">
+         
               <div className="form-container">
                   <div className="form login">
                       <div className="form-content">
@@ -86,7 +86,7 @@ const SignIn = () => {
                          </div>
                      </div>
                  </div>
-                 </div>
+                 
 
     </section>
   );
