@@ -1,19 +1,18 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/sign-in'); 
+    navigate("/sign-in");
   };
 
   return (
-      <div style={{ padding: '1rem' }}>
-        <h2>Bienvenido a DOUCEUR</h2>
-        {/* Aquí va tu formulario de autenticación */}
-      </div>
-    
+    <div style={{ padding: "1rem" }}>
+      <h2>Bienvenido a DOUCEUR</h2>
+      {/* Aquí va tu formulario de autenticación */}
+    </div>
   );
 };
 

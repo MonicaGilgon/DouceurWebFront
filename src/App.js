@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Home from './api/pages/Home';
 import PublicLayout from './api/layouts/PublicLayout';
+import AuthenticatedLayout from './api/layouts/AuthenticatedLayout'; 
 import AdminLayout from './api/layouts/AdminLayout';
 import CreateCategoriaArticulo from './api/pages/admin/CreateCategoriaArticulo';
 import CategoriaArticuloList from './api/pages/admin/CategoriaArticuloList';
@@ -21,6 +22,7 @@ import SignUp from './api/pages/login/SignUp';
 import RecoverPassword from './api/pages/login/RecoverPassword';
 import ResetPassword from './api/pages/login/ResetPassword';
 import Profile from './api/pages/Profile';
+
 function App() {
   return (
     <>
@@ -35,18 +37,21 @@ function App() {
         draggable
         pauseOnHover
       />
-    <Routes>
-
-      <Route path="/" element={<PublicLayout />}>
+      <Routes>
+        {/* Rutas públicas */}
+        <Route path="/" element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="recover-password" element={<RecoverPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
         </Route>
 
-      <Route path="/admin" element={<AdminLayout />}>
+        {/* Rutas autenticadas (como Perfil) */}
+        <Route path="/profile" element={<AuthenticatedLayout />}>
+          <Route path="" element={<Profile />} />
+        </Route>
+
         <Route path="crear-categoria-articulo" element={<CreateCategoriaArticulo />} />
         <Route path="listar-categoria-articulo" element={<CategoriaArticuloList />} />
         <Route path="editar-categoria-articulo/:categoriaId" element={<CategoriaArticuloEdit />} />
@@ -63,10 +68,9 @@ function App() {
         <Route path="listar-producto-base" element={<ProductoBaseList />} />
         <Route path="editar-productoBase/:productoId" element={<ProductoBaseEdit />} />  
 
-      </Route>
-
-    </Routes>
+      </Routes>
     </>
   );
 }
+
 export default App;
