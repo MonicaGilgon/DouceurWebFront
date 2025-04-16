@@ -23,6 +23,14 @@ const _nav = [
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
     className: "clientes-nav",
   },
+  {
+    component: CNavItem,
+    name: 'Categorías Producto Base',
+    to: '/admin/listar-categoria-producto-base',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    className: 'categoria-producto-base-nav'
+  },
+]
 ];
 
 export default _nav;

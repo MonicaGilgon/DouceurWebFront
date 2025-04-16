@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../scss/sign.scss';
+import '../scss/Reset.scss';
 
 const RecoverPassword = () => {
   const [correo, setCorreo] = useState('');

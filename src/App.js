@@ -34,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="recover-password" element={<RecoverPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
         </Route>
@@ -57,5 +58,4 @@ function App() {
     </>
   );
 }
-
 export default App;
