@@ -28,7 +28,7 @@ const ClienteList = () => {
     const fetchClientes = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8000/listar-clientes/"
+          "http://localhost:8000/api/listar-clientes/"
         );
         setClientes(response.data);
       } catch (error) {

@@ -7,6 +7,25 @@ import { cilList } from '@coreui/icons';
 
 const _nav = [
   {
+    
+    component: CNavTitle,
+    name: "PRODUCTOS",
+  },
+  {
+    component: CNavItem,
+    name: 'Categorías Producto Base',
+    to: '/admin/listar-categoria-producto-base',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    className: "categoria-producto-base-nav",
+  },
+  {
+    component: CNavItem,
+    name: 'Productos Base',
+    to: '/admin/listar-producto-base',
+    icon: <AiOutlineProduct className="nav-icon" />,
+    className: 'categoria-articulo-nav'
+  },
+  {
     component: CNavItem,
     name: "Categorías Artículo",
     to: "/admin/listar-categoria-articulo",
@@ -21,24 +40,8 @@ const _nav = [
     className: 'categoria-articulo-nav'
   },
   {
-    component: CNavItem,
-    name: 'Categorías Producto Base',
-    to: '/admin/listar-categoria-producto-base',
-    name: "Categorías Producto Base",
-    to: "/admin/listar-categoria-producto-base",
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    className: "categoria-producto-base-nav",
-  },
-  {
-    component: CNavItem,
-    name: 'Productos Base',
-    to: '/admin/listar-producto-base',
-    icon: <AiOutlineProduct className="nav-icon" />,
-    className: 'categoria-articulo-nav'
-  },
-  {
     component: CNavTitle,
-    name: "Clientes",
+    name: "CLIENTES",
   },
   {
     component: CNavItem,

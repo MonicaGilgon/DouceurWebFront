@@ -22,6 +22,8 @@ import SignUp from './api/pages/login/SignUp';
 import RecoverPassword from './api/pages/login/RecoverPassword';
 import ResetPassword from './api/pages/login/ResetPassword';
 import Profile from './api/pages/Profile';
+import ClienteList from './api/pages/admin/ClienteList';
+import ClienteEdit from './api/pages/admin/ClienteEdit';
 
 function App() {
   return (
@@ -52,22 +54,27 @@ function App() {
           <Route path="" element={<Profile />} />
         </Route>
 
-        <Route path="crear-categoria-articulo" element={<CreateCategoriaArticulo />} />
-        <Route path="listar-categoria-articulo" element={<CategoriaArticuloList />} />
-        <Route path="editar-categoria-articulo/:categoriaId" element={<CategoriaArticuloEdit />} />
+        {/* Rutas de administración */} 
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="crear-categoria-articulo" element={<CreateCategoriaArticulo />} />
+          <Route path="listar-categoria-articulo" element={<CategoriaArticuloList />} />
+          <Route path="editar-categoria-articulo/:categoriaId" element={<CategoriaArticuloEdit />} />
 
-        <Route path="crear-articulo" element={<CreateArticulo />} />
-        <Route path="listar-articulos" element={<ArticuloList />} />
-        {/* <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} /> */}
+          <Route path="crear-articulo" element={<CreateArticulo />} />
+          <Route path="listar-articulos" element={<ArticuloList />} />
+          {/* <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} /> */}
 
-        <Route path="crear-categoria-producto-base" element={<CreateCategoriaProductoBase />} />
-        <Route path="listar-categoria-producto-base" element={<CategoriaProductoBaseList />} />
-        <Route path="editar-categoria-productoBase/:categoriaId" element={<CategoriaProductoBaseEdit />} />  
+          <Route path="crear-categoria-producto-base" element={<CreateCategoriaProductoBase />} />
+          <Route path="listar-categoria-producto-base" element={<CategoriaProductoBaseList />} />
+          <Route path="editar-categoria-producto-base/:categoriaId" element={<CategoriaProductoBaseEdit />} />  
 
-        <Route path="crear-producto-base" element={<CreateProductoBase />} />
-        <Route path="listar-producto-base" element={<ProductoBaseList />} />
-        <Route path="editar-productoBase/:productoId" element={<ProductoBaseEdit />} />  
+          <Route path="crear-producto-base" element={<CreateProductoBase />} />
+          <Route path="listar-producto-base" element={<ProductoBaseList />} />
+          <Route path="editar-producto-base/:productoId" element={<ProductoBaseEdit />} />  
 
+          <Route path='listar-clientes' element={<ClienteList />} />
+          <Route path='editar-cliente/:clienteId' element={<ClienteEdit />} />
+          </Route>
       </Routes>
     </>
   );
