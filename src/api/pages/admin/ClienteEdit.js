@@ -18,8 +18,8 @@ const ClienteEdit = () => {
     const fetchClientes = async () => {
       try {
         const [clienteResponse, clientesResponse] = await Promise.all([
-          api.get(`http://localhost:8000/editar-cliente/${clienteId}/`),
-          api.get("http://localhost:8000/listar-clientes/"),
+          api.get(`http://localhost:8000/api/editar-cliente/${clienteId}/`),
+          api.get("http://localhost:8000/api/listar-clientes/"),
         ]);
 
         setCliente(clienteResponse.data);
@@ -63,8 +63,8 @@ const ClienteEdit = () => {
     }
 
     try {
-      await api.put(
-        `http://localhost:8000/editar-cliente/${clienteId}/`,
+      await api.post(
+        `http://localhost:8000/api/editar-cliente/${clienteId}/`,
         {
           id: clienteId,
           nombre: cliente.nombre,

@@ -26,12 +26,14 @@ const PublicFooter = () => {
       >
         {/* LOGO */}
         <div>
-          <img
-            src={logo2}
-            width="110"
-            height="120"
-            alt="logo"
-          />
+          <a href="/">
+            <img
+              src={logo2}
+              width="110"
+              height="120"
+              alt="logo"
+            />
+          </a>
         </div>
 
         {/* INFO DE CONTACTO */}
