@@ -8,11 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const ClienteEdit = () => {
   const { clienteId } = useParams();
   const navigate = useNavigate();
-  const [cliente, setCliente] = useState({
-    nombre: "",
-    correo: "",
-    telefono: "",
-  });
+  const [cliente, setCliente] = useState({ nombre: "", correo: "", telefono: "", });
   const [clientesExistentes, setClientesExistentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +34,7 @@ const ClienteEdit = () => {
         setLoading(false);
       }
     };
+
     fetchClientes();
   }, [clienteId]);
 
@@ -50,6 +47,8 @@ const ClienteEdit = () => {
   };
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
+
     if (!cliente.nombre.trim()) {
       toast.error("El nombre no puede estar vacío.");
       return;
@@ -66,10 +65,16 @@ const ClienteEdit = () => {
     try {
       await api.put(
         `http://localhost:8000/editar-cliente/${clienteId}/`,
-        cliente
+        {
+          id: clienteId,
+          nombre: cliente.nombre,
+          correo: cliente.correo,
+          telefono: cliente.telefono,
+          direccion: cliente.direccion,
+        }
       );
       toast.success("Cliente actualizado con éxito.");
-      navigate("admin/listar-clientes");
+      navigate("../listar-clientes");
     } catch (error) {
       console.error("Error al actualizar el cliente", error);
       toast.error("Error al actualizar el cliente.");
