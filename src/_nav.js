@@ -3,6 +3,8 @@ import CIcon from '@coreui/icons-react'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
 import { NavLink } from 'react-router-dom'
+import { cilList } from '@coreui/icons';
+
 
 
 const _nav = [
