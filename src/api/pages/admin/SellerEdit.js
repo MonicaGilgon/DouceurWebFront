@@ -12,7 +12,7 @@ const SellerEdit = () => {
   const navigate = useNavigate();
   const [seller, setSeller] = useState({
     document_number: "",
-    nombre_completo: "",
+    nombre: "",
     correo: "",
     telefono: "",
     direccion: "",
@@ -28,7 +28,6 @@ const SellerEdit = () => {
           api.get(`http://localhost:8000/api/editar-vendedor/${sellerId}/`),
           api.get("http://localhost:8000/api/listar-vendedores/"),
         ]);
-
         setSeller(sellerResponse.data);
         setSellersExistentes(sellersResponse.data);
       } catch (error) {
@@ -60,7 +59,7 @@ const SellerEdit = () => {
       toast.error("El documento no puede estar vacío.");
       return;
     }
-    if (!seller.nombre_completo.trim()) {
+    if (!seller.nombre.trim()) {
       toast.error("El nombre no puede estar vacío.");
       return;
     }
@@ -82,11 +81,11 @@ const SellerEdit = () => {
       await api.post(`http://localhost:8000/api/editar-vendedor/${sellerId}/`, {
         id: sellerId,
         document_number: seller.document_number,
-        nombre_completo: seller.nombre_completo,
+        nombre_completo: seller.nombre,
         correo: seller.correo,
         telefono: seller.telefono,
         direccion: seller.direccion,
-        estado: seller.estado === "Activo" ? true : false,
+        estado: seller.estado,
       });
 
       navigate("../listar-vendedores");
@@ -122,7 +121,7 @@ const SellerEdit = () => {
         <TextField
           name="nombre"
           label="Nombre"
-          value={seller.nombre_completo}
+          value={seller.nombre}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -155,31 +154,28 @@ const SellerEdit = () => {
           margin="normal"
           required
         />
-
         <Typography
           variant="body1"
           style={{ marginTop: "1rem", fontWeight: "normal" }}
         >
           Estado: *
         </Typography>
-
         <FormControlLabel
           control={
             <Switch
-              checked={seller.estado === "Activo"} // El estado "Activo" se considera true
+              checked={seller.estado} // El estado "Activo" se considera true
               onChange={(e) =>
                 setSeller((prevState) => ({
                   ...prevState,
-                  estado: e.target.checked ? "Activo" : "Inactivo", // Cambia entre "Activo" e "Inactivo"
+                  estado: e.target.checked ? true : false, // Cambia entre "Activo" e "Inactivo"
                 }))
               }
               color="primary"
             />
           }
-          label={seller.estado === "Activo" ? "Activo" : "Inactivo"} // Muestra el estado actual
+          label={seller.estado ? "Activo" : "Inactivo"} // Muestra el estado actual
           style={{ marginTop: "1rem" }}
         />
-
         <div className="form-buttons">
           <Button
             type="button"
