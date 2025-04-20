@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import "../scss/SwitchConf.scss";
 import api from "../../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
@@ -11,33 +12,30 @@ import {
   Typography,
   Button,
   Switch,
-  Modal,
-  message,
   Space,
   ConfigProvider,
-  Divider,
 } from "antd";
 
-const ClienteList = () => {
+const SellerList = () => {
   const { Content, Header } = Layout;
   const { Title } = Typography;
-  const [clientes, setClientes] = useState([]);
+  const [vendedores, setVendedores] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchClientes = async () => {
+    const fetchVendedores = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8000/api/listar-clientes/"
+          "http://localhost:8000/api/listar-vendedores/"
         );
-        setClientes(response.data);
+        setVendedores(response.data);
       } catch (error) {
-        console.error("Error al cargar los clientes", error);
+        console.error("Error al cargar los vendedores", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchClientes();
+    fetchVendedores();
   }, []);
 
   const columns = [
@@ -45,6 +43,11 @@ const ClienteList = () => {
       title: "ID",
       dataIndex: "id",
       key: "id",
+    },
+    {
+      title: "Cedula",
+      dataIndex: "document_number",
+      key: "cedula",
     },
     {
       title: "Nombre",
@@ -67,11 +70,42 @@ const ClienteList = () => {
       key: "direccion",
     },
     {
+      title: "Activo",
+      dataIndex: "activo",
+      key: "activo",
+      render: (_, record) => (
+        <Switch
+          checked={record.estado}
+          onChange={async (checked) => {
+            try {
+              await api.patch(
+                `http://localhost:8000/api/cambiar-estado-vendedor/${record.id}/`,
+                {
+                  estado: checked,
+                }
+              );
+              setVendedores((prevVendedores) =>
+                prevVendedores.map((vendedor) =>
+                  vendedor.id === record.id
+                    ? { ...vendedor, estado: checked }
+                    : vendedor
+                )
+              );
+              toast.success("Estado actualizado correctamente");
+            } catch (error) {
+              console.error("Error al actualizar el estado", error);
+              toast.error("Error al actualizar el estado");
+            }
+          }}
+        />
+      ),
+    },
+    {
       title: "Acciones",
       key: "acciones",
       render: (_, record) => (
         <Space size="middle">
-          <Link to={`/admin/editar-cliente/${record.id}`}>
+          <Link to={`/admin/editar-vendedor/${record.id}`}>
             <Button
               type="primary"
               style={{ backgroundColor: "#FBD5E5", color: "#000" }}
@@ -91,8 +125,8 @@ const ClienteList = () => {
           style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
         >
           <div>
-            <Title level={3} style={{ color: "#001529", textAlign: "center" }}>
-              Lista de Clientes
+            <Title level={3} style={{ textAlign: "center" }}>
+              Lista de Vendedores
             </Title>
           </div>
         </Header>
@@ -102,13 +136,13 @@ const ClienteList = () => {
             background: "#fff",
             margin: "20px",
             borderRadius: "10px",
-            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
           }}
         >
           <div className="clientes-list">
             <Table
               columns={columns}
-              dataSource={clientes}
+              dataSource={vendedores}
               rowKey="id"
               loading={loading}
               bordered
@@ -129,4 +163,4 @@ const ClienteList = () => {
   );
 };
 
-export default ClienteList;
+export default SellerList;

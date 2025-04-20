@@ -124,7 +124,12 @@ const CategoriaProductoBaseList = () => {
       render: (text, categoria) => (
         <Space>
           <Link to={`/admin/editar-categoria-producto-base/${categoria.id}`}>
-            <Button type="primary">Editar</Button>
+            <Button
+              type="primary"
+              style={{ backgroundColor: "#FBD5E5", color: "#000" }}
+            >
+              Editar
+            </Button>
           </Link>
         </Space>
       ),
@@ -135,10 +140,10 @@ const CategoriaProductoBaseList = () => {
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
         <Header
-          style={{ background: "#001529", padding: "10px 20px", color: "#fff" }}
+          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
         >
           <div>
-            <Title level={3} style={{ color: "#fff" }}>
+            <Title level={3} style={{ textAlign: "center", color: "#001529" }}>
               Lista de Categorias de Productos Base
             </Title>
           </div>
@@ -147,17 +152,30 @@ const CategoriaProductoBaseList = () => {
           style={{
             background: "#fff",
             margin: "20px",
-            borderRadius: "100px",
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
+            borderRadius: "10px",
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
           }}
         >
           <div className="categorias-list">
-            <div style={{ display: "flex", gap: "50px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
-                <Button type="default">Regresar</Button>
+                <Button
+                  type="default"
+                  style={{ marginBottom: "20px", marginTop: "20px" }}
+                >
+                  Regresar
+                </Button>
               </Link>
               <Link to="/admin/crear-categoria-producto-base">
-                <Button type="primary" style={{ marginBottom: "20px" }}>
+                <Button
+                  type="primary"
+                  style={{
+                    marginBottom: "20px",
+                    marginTop: "20px",
+                    backgroundColor: "#FBD5E5",
+                    color: "#000",
+                  }}
+                >
                   Crear Categoría Producto Base
                 </Button>
               </Link>
@@ -168,7 +186,12 @@ const CategoriaProductoBaseList = () => {
               rowKey="id"
               loading={loading}
               bordered
-              pagination={{ pageSize: 10 }}
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "30"],
+                align: "center",
+              }}
               scroll={{ x: "max-content" }}
               locale={{ emptyText: "No hay categorías disponibles" }}
             />

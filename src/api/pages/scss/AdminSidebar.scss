@@ -1,57 +1,72 @@
+/* General Layout */
+.app-container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  margin-top: 80px; /* Espacio para el header */
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+/* Sidebar Styles */
 .app-sidebar {
-  position: fixed;
-  top: 92px;
-  left: 0;
   width: 250px;
-  height: calc(100% - 92px);
-  background-color: rgba(240, 234, 234, 0.979); // Color semi-transparente
-  overflow-y: auto;
-  transition: transform 0.3s ease-in-out; // Transición para animación de deslizamiento
-  transform: translateX(-100%); // Oculto por defecto
-
-  &.visible {
-      transform: translateX(0); // Mostrar sidebar al deslizar
-  }
+  flex-shrink: 0;
+  background-color: #fbd5e5;
+  height: calc(100vh - 80px);
+  padding: 20px 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  position: fixed; /* Mantener fijo */
+  top: 80px; /* Colocar exactamente debajo del header */
+  left: 0;
+  z-index: 990; /* Menor que el header pero aún visible */
+  overflow-y: auto; /* Permitir scroll si el contenido es grande */
+  overflow-x: hidden;
 }
 
-.toggle-sidebar-icon {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  font-size: 2rem;
-  color: #000000;
-  cursor:pointer;
-  z-index: 1000;
-  box-shadow: 0px 4px 8px rgb(84, 84, 84);
-
-  &:hover {
-      color: #000000;
-      box-shadow: 0px 6px 12px rgb(116, 116, 116);
-  }
+/* Sidebar Navigation */
+.sidebar-nav {
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.sidebar-header {
-  border-bottom: 1px solid #ff0000;
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.sidebar-footer {
-  border-top: 1px solid #d10000;
-  padding: 10px;
+.sidebar-nav li {
+  margin: 15px 0;
 }
 
-.nav-icon, .nav-text, .categoria-articulo-nav {
-  color: #000000 !important;
+.sidebar-nav a {
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
-.nav-link {
-  color: black;
+.sidebar-nav a:hover {
+  background-color: #ffe4f0;
 }
 
-.nav-link.active {
-  background-color: pink !important;
+.sidebar-nav a.active {
+  background-color: #ffe4f0;
+  font-weight: bold;
 }
 
-.nav-link:hover {
-  background-color: rgb(245, 222, 226) !important;
-  color: black;
+/* Content Area */
+.app-content {
+  flex: 1;
+  margin-left: 250px; /* Dejar espacio para el sidebar */
+  padding: 20px;
+  background-color: #fff;
+  min-height: calc(100vh - 80px);
+  width: calc(100% - 250px);
 }

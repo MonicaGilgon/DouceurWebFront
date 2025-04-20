@@ -1,21 +1,23 @@
 import React from 'react';
+import '../pages/scss/AdminSidebar.scss'
+import '../pages/scss/AdminHeader.scss'
 import { Outlet } from 'react-router-dom';
 import AdminHeader from '../components/AdminHeader';
 import AdminSidebar from '../components/AdminSidebar';
 
 const AdminLayout = () => {
-    return (
-      <div style={{ display: 'flex', height: '100vh', flexDirection: 'column'}}>
-        <AdminHeader />
-  
-        <div style={{ paddingTop: '80px', display: 'flex', flex: 1 }}>
-          <AdminSidebar />
-          <main style={{ padding: '2rem', flex: 1, overflowY: 'auto' }}>
-            <Outlet />
-          </main>
-        </div>
+  return (
+    <div className="admin-layout">
+      <AdminHeader />
+
+      <div className="app-container">
+        <AdminSidebar />
+        <main className="app-content">
+          <Outlet />
+        </main>
       </div>
-    );
-  };
-  
-  export default AdminLayout;
+    </div>
+  );
+};
+
+export default AdminLayout;

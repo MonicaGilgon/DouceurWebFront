@@ -1,4 +1,5 @@
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
+import "../scss/EditView.scss";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../../api/axios";
@@ -8,10 +9,13 @@ import "react-toastify/dist/ReactToastify.css";
 const ClienteEdit = () => {
   const { clienteId } = useParams();
   const navigate = useNavigate();
-  const [cliente, setCliente] = useState({ nombre: "", correo: "", telefono: "", });
+  const [cliente, setCliente] = useState({
+    nombre: "",
+    correo: "",
+    telefono: "",
+  });
   const [clientesExistentes, setClientesExistentes] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -63,16 +67,13 @@ const ClienteEdit = () => {
     }
 
     try {
-      await api.post(
-        `http://localhost:8000/api/editar-cliente/${clienteId}/`,
-        {
-          id: clienteId,
-          nombre: cliente.nombre,
-          correo: cliente.correo,
-          telefono: cliente.telefono,
-          direccion: cliente.direccion,
-        }
-      );
+      await api.post(`http://localhost:8000/api/editar-cliente/${clienteId}/`, {
+        id: clienteId,
+        nombre: cliente.nombre,
+        correo: cliente.correo,
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+      });
       toast.success("Cliente actualizado con éxito.");
       navigate("../listar-clientes");
     } catch (error) {
@@ -81,7 +82,7 @@ const ClienteEdit = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (event) => {
     navigate("../listar-clientes");
   };
 
@@ -90,8 +91,8 @@ const ClienteEdit = () => {
   }
 
   return (
-    <div className="edit-cliente-container">
-      <form onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Editar Cliente
         </Typography>
@@ -133,17 +134,24 @@ const ClienteEdit = () => {
           margin="normal"
           required
         />
-        <Button type="default" onClick={handleCancel} style={{ width: "38%" }}>
-          Cancelar
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "10px" }}
-        >
-          Guardar Cambios
-        </Button>
+        <div className="form-buttons">
+          <Button
+            type="button"
+            onClick={handleCancel}
+            variant="outlined"
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            className="save-button"
+            onClick={handleSubmit}
+          >
+            Guardar Cambios
+          </Button>
+        </div>
 
         <ToastContainer />
       </form>

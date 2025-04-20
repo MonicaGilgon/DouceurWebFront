@@ -1,11 +1,11 @@
-
-import React, { useEffect, useState } from 'react'
-import api from '../../../api/axios';
-import { Link, useNavigate } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import 'antd/dist/reset.css'
-import esES from 'antd/es/locale/es_ES'
+import React, { useEffect, useState } from "react";
+import "../scss/SwitchConf.scss";
+import api from "../../../api/axios";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "antd/dist/reset.css";
+import esES from "antd/es/locale/es_ES";
 import {
   Layout,
   Table,
@@ -14,108 +14,139 @@ import {
   Switch,
   ConfigProvider,
   notification,
-} from 'antd'
+} from "antd";
 
-const { Title } = Typography
+const { Title } = Typography;
 
 const ArticuloList = () => {
-  const [articulos, setArticulos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const { Content, Header } = Layout
+  const [articulos, setArticulos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { Content, Header } = Layout;
 
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await api.get('listar-articulos/')
-        setArticulos(response.data)
+        const response = await api.get("listar-articulos/");
+        setArticulos(response.data);
       } catch (err) {
-        console.error('Error al cargar los artículos:', err)
-        setError('Error al cargar los artículos.')
+        console.error("Error al cargar los artículos:", err);
+        setError("Error al cargar los artículos.");
         notification.error({
-          message: 'Error',
-          description: 'Error al cargar los artículos.',
-        })
+          message: "Error",
+          description: "Error al cargar los artículos.",
+        });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchArticulos()
-  }, [])
+    fetchArticulos();
+  }, []);
 
   const toggleActivo = async (articuloId, estado) => {
     try {
       await api.patch(
         `articulos/cambio_estado/${articuloId}/`,
         { estado: !estado },
-        { headers: { 'Content-Type': 'application/json' } },
-      )
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       setArticulos((prevArticulos) =>
         prevArticulos.map((articulo) =>
-          articulo.id === articuloId ? { ...articulo, estado: !estado } : articulo,
-        ),
-      )
+          articulo.id === articuloId
+            ? { ...articulo, estado: !estado }
+            : articulo
+        )
+      );
 
       notification.success({
-        message: 'Estado actualizado',
-        description: `Artículo ${!estado ? 'activado' : 'desactivado'} correctamente.`,
-      })
+        message: "Estado actualizado",
+        description: `Artículo ${
+          !estado ? "activado" : "desactivado"
+        } correctamente.`,
+      });
     } catch (error) {
-      console.error('Error al cambiar el estado del artículo:', error)
+      console.error("Error al cambiar el estado del artículo:", error);
       notification.error({
-        message: 'Error',
-        description: 'No se pudo actualizar el estado del artículo.',
-      })
+        message: "Error",
+        description: "No se pudo actualizar el estado del artículo.",
+      });
     }
-  }
+  };
 
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Nombre', dataIndex: 'nombre', key: 'nombre' },
+    { title: "ID", dataIndex: "id", key: "id" },
+    { title: "Nombre", dataIndex: "nombre", key: "nombre" },
     {
-      title: 'Estado',
-      key: 'estado',
+      title: "Estado",
+      key: "estado",
       render: (_, record) => (
-        <Switch checked={record.estado} onChange={() => toggleActivo(record.id, record.estado)} />
+        <Switch
+          checked={record.estado}
+          onChange={() => toggleActivo(record.id, record.estado)}
+        />
       ),
     },
-    { title: 'Categoría', dataIndex: ['categoriaArticulo', 'nombre'], key: 'categoriaArticulo' },
     {
-      title: 'Acciones',
-      key: 'acciones',
+      title: "Categoría",
+      dataIndex: ["categoriaArticulo", "nombre"],
+      key: "categoriaArticulo",
+    },
+    {
+      title: "Acciones",
+      key: "acciones",
       render: (_, record) => (
         <Link to={`/admin/editar-articulo/${record.id}`}>
-          <Button type="primary">Editar</Button>
+          <Button
+            type="primary"
+            style={{ backgroundColor: "#FBD5E5", color: "#000" }}
+          >
+            Editar
+          </Button>
         </Link>
       ),
     },
-  ]
+  ];
 
   return (
     <ConfigProvider locale={esES}>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{ background: '#001529', padding: '10px 20px', color: '#fff' }}>
-          <Title level={3} style={{ color: '#fff' }}>
+      <Layout style={{ minHeight: "100vh" }}>
+        <Header
+          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
+        >
+          <Title level={3} style={{ color: "#001529", textAlign: "center" }}>
             Lista de Articulos
           </Title>
         </Header>
         <Content
           style={{
-            background: '#fff',
-            margin: '20px',
-            borderRadius: '10px',
-            boxShadow: 'box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;',
+            background: "#fff",
+            margin: "20px",
+            borderRadius: "10px",
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
           }}
         >
           <div className="articulos-list">
-            <div style={{ display: 'flex', gap: '50px' }}>
+            <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
-                <Button type="default">Regresar</Button>
+                <Button
+                  type="default"
+                  style={{ marginBottom: "20px", marginTop: "20px" }}
+                >
+                  Regresar
+                </Button>
               </Link>
               <Link to="/admin/crear-articulo">
-                <Button type="primary" style={{ marginBottom: '20px' }}>
+                <Button
+                  type="primary"
+                  style={{
+                    marginBottom: "20px",
+                    marginTop: "20px",
+                    backgroundColor: "#FBD5E5",
+                    color: "#000",
+                  }}
+                >
                   Crear Artículo
                 </Button>
               </Link>
@@ -127,14 +158,19 @@ const ArticuloList = () => {
               loading={loading}
               rowKey="id"
               bordered
-              pagination={{ pageSize: 10 }}
-              scroll={{ x: 'max-content' }}
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "30"],
+              }}
+              locale={{ emptyText: "No hay datos" }}
+              scroll={{ x: "max-content" }}
             />
           </div>
         </Content>
       </Layout>
     </ConfigProvider>
-  )
-}
+  );
+};
 
-export default ArticuloList
+export default ArticuloList;

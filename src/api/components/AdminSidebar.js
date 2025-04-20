@@ -1,21 +1,24 @@
 import React from 'react'
+import '../pages/scss/AdminSidebar.scss'
 import {
   CSidebar,
   CSidebarBrand,
   CSidebarNav,
-  CSidebarToggler,
 } from '@coreui/react'
 import AdminSidebarNav from './AdminSidebarNav'
 
 const AdminSidebar = () => {
   return (
-    <CSidebar unfoldable className="bg-light">
-      <CSidebarBrand className="d-none d-md-flex p-3 fw-bold">
+    <CSidebar 
+      unfoldable={true}
+      className="app-sidebar"
+      visible={true} // Asegura que el sidebar siempre esté visible
+    >
+      <CSidebarBrand className="sidebar-header">
       </CSidebarBrand>
       <CSidebarNav>
         <AdminSidebarNav />
       </CSidebarNav>
-      <CSidebarToggler />
     </CSidebar>
   )
 }
