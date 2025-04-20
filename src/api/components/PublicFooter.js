@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../images/logo.png';
+import logo2 from '../images/logo2.png';
 import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 const PublicFooter = () => {
@@ -7,7 +7,7 @@ const PublicFooter = () => {
     <footer
       className="footer"
       style={{
-        backgroundColor: '#f4a8b9',
+        backgroundColor: 'rgb(253, 199, 231)',
         padding: '3rem 1rem',
         display: 'flex',
         justifyContent: 'center',
@@ -26,26 +26,29 @@ const PublicFooter = () => {
       >
         {/* LOGO */}
         <div>
-          <img
-            src={logo}
-            width="120"
-            height="120"
-            alt="logo"
-            style={{ borderRadius: '50%' }}
-          />
+          <a href="/">
+            <img
+              src={logo2}
+              width="110"
+              height="120"
+              alt="logo"
+            />
+          </a>
         </div>
 
         {/* INFO DE CONTACTO */}
         <div>
-          <h3 style={{ fontWeight: 'bold' }}>Contáctanos</h3>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <h3 style={{ fontWeight: 'Bold' }}>Contáctanos</h3>
+          <a href="https://wa.me/573124132200" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize: 18, fontWeight: 'Bold', display: 'flex', alignItems: 'center', marginBottom: '0.5rem', color: 'inherit', textDecoration: 'none' }}>
             <FaWhatsapp style={{ marginRight: '0.5rem' }} />
             <span>3124132200</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          </a>
+          <a href="https://www.instagram.com/douceur.nl/" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize: 18, fontWeight: 'Bold', display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}>
             <FaInstagram style={{ marginRight: '0.5rem' }} />
             <span>@douceur.nl</span>
-          </div>
+          </a>          
         </div>
       </div>
     </footer>

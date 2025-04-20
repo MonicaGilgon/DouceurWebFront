@@ -11,11 +11,7 @@ import {
   Typography,
   Button,
   Switch,
-  Modal,
-  message,
-  Space,
   ConfigProvider,
-  Divider,
 } from "antd";
 
 const CategoriaArticuloList = () => {
@@ -151,7 +147,12 @@ const CategoriaArticuloList = () => {
       key: "acciones",
       render: (_, record) => (
         <Link to={`/admin/editar-categoria-articulo/${record.id}`}>
-          <Button type="primary">Editar</Button>
+          <Button
+            type="primary"
+            style={{ backgroundColor: "#FBD5E5", color: "#000" }}
+          >
+            Editar
+          </Button>
         </Link>
       ),
     },
@@ -161,10 +162,10 @@ const CategoriaArticuloList = () => {
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
         <Header
-          style={{ background: "#001529", padding: "10px 20px", color: "#fff" }}
+          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
         >
           <div>
-            <Title level={3} style={{ color: "#fff" }}>
+            <Title level={3} style={{ textAlign: "center", color: "#001529" }}>
               Lista de Categorias Articulo
             </Title>
           </div>
@@ -173,17 +174,32 @@ const CategoriaArticuloList = () => {
           style={{
             background: "#fff",
             margin: "20px",
-            borderRadius: "100px",
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
+            borderRadius: "10px",
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
           }}
         >
           <div className="categorias-list">
-            <div style={{ display: "flex", gap: "50px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
-                <Button type="default">Regresar</Button>
+                <Button
+                  type="default"
+                  style={{ marginBottom: "20px", marginTop: "20px" }}
+                >
+                  Regresar
+                </Button>
               </Link>
               <Link to="/admin/crear-categoria-articulo">
-                <Button type="primary">Crear Categoria Articulo</Button>
+                <Button
+                  type="primary"
+                  style={{
+                    marginBottom: "20px",
+                    marginTop: "20px",
+                    backgroundColor: "#FBD5E5",
+                    color: "#000",
+                  }}
+                >
+                  Crear Categoria Articulo
+                </Button>
               </Link>
             </div>
             <Table

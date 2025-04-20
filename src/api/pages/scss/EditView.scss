@@ -1,0 +1,56 @@
+.edit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9; // Fondo claro para el formulario
+}
+
+.edit-form {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.form-title {
+  text-align: center !important;
+  color: #001529;
+  margin-bottom: 1rem;
+}
+
+.MuiTextField-root {
+  margin-bottom: 1rem;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.cancel-button {
+  background-color: #e3e3e3 !important;
+  color: #000 !important;
+  border: none !important;
+  width: 48%;
+  text-transform: none !important;
+
+  &:hover {
+    background-color: #d6d6d6;
+  }
+}
+
+.save-button {
+  background-color: #fbd5e5 !important;
+  color: #000 !important;
+  width: 48%;
+  text-transform: none !important;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #f89bb5;
+  }
+}

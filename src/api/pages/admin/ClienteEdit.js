@@ -1,4 +1,5 @@
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
+import "../scss/EditView.scss";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../../api/axios";
@@ -15,15 +16,14 @@ const ClienteEdit = () => {
   });
   const [clientesExistentes, setClientesExistentes] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchClientes = async () => {
       try {
         const [clienteResponse, clientesResponse] = await Promise.all([
-          api.get(`http://localhost:8000/editar-cliente/${clienteId}/`),
-          api.get("http://localhost:8000/listar-clientes/"),
+          api.get(`http://localhost:8000/api/editar-cliente/${clienteId}/`),
+          api.get("http://localhost:8000/api/listar-clientes/"),
         ]);
 
         setCliente(clienteResponse.data);
@@ -38,6 +38,7 @@ const ClienteEdit = () => {
         setLoading(false);
       }
     };
+
     fetchClientes();
   }, [clienteId]);
 
@@ -50,6 +51,8 @@ const ClienteEdit = () => {
   };
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
+
     if (!cliente.nombre.trim()) {
       toast.error("El nombre no puede estar vacío.");
       return;
@@ -64,19 +67,22 @@ const ClienteEdit = () => {
     }
 
     try {
-      await api.put(
-        `http://localhost:8000/editar-cliente/${clienteId}/`,
-        cliente
-      );
+      await api.post(`http://localhost:8000/api/editar-cliente/${clienteId}/`, {
+        id: clienteId,
+        nombre: cliente.nombre,
+        correo: cliente.correo,
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+      });
       toast.success("Cliente actualizado con éxito.");
-      navigate("admin/listar-clientes");
+      navigate("../listar-clientes");
     } catch (error) {
       console.error("Error al actualizar el cliente", error);
       toast.error("Error al actualizar el cliente.");
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (event) => {
     navigate("../listar-clientes");
   };
 
@@ -85,8 +91,8 @@ const ClienteEdit = () => {
   }
 
   return (
-    <div className="edit-cliente-container">
-      <form onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Editar Cliente
         </Typography>
@@ -128,17 +134,24 @@ const ClienteEdit = () => {
           margin="normal"
           required
         />
-        <Button type="default" onClick={handleCancel} style={{ width: "38%" }}>
-          Cancelar
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "10px" }}
-        >
-          Guardar Cambios
-        </Button>
+        <div className="form-buttons">
+          <Button
+            type="button"
+            onClick={handleCancel}
+            variant="outlined"
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            className="save-button"
+            onClick={handleSubmit}
+          >
+            Guardar Cambios
+          </Button>
+        </div>
 
         <ToastContainer />
       </form>

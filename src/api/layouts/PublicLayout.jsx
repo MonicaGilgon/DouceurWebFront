@@ -16,7 +16,7 @@ const PublicLayout = () => {
       <div
         className="public-content"
         style={{
-          flex: 1, // esto empuja el footer al final
+          flex: 1, 
         }}
       >
         <Outlet />

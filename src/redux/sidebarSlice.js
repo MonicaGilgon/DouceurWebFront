@@ -7,7 +7,7 @@ const sidebarSlice = createSlice({
   },
   reducers: {
     setSidebarShow: (state, action) => {
-      state.sidebarShow = action.payload;
+      state.sidebarShow = action.true;
     },
   },
 });

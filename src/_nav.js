@@ -3,11 +3,28 @@ import CIcon from '@coreui/icons-react'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
 import { NavLink } from 'react-router-dom'
-import { cilList } from '@coreui/icons';
-
-
+import { cilCart, cilList, cilUserPlus } from '@coreui/icons';
 
 const _nav = [
+  {
+    component: CNavTitle,
+    name: "PRODUCTOS",
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Categorías Producto Base',
+    to: '/admin/listar-categoria-producto-base',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    className: "categoria-producto-base-nav",
+  },
+  {
+    component: CNavItem,
+    name: 'Productos Base',
+    to: '/admin/listar-producto-base',
+    icon: <AiOutlineAppstoreAdd className="nav-icon" />,
+    className: 'categoria-articulo-nav'
+  },
   {
     component: CNavItem,
     name: "Categorías Artículo",
@@ -23,24 +40,26 @@ const _nav = [
     className: 'categoria-articulo-nav'
   },
   {
-    component: CNavItem,
-    name: 'Categorías Producto Base',
-    to: '/admin/listar-categoria-producto-base',
-    name: "Categorías Producto Base",
-    to: "/admin/listar-categoria-producto-base",
-    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
-    className: "categoria-producto-base-nav",
+    component: CNavTitle,
+    name: "VENDEDORES",
   },
   {
     component: CNavItem,
-    name: 'Productos Base',
-    to: '/admin/listar-producto-base',
-    icon: <AiOutlineProduct className="nav-icon" />,
-    className: 'categoria-articulo-nav'
+    name: "Lista de vendedores",
+    to: "/admin/listar-vendedores",
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+    className: "listar-clientes-nav",
+  },
+  {
+    component: CNavItem,
+    name: "Añadir vendedor",
+    to: "/admin/crear-vendedor",
+    icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
+    className: "listar-clientes-nav",
   },
   {
     component: CNavTitle,
-    name: "Clientes",
+    name: "CLIENTES",
   },
   {
     component: CNavItem,
