@@ -13,7 +13,9 @@ const AdminLayout = () => {
       <div className="app-container">
         <AdminSidebar />
         <main className="app-content">
-          <Outlet />
+          <div className='content-wrapper'>
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

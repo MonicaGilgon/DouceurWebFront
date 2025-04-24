@@ -11,18 +11,18 @@
   right: 0;
   z-index: 1000; /* Mayor que el sidebar para estar encima */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  
+
   .logo {
     display: flex;
     align-items: center;
-    
+
     img {
       width: 50px;
       height: 50px;
       margin-right: 1rem;
     }
   }
-  
+
   .user-button {
     background-color: #ffb9cb;
     border: none;
@@ -33,11 +33,11 @@
     color: white;
     font-weight: bold;
     cursor: pointer;
-    
+
     &:hover {
       background-color: #f89bb5;
     }
-    
+
     .icon {
       margin-right: 0.5rem;
     }

@@ -8,17 +8,17 @@
 }
 
 /* Sidebar Styles */
-.app-sidebar {
-  width: 250px;
-  flex-shrink: 0;
+.app-sidebar.c-sidebar,
+.c-sidebar {
+  width: 250px !important;
   background-color: #fbd5e5;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 80px) !important;
+  position: fixed !important; /* Mantener fijo */
+  top: 80px !important; /* Colocar exactamente debajo del header */
+  left: 0 !important;
+  z-index: 990 !important; /* Menor que el header pero aún visible */
   padding: 20px 0;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  position: fixed; /* Mantener fijo */
-  top: 80px; /* Colocar exactamente debajo del header */
-  left: 0;
-  z-index: 990; /* Menor que el header pero aún visible */
   overflow-y: auto; /* Permitir scroll si el contenido es grande */
   overflow-x: hidden;
 }
@@ -64,9 +64,105 @@
 /* Content Area */
 .app-content {
   flex: 1;
-  margin-left: 250px; /* Dejar espacio para el sidebar */
-  padding: 20px;
+  margin-left: 270px; /* Dejar espacio para el sidebar */
+  padding: 20px 30px;
   background-color: #fff;
   min-height: calc(100vh - 80px);
-  width: calc(100% - 250px);
+  width: calc(100% - 270px);
+  box-sizing: border-box;
+}
+
+/* Mejora para la responsividad */
+@media (max-width: 991.98px) {
+  .app-content {
+    margin-left: 270px !important;
+    width: calc(100% - 270px) !important;
+  }
+}
+
+/* Asegurar que las tablas se ajusten correctamente */
+.app-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Estilos para los botones y elementos de acción */
+.app-content .action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Contenedor del contenido */
+.content-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Estilo para headings */
+.app-content h1,
+.app-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Estilo para tablas */
+.app-content table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.app-content th {
+  background-color: #f9f9f9;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.app-content td {
+  padding: 12px 15px;
+  border-top: 1px solid #eee;
+}
+
+/* Botones de acción */
+.app-content button {
+  transition: all 0.2s ease;
+}
+
+.app-content button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Eliminar espacio en blanco entre sidebar y contenido */
+.app-sidebar + .app-content,
+.c-sidebar + .c-wrapper {
+  margin-left: 0px !important;
+  padding-left: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Asegurar que el contenido se alinee correctamente */
+.app-content {
+  padding-top: 0;
+  box-sizing: border-box;
+}
+
+/* Mejorar la visualización de tablas */
+.app-content table {
+  width: 100%;
+  background-color: white;
+}
+
+/* Estilo para encabezados de sección */
+.app-content h1,
+.app-content h2 {
+  background-color: #0f1e38; /* Color oscuro para el fondo del título */
+  color: white;
+  padding: 15px;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
