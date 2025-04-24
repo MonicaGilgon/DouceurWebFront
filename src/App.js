@@ -24,7 +24,7 @@ import ResetPassword from "./api/pages/login/ResetPassword";
 import Profile from "./api/pages/Profile";
 import ClienteList from "./api/pages/admin/ClienteList";
 import ClienteEdit from "./api/pages/admin/ClienteEdit";
-import CreateVendedor from "./api/pages/admin/CreateSeller";
+import CreateVendedor from "./api/pages/admin/CreateVendedor";
 import VendedorList from "./api/pages/admin/SellerList";
 import VendedorEdit from "./api/pages/admin/SellerEdit";
 
