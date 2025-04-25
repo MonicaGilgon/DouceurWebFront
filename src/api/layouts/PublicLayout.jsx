@@ -1,7 +1,7 @@
-import React from 'react'
-import PublicHeader from '../components/PublicHeader'
-import PublicFooter from '../components/PublicFooter'
-import { Outlet } from 'react-router-dom'
+import React from 'react';
+import PublicHeader from '../components/PublicHeader';
+import PublicFooter from '../components/PublicFooter';
+import { Outlet } from 'react-router-dom';
 
 const PublicLayout = () => {
   return (
@@ -9,21 +9,21 @@ const PublicLayout = () => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh',
+        height: 'auto', 
       }}
     >
       <PublicHeader />
       <div
         className="public-content"
         style={{
-          flex: 1, 
+          flex: 'none', 
         }}
       >
         <Outlet />
       </div>
       <PublicFooter />
     </div>
-  )
-}
+  );
+};
 
-export default PublicLayout
+export default PublicLayout;

@@ -10,6 +10,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [formData, setFormData] = useState({
+        document_number: '',
         nombre_completo: '',
         direccion: '',
         telefono: '',
@@ -27,78 +28,84 @@ const Profile = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get("/profile/");
-        setUserData(response.data);
-        setFormData({
-          nombre_completo: response.data.nombre_completo || "",
-          direccion: response.data.direccion || "",
-          telefono: response.data.telefono || "",
-          correo: response.data.correo || "",
-        });
-        setLoading(false);
-      } catch (err) {
-        setError("Error al cargar el perfil: " + err.message);
-        setLoading(false);
-      }
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await api.get("/profile/");
+                setUserData(response.data);
+                setFormData({
+                    document_number: response.data.document_number || "",
+                    nombre_completo: response.data.nombre_completo || "",
+                    direccion: response.data.direccion || "",
+                    telefono: response.data.telefono || "",
+                    correo: response.data.correo || "",
+                });
+                setLoading(false);
+            } catch (err) {
+                setError("Error al cargar el perfil: " + err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    const validateForm = () => {
+        const errors = {};
+        if (!formData.nombre_completo)
+            errors.nombre_completo = "El nombre es obligatorio.";
+        if (!formData.telefono) errors.telefono = "El teléfono es obligatorio.";
+        if (!formData.correo) {
+            errors.correo = "El correo es obligatorio.";
+        } else if (!/^[^@]+@[^@]+\.[^@]+$/.test(formData.correo)) {
+            errors.correo = "El correo no tiene un formato válido.";
+        }
+        if (!formData.document_number) {
+            errors.document_number = "El número de documento es obligatorio.";
+        } else if (formData.document_number.length < 5) {
+            errors.document_number = "El número de documento debe tener al menos 5 caracteres.";
+        }
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
-    fetchProfile();
-  }, []);
+    const validatePasswordForm = () => {
+        const errors = {};
+        if (!passwordData.current_password)
+            errors.current_password = "La contraseña actual es obligatoria.";
+        if (!passwordData.new_password) {
+            errors.new_password = "La nueva contraseña es obligatoria.";
+        } else {
+            if (passwordData.new_password.length < 8) {
+                errors.new_password = "La contraseña debe tener al menos 8 caracteres.";
+            } else if (!/[A-Z]/.test(passwordData.new_password)) {
+                errors.new_password =
+                    "La contraseña debe contener al menos una letra mayúscula.";
+            } else if (!/[a-z]/.test(passwordData.new_password)) {
+                errors.new_password =
+                    "La contraseña debe contener al menos una letra minúscula.";
+            } else if (!/\d/.test(passwordData.new_password)) {
+                errors.new_password = "La contraseña debe contener al menos un número.";
+            }
+        }
+        if (!passwordData.confirm_password) {
+            errors.confirm_password = "Debes confirmar la nueva contraseña.";
+        } else if (passwordData.new_password !== passwordData.confirm_password) {
+            errors.confirm_password = "Las contraseñas no coinciden.";
+        }
+        setPasswordErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
-  const validateForm = () => {
-    const errors = {};
-    if (!formData.nombre_completo)
-      errors.nombre_completo = "El nombre es obligatorio.";
-    if (!formData.telefono) errors.telefono = "El teléfono es obligatorio.";
-    if (!formData.correo) {
-      errors.correo = "El correo es obligatorio.";
-    } else if (!/^[^@]+@[^@]+\.[^@]+$/.test(formData.correo)) {
-      errors.correo = "El correo no tiene un formato válido.";
-    }
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
-  const validatePasswordForm = () => {
-    const errors = {};
-    if (!passwordData.current_password)
-      errors.current_password = "La contraseña actual es obligatoria.";
-    if (!passwordData.new_password) {
-      errors.new_password = "La nueva contraseña es obligatoria.";
-    } else {
-      if (passwordData.new_password.length < 8) {
-        errors.new_password = "La contraseña debe tener al menos 8 caracteres.";
-      } else if (!/[A-Z]/.test(passwordData.new_password)) {
-        errors.new_password =
-          "La contraseña debe contener al menos una letra mayúscula.";
-      } else if (!/[a-z]/.test(passwordData.new_password)) {
-        errors.new_password =
-          "La contraseña debe contener al menos una letra minúscula.";
-      } else if (!/\d/.test(passwordData.new_password)) {
-        errors.new_password = "La contraseña debe contener al menos un número.";
-      }
-    }
-    if (!passwordData.confirm_password) {
-      errors.confirm_password = "Debes confirmar la nueva contraseña.";
-    } else if (passwordData.new_password !== passwordData.confirm_password) {
-      errors.confirm_password = "Las contraseñas no coinciden.";
-    }
-    setPasswordErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordData({ ...passwordData, [name]: value });
-  };
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordData({ ...passwordData, [name]: value });
+    };
 
     const handleSubmit = async () => {
         console.log('handleSubmit ejecutado');
@@ -129,6 +136,7 @@ const Profile = () => {
         console.log('Botón Cancelar clickeado');
         setIsEditing(false);
         setFormData({
+            document_number: userData.document_number || '',
             nombre_completo: userData.nombre_completo || '',
             direccion: userData.direccion || '',
             telefono: userData.telefono || '',
@@ -137,9 +145,9 @@ const Profile = () => {
         setFormErrors({});
     };
 
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    if (!validatePasswordForm()) return;
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        if (!validatePasswordForm()) return;
 
         setIsSubmittingPassword(true);
         try {
@@ -163,11 +171,11 @@ const Profile = () => {
         setModalMessage('');
     };
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>{error}</div>;
-  if (!userData) return <div>No se encontraron datos</div>;
+    if (loading) return <div>Cargando...</div>;
+    if (error) return <div>{error}</div>;
+    if (!userData) return <div>No se encontraron datos</div>;
 
-  const isClient = userData.rol === "cliente";
+    const isClient = userData.rol === "cliente";
 
     return (
         <div className="profile-page">
@@ -179,9 +187,13 @@ const Profile = () => {
                         <label>N° de Documento:</label>
                         <input
                             type="text"
-                            value={userData.document_number || 'No especificado'}
-                            disabled
+                            name="document_number"
+                            value={formData.document_number}
+                            onChange={handleInputChange}
+                            disabled={!isEditing || isSubmittingData}
+                            className={formErrors.document_number ? 'input-error' : ''}
                         />
+                        {formErrors.document_number && <span className="error">{formErrors.document_number}</span>}
                     </div>
                     <div className="form-group">
                         <label>Nombre:</label>
