@@ -27,7 +27,7 @@ const CategoriaArticuloList = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8000/listar-categoria-articulo/"
+          "/listar-categoria-articulo/"
         );
         setCategorias(response.data);
 
@@ -55,7 +55,7 @@ const CategoriaArticuloList = () => {
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
       const response = await api.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+        `/articulos-por-categoria/${categoriaId}/`
       );
       const articulos = response.data;
       return articulos.every((articulo) => !articulo.estado);
@@ -68,7 +68,7 @@ const CategoriaArticuloList = () => {
   const obtenerArticulosPorCategoria = async (categoriaId) => {
     try {
       const response = await api.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+        `/articulos-por-categoria/${categoriaId}/`
       );
       return response.data.map((articulo) => articulo.nombre);
     } catch (error) {
@@ -101,7 +101,7 @@ const CategoriaArticuloList = () => {
         `Categoría ${!estado ? "activada" : "desactivada"} correctamente`
       );
       await api.patch(
-        `http://localhost:8000/cambiar-estado-categoria-articulo/${categoriaId}/`,
+        `/cambiar-estado-categoria-articulo/${categoriaId}/`,
         {
           estado: !estado,
         }

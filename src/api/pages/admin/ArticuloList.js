@@ -27,7 +27,7 @@ const ArticuloList = () => {
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await api.get("listar-articulos/");
+        const response = await api.get("/listar-articulos/");
         setArticulos(response.data);
       } catch (err) {
         console.error("Error al cargar los artículos:", err);

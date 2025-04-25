@@ -44,6 +44,7 @@
     .categorias-section {
       padding: 2rem;
       background-color: #fff;
+
   
       h3 {
         color: #f9a8d4;
@@ -58,9 +59,13 @@
         justify-content: center; 
         align-items: center;        
         overflow-x: auto;
-        gap: 1rem;
+        gap: 3.9rem;
         min-width: 100px;
         color: #f9a8d4;
+
+        a {
+          text-decoration: none;
+        }
   
         .categoria {
           display: flex;
@@ -68,14 +73,15 @@
           align-items: center;
           min-width: 100px;
           text-align: center;
-  
+          font-weight: bold;
+
           p {
             margin-top: 0.5rem;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
             color: #f9a8d4;
           }
   
-          &.ver-todas {
+          &.catalogo {
             .mas {
               width: 80px;
               height: 80px;

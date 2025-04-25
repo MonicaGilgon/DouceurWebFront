@@ -25,8 +25,8 @@ const SellerEdit = () => {
     const fetchSellers = async () => {
       try {
         const [sellerResponse, sellersResponse] = await Promise.all([
-          api.get(`http://localhost:8000/api/editar-vendedor/${sellerId}/`),
-          api.get("http://localhost:8000/api/listar-vendedores/"),
+          api.get(`/editar-vendedor/${sellerId}/`),
+          api.get("/listar-vendedores/"),
         ]);
         setSeller(sellerResponse.data);
         setSellersExistentes(sellersResponse.data);
@@ -78,7 +78,7 @@ const SellerEdit = () => {
 
     try {
       toast.success("Vendedor editado con éxito.");
-      await api.post(`http://localhost:8000/api/editar-vendedor/${sellerId}/`, {
+      await api.post(`/editar-vendedor/${sellerId}/`, {
         id: sellerId,
         document_number: seller.document_number,
         nombre_completo: seller.nombre,

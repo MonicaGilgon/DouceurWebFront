@@ -5,7 +5,6 @@ import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa";
 
 const PublicHeader = () => {
   const navigate = useNavigate();
-  const [catalogoAbierto, setCatalogoAbierto] = useState(false);
   const [masAbierto, setMasAbierto] = useState(false);
 
   const handleLoginClick = () => {
@@ -34,68 +33,21 @@ const PublicHeader = () => {
             style={{ width: "75px", height: "85px" }}
           />
         </a>
-        <div style={{ position: "relative", display: "inline-block" }}>
-          <button
-            onClick={() => setCatalogoAbierto(!catalogoAbierto)}
-            style={{
-              fontWeight: "bold",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "5px",
-              background: "#ffffff",
-              color: "#000",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              marginLeft: 60,
-            }}
-          >
-            Catálogo
-          </button>
-          {catalogoAbierto && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                background: "#fff",
-                border: "1px solid #ddd",
-                borderRadius: "5px",
-                marginTop: "0.5rem",
-                zIndex: 1000,
-                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-              }}
-            >
-              <a
-                href="/catalogo/categoria1"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 1.5rem",
-                  textDecoration: "none",
-                  color: "#000",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                categoria1
-              </a>
-              <a
-                href="/catalago/categoria2"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 1rem",
-                  textDecoration: "none",
-                  color: "#000",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                categoria2
-              </a>
-            </div>
-          )}
-        </div>
+        <a
+          //href="/catalogo"
+          style={{
+            marginLeft: 30,
+            fontWeight: "bold",
+            padding: "0.5rem",
+            borderRadius: "5px",
+            textDecoration: "none",
+            color: "#000",
+            cursor: "pointer",
+          }}
+        >
+          Catálogo
+        </a>
+        
         <a
           href="/nosotros"
           style={{

@@ -18,9 +18,9 @@ const CategoriaArticuloEdit = () => {
       try {
         const [categoriaResponse, categoriasResponse] = await Promise.all([
           api.get(
-            `http://localhost:8000/editar-categoria-articulo/${categoriaId}/`
+            `/editar-categoria-articulo/${categoriaId}/`
           ),
-          api.get("http://localhost:8000/listar-categoria-articulo/"),
+          api.get("/listar-categoria-articulo/"),
         ]);
 
         setCategoria(categoriaResponse.data);
@@ -70,7 +70,7 @@ const CategoriaArticuloEdit = () => {
     try {
       toast.success("Categoría editada correctamente.");
       await api.put(
-        `http://localhost:8000/editar-categoria-articulo/${categoriaId}/`,
+        `/editar-categoria-articulo/${categoriaId}/`,
         {
           nombre: categoria.nombre.trim(),
         }

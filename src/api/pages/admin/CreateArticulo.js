@@ -22,9 +22,8 @@ const CreateArticulo = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get('listar-categoria-articulo/')
+        const response = await api.get('/listar-categoria-articulo/')
         const categoriasActivas = response.data.filter((categoria) => categoria.estado === true)
-        console.log('Categorías cargadas:', categoriasActivas)
         setCategorias(categoriasActivas)
       } catch (err) {
         console.error('Error al cargar las categorías de artículo:', err)
@@ -40,7 +39,7 @@ const CreateArticulo = () => {
     event.preventDefault()
     try {
       toast.success('Artículo creado correctamente.')
-      await api.post('crear-articulo/', {
+      await api.post('/crear-articulo/', {
         nombre,
         categoriaArticulo,
       })

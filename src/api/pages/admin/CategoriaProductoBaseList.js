@@ -50,7 +50,7 @@ const CategoriaProductoBaseList = () => {
     try {
       const response = await api
         .get
-        //`productos_por_categoria/${categoriaId}/`,
+        //`productos-por-categoria/${categoriaId}/`,
         ();
       const productos = response.data;
       return productos.every((producto) => !producto.estado);

@@ -15,7 +15,7 @@ const CreateCategoriaArticulo = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get(
-          "http://127.0.0.1:8000/listar-categoria-articulo/"
+          "/listar-categoria-articulo/"
         );
         setCategoriasExistentes(response.data);
       } catch (err) {
@@ -44,7 +44,7 @@ const CreateCategoriaArticulo = () => {
 
     try {
       toast.success("Categoría creada correctamente.");
-      await api.post("http://127.0.0.1:8000/listar-categoria-articulo/", {
+      await api.post("/listar-categoria-articulo/", {
         nombre: nombre.trim(),
         estado,
       });

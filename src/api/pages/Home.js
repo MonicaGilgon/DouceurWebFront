@@ -1,7 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import api from '../../api/axios';
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import logo from '../images/logo.png';
 import banner from '../images/banner-desayuno.png';
+import categorias from  './admin/CategoriaProductoBaseList';
 import "./scss/Home.scss";
 
 const Home = () => {
@@ -10,6 +13,25 @@ const Home = () => {
   const handleLoginClick = () => {
     navigate("/sign-in");
   };
+  const [loading, setLoading] = useState(true);
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await api.get("listar-categoria-producto-base/");
+        setCategorias(response.data);
+      } catch (error) {
+        console.error("Error al cargar las categorías", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
+  const categoriasVisibles = categorias.slice(0, 5);
 
   return (
     <div className="home-container">
@@ -34,27 +56,22 @@ const Home = () => {
       {/* Carrusel de categorías */}
       <div className="categorias-section">
         <h3>Categorías</h3>
-        <div className="categorias">
-          <div className="categoria">
-            <p>Amor y Amistad</p>
+        {loading ? (
+          <p>Cargando categorías...</p>
+        ) : (
+          <div className="categorias">
+            {categoriasVisibles.map((categoria) => (
+              <Link to={`/categoria/${categoria.id}`} className="categoria" key={categoria.id}>
+                <p>{categoria.nombre}</p>
+              </Link>
+            ))}
+
+            <Link /* to="/catalogo" */ className="categoria catalogo">
+              <div className="mas">+</div>
+              <p>Ver todas</p>
+            </Link>
           </div>
-          <div className="categoria">
-            <p>Flores</p>
-          </div>
-          <div className="categoria">
-            <p>Desayunos y Meriendas</p>
-          </div>
-          <div className="categoria">
-            <p>Caballero</p>
-          </div>
-          <div className="categoria">
-            <p>Chocolatería</p>
-          </div>
-          <div className="categoria ver-todas">
-            <div className="mas">+</div>
-            <p>Ver todas</p>
-          </div>
-        </div>
+        )}   
       </div>
 
         {/* Carrusel de PRODUCTOS */}

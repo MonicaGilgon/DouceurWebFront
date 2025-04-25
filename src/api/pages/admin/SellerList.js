@@ -26,7 +26,7 @@ const SellerList = () => {
     const fetchVendedores = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8000/api/listar-vendedores/"
+          "/listar-vendedores/"
         );
         setVendedores(response.data);
       } catch (error) {
@@ -79,7 +79,7 @@ const SellerList = () => {
           onChange={async (checked) => {
             try {
               await api.patch(
-                `http://localhost:8000/api/cambiar-estado-vendedor/${record.id}/`,
+                `/cambiar-estado-vendedor/${record.id}/`,
                 {
                   estado: checked,
                 }
