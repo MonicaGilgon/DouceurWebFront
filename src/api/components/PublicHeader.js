@@ -1,19 +1,88 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo2 from "../images/logo2.png";
-import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa";
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate, useLocation, Link } from "react-router-dom"
+import logo2 from "../images/logo2.png"
+import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa"
 
 const PublicHeader = () => {
-  const navigate = useNavigate();
-  const [masAbierto, setMasAbierto] = useState(false);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [masAbierto, setMasAbierto] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userName, setUserName] = useState("")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  // Función para verificar el estado de autenticación
+  const checkAuth = () => {
+    const token = localStorage.getItem("access_token")
+    if (token) {
+      setIsAuthenticated(true)
+
+      // Intentar obtener el nombre del usuario si está almacenado
+      const userData = localStorage.getItem("user")
+      if (userData) {
+        try {
+          const user = JSON.parse(userData)
+          setUserName(user.nombre_completo || user.correo || "Usuario")
+        } catch (e) {
+          console.error("Error al parsear datos de usuario", e)
+        }
+      }
+    } else {
+      setIsAuthenticated(false)
+    }
+  }
+
+  // Verificar autenticación cuando el componente se monta
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  // Verificar autenticación cuando cambia la ruta
+  useEffect(() => {
+    checkAuth()
+  }, [location.pathname])
+
+  // Escuchar el evento personalizado de cambio de autenticación
+  useEffect(() => {
+    const handleAuthChange = () => {
+      checkAuth()
+    }
+
+    window.addEventListener("auth-change", handleAuthChange)
+
+    // Verificar periódicamente el estado de autenticación (como respaldo)
+    const interval = setInterval(checkAuth, 2000)
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange)
+      clearInterval(interval)
+    }
+  }, [])
 
   const handleLoginClick = () => {
-    navigate("/sign-in");
-  };
+    navigate("/sign-in")
+  }
+
+  const handleLogout = () => {
+    // Eliminar tokens y datos de usuario
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
+    localStorage.removeItem("user")
+
+    // Disparar evento de cambio de autenticación
+    window.dispatchEvent(new Event("auth-change"))
+
+    setIsAuthenticated(false)
+    navigate("/") // Redirigir a la página de inicio
+    setIsDropdownOpen(false) // Cerrar el dropdown
+  }
 
   const handleCartClick = () => {
-    navigate("/cart");
-  };
+    navigate("/cart")
+  }
+
   return (
     <header
       style={{
@@ -27,11 +96,7 @@ const PublicHeader = () => {
       {/* Logo + Catálogo */}
       <div style={{ alignItems: "center", gap: "1rem", marginLeft: 35 }}>
         <a href="/">
-          <img
-            src={logo2}
-            alt="Douceur Logo"
-            style={{ width: "75px", height: "85px" }}
-          />
+          <img src={logo2 || "/placeholder.svg"} alt="Douceur Logo" style={{ width: "75px", height: "85px" }} />
         </a>
         <a
           //href="/catalogo"
@@ -47,7 +112,7 @@ const PublicHeader = () => {
         >
           Catálogo
         </a>
-        
+
         <a
           href="/nosotros"
           style={{
@@ -181,7 +246,7 @@ const PublicHeader = () => {
 
         {/* Botón de carrito */}
         <button
-          /* onClick={handleCartClick} */
+          onClick={handleCartClick}
           style={{
             backgroundColor: "#ffb9cb",
             border: "none",
@@ -210,26 +275,99 @@ const PublicHeader = () => {
           </span>
         </button>
 
-        {/* Botón de iniciar sesión */}
-        <button
-          onClick={handleLoginClick}
-          style={{
-            backgroundColor: "#ffb9cb",
-            border: "none",
-            borderRadius: "5px",
-            padding: "0.5rem 0.75rem",
-            display: "flex",
-            alignItems: "center",
-            color: "white",
-            marginRight: 30,
-          }}
-        >
-          <FaUser style={{ marginRight: "0.5rem" }} />
-          Iniciar sesión
-        </button>
+        {/* Mostrar botón de inicio de sesión o menú de usuario según el estado de autenticación */}
+        {isAuthenticated ? (
+          <div style={{ position: "relative", marginRight: 30 }}>
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              style={{
+                backgroundColor: "#ffb9cb",
+                border: "none",
+                borderRadius: "5px",
+                padding: "0.5rem 0.75rem",
+                display: "flex",
+                alignItems: "center",
+                color: "white",
+              }}
+            >
+              <FaUser style={{ marginRight: "0.5rem" }} />
+              Mi Cuenta
+            </button>
+
+            {isDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                  backgroundColor: "white",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "5px",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  zIndex: 1000,
+                  minWidth: "150px",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "10px 20px",
+                    borderBottom: "1px solid #e0e0e0",
+                    fontWeight: "bold",
+                    color: "#333",
+                  }}
+                >
+                  Hola, {userName}
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => setIsDropdownOpen(false)}
+                  style={{
+                    display: "block",
+                    padding: "10px 20px",
+                    color: "#333",
+                    textDecoration: "none",
+                  }}
+                >
+                  Mi Perfil
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    display: "block",
+                    padding: "10px 20px",
+                    color: "#333",
+                    border: "none",
+                    background: "none",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={handleLoginClick}
+            style={{
+              backgroundColor: "#ffb9cb",
+              border: "none",
+              borderRadius: "5px",
+              padding: "0.5rem 0.75rem",
+              display: "flex",
+              alignItems: "center",
+              color: "white",
+              marginRight: 30,
+            }}
+          >
+            <FaUser style={{ marginRight: "0.5rem" }} />
+            Iniciar sesión
+          </button>
+        )}
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default PublicHeader;
+export default PublicHeader
