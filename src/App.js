@@ -5,6 +5,7 @@ import Home from "./api/pages/Home"
 import PublicLayout from "./api/layouts/PublicLayout"
 import AuthenticatedLayout from "./api/layouts/AuthenticatedLayout"
 import AdminLayout from "./api/layouts/AdminLayout"
+import VendedorLayout from "./api/layouts/VendedorLayout"
 import CreateCategoriaArticulo from "./api/pages/admin/CreateCategoriaArticulo"
 import CategoriaArticuloList from "./api/pages/admin/CategoriaArticuloList"
 import CategoriaArticuloEdit from "./api/pages/admin/CategoriaArticuloEdit"
@@ -27,6 +28,7 @@ import CreateVendedor from "./api/pages/admin/CreateVendedor"
 import VendedorList from "./api/pages/admin/SellerList"
 import VendedorEdit from "./api/pages/admin/SellerEdit"
 import AdminRoute from "./api/components/ProtectedRoutes/AdminRoute"
+import VendedorRoute from "./api/components/ProtectedRoutes/VendedorRoute"
 import AuthenticatedRoute from "./api/components/ProtectedRoutes/AuthenticatedRoute"
 import AccessDenied from "./api/pages/AccessDenied" // Crea esta página para mostrar un mensaje de acceso denegado
 
@@ -89,6 +91,22 @@ function App() {
             <Route path="editar-cliente/:clienteId" element={<ClienteEdit />} />
           </Route>
         </Route>
+
+
+
+
+        {/* Rutas de administración - Protegidas para administradores */}
+        <Route element={<VendedorRoute />}>
+          <Route path="/vendedor" element={<VendedorLayout />}>
+          </Route>
+        </Route>
+
+
+
+
+
+
+
 
         {/* Ruta para manejar rutas no encontradas */}
         <Route path="*" element={<Navigate to="/" replace />} />
