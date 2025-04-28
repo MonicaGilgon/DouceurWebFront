@@ -49,7 +49,7 @@ const SignIn = () => {
           navigate("/admin/") // Redirigir a la página principal de admin
           break
         case "vendedor":
-          navigate("/") // Redirigir a la página principal de vendedor
+          navigate("/vendedor/") // Redirigir a la página principal de vendedor
           break
         case "cliente":
         default:
