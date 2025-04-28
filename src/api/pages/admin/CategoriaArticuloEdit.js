@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
@@ -17,9 +18,7 @@ const CategoriaArticuloEdit = () => {
     const fetchCategoria = async () => {
       try {
         const [categoriaResponse, categoriasResponse] = await Promise.all([
-          api.get(
-            `/editar-categoria-articulo/${categoriaId}/`
-          ),
+          api.get(`/editar-categoria-articulo/${categoriaId}/`),
           api.get("/listar-categoria-articulo/"),
         ]);
 
@@ -69,12 +68,9 @@ const CategoriaArticuloEdit = () => {
 
     try {
       toast.success("Categoría editada correctamente.");
-      await api.put(
-        `/editar-categoria-articulo/${categoriaId}/`,
-        {
-          nombre: categoria.nombre.trim(),
-        }
-      );
+      await api.put(`/editar-categoria-articulo/${categoriaId}/`, {
+        nombre: categoria.nombre.trim(),
+      });
       navigate("/admin/listar-categoria-articulo");
     } catch (error) {
       console.error("Error al editar la categoría", error);
@@ -91,8 +87,8 @@ const CategoriaArticuloEdit = () => {
   }
 
   return (
-    <div className="create-vendedor">
-      <form onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Editar Categoría de Artículo
         </Typography>
@@ -105,22 +101,25 @@ const CategoriaArticuloEdit = () => {
           margin="normal"
           required
         />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "10px" }}
-        >
-          Guardar Cambios
-        </Button>
-        <Button
-          type="default"
-          onClick={() => navigate(-1)}
-          style={{ width: "38%" }}
-        >
-          Cancelar
-        </Button>
-        <ToastContainer />
+        <div className="form-buttons">
+          <Button
+            type="default"
+            onClick={() => navigate(-1)}
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="save-button"
+          >
+            Guardar Cambios
+          </Button>
+
+          <ToastContainer />
+        </div>
       </form>
     </div>
   );

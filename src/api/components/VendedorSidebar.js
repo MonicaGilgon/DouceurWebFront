@@ -19,4 +19,3 @@ const VendedorSidebar = () => {
 };
 
 export default VendedorSidebar;
-    ;

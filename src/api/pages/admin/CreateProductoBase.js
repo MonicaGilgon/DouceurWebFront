@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { TextField, Button, Typography, MenuItem } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
@@ -136,8 +137,12 @@ const CreateProductoBase = () => {
   };
 
   return (
-    <div className="create-vendedor">
-      <form id="crearProductoBaseForm" onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form
+        id="crearProductoBaseForm"
+        onSubmit={handleSubmit}
+        className="edit-form"
+      >
         <Typography variant="h4" align="center" gutterBottom>
           Crear Producto
         </Typography>
@@ -178,7 +183,8 @@ const CreateProductoBase = () => {
           onChange={handleChange}
           fullWidth
           required
-          margin="normal">
+          margin="normal"
+        >
           {categorias.map((categoria) => (
             <MenuItem key={categoria.id} value={categoria.id}>
               {categoria.nombre}
@@ -201,7 +207,8 @@ const CreateProductoBase = () => {
           value={selectedArticulo}
           onChange={(e) => setSelectedArticulo(e.target.value)}
           fullWidth
-          margin="normal">
+          margin="normal"
+        >
           {articulos.map((articulo) => (
             <MenuItem key={articulo.id} value={articulo.id}>
               {articulo.nombre}
@@ -213,7 +220,8 @@ const CreateProductoBase = () => {
           variant="outlined"
           color="secondary"
           fullWidth
-          margin="normal">
+          margin="normal"
+        >
           Añadir Artículo
         </Button>
         <TextField
@@ -230,25 +238,22 @@ const CreateProductoBase = () => {
           }}
           margin="normal"
         />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}>
+        <div className="form-buttons">
+          <Button
+            type="default"
+            onClick={() => navigate(-1)}
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            disabled={loading}>
+            disabled={loading}
+            className="save-button"
+          >
             {loading ? "Cargando..." : "Crear Producto"}
-          </Button>
-
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            style={{ width: "38%" }}>
-            Cancelar
           </Button>
         </div>
       </form>

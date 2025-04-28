@@ -40,9 +40,9 @@ const ClienteList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => index + 1,
     },
     {
       title: "Nombre",
@@ -74,7 +74,7 @@ const ClienteList = () => {
               type="primary"
               style={{ backgroundColor: "#FBD5E5", color: "#000" }}
             >
-              Editar
+              Ver
             </Button>
           </Link>
         </Space>

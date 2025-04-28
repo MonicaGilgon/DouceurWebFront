@@ -1,12 +1,19 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { CNavGroup, CNavItem } from '@coreui/react'
-import _nav from '../../_nav'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { CNavGroup, CNavItem } from "@coreui/react";
+import _navAdmin from "../../_navAdmin";
 
 const AdminSidebarNav = () => {
   const renderNavItems = (items) => {
     return items.map((item, index) => {
-      const { component: Component, icon, name, to, className, items: subItems } = item
+      const {
+        component: Component,
+        icon,
+        name,
+        to,
+        className,
+        items: subItems,
+      } = item;
 
       if (subItems) {
         return (
@@ -21,7 +28,7 @@ const AdminSidebarNav = () => {
           >
             {renderNavItems(subItems)}
           </CNavGroup>
-        )
+        );
       }
 
       return (
@@ -31,11 +38,11 @@ const AdminSidebarNav = () => {
             {name}
           </NavLink>
         </CNavItem>
-      )
-    })
-  }
+      );
+    });
+  };
 
-  return <>{renderNavItems(_nav)}</>
-}
+  return <>{renderNavItems(_navAdmin)}</>;
+};
 
-export default AdminSidebarNav
+export default AdminSidebarNav;

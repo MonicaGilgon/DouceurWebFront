@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import api from '../../../api/axios';
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import "../scss/EditView.scss";
+import api from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -9,55 +10,63 @@ import {
   Select,
   InputLabel,
   FormControl,
-} from '@mui/material'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+} from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const CreateArticulo = () => {
-  const [nombre, setNombre] = useState('')
-  const [categoriaArticulo, setCategoriaArticulo] = useState('')
-  const [categorias, setCategorias] = useState([])
-  const [error, setError] = useState(null)
-  const navigate = useNavigate()
+  const [nombre, setNombre] = useState("");
+  const [categoriaArticulo, setCategoriaArticulo] = useState("");
+  const [categorias, setCategorias] = useState([]);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get('/listar-categoria-articulo/')
-        const categoriasActivas = response.data.filter((categoria) => categoria.estado === true)
-        setCategorias(categoriasActivas)
+        const response = await api.get("/listar-categoria-articulo/");
+        const categoriasActivas = response.data.filter(
+          (categoria) => categoria.estado === true
+        );
+        setCategorias(categoriasActivas);
       } catch (err) {
-        console.error('Error al cargar las categorías de artículo:', err)
-        setError('Error al cargar las categorías de artículo')
-        toast.error('Error al cargar las categorías de artículo')
+        console.error("Error al cargar las categorías de artículo:", err);
+        setError("Error al cargar las categorías de artículo");
+        toast.error("Error al cargar las categorías de artículo");
       }
-    }
+    };
 
-    fetchCategorias()
-  }, [])
+    fetchCategorias();
+  }, []);
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
-      toast.success('Artículo creado correctamente.')
-      await api.post('/crear-articulo/', {
+      toast.success("Artículo creado correctamente.");
+      await api.post("/crear-articulo/", {
         nombre,
         categoriaArticulo,
-      })
-      navigate('/admin/listar-articulos')
+      });
+      navigate("/admin/listar-articulos");
     } catch (err) {
-      setError(err.response ? err.response.data : { message: 'Error al crear el artículo.' })
-      toast.error(err.response ? err.response.data.message : 'Error al crear el artículo.')
+      setError(
+        err.response
+          ? err.response.data
+          : { message: "Error al crear el artículo." }
+      );
+      toast.error(
+        err.response ? err.response.data.message : "Error al crear el artículo."
+      );
     }
-  }
+  };
 
   const handleCancel = () => {
-    navigate('/admin/listar-articulos')
-  }
+    navigate("/admin/listar-articulos");
+  };
 
   return (
-    <div className="create-vendedor">
+    <div className="edit-container">
       {error && <div className="error">{error.message}</div>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Crear Artículo
         </Typography>
@@ -83,18 +92,28 @@ const CreateArticulo = () => {
             ))}
           </Select>
         </FormControl>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Button type="submit" variant="contained" color="primary" style={{ marginRight: '8px' }}>
-            Crear Artículo
-          </Button>
-          <Button type="default" onClick={() => navigate(-1)} style={{ width: '38%' }}>
+
+        <div className="form-buttons">
+          <Button
+            type="default"
+            onClick={() => navigate(-1)}
+            className="cancel-button"
+          >
             Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="save-button"
+          >
+            Crear Artículo
           </Button>
         </div>
       </form>
       <ToastContainer /> {/* Agregar el contenedor de toast */}
     </div>
-  )
-}
+  );
+};
 
-export default CreateArticulo
+export default CreateArticulo;

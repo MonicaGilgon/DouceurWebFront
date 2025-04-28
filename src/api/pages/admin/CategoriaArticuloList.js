@@ -26,9 +26,7 @@ const CategoriaArticuloList = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get(
-          "/listar-categoria-articulo/"
-        );
+        const response = await api.get("/listar-categoria-articulo/");
         setCategorias(response.data);
 
         const disabledStates = {};
@@ -100,12 +98,9 @@ const CategoriaArticuloList = () => {
       toast.success(
         `Categoría ${!estado ? "activada" : "desactivada"} correctamente`
       );
-      await api.patch(
-        `/cambiar-estado-categoria-articulo/${categoriaId}/`,
-        {
-          estado: !estado,
-        }
-      );
+      await api.patch(`/cambiar-estado-categoria-articulo/${categoriaId}/`, {
+        estado: !estado,
+      });
     } catch (error) {
       console.error("Error al cambiar el estado activo de la categoría", error);
     }
