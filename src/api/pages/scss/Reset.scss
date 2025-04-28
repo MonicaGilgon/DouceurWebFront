@@ -1,27 +1,30 @@
 #auth-section.auth-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #ffffff !important; /* Forzar fondo blanco */
-  padding: 20px;
+  align-items: flex-start;
+  background-color: #ffffff !important;
+  padding: 0 20px; 
+  height: auto; 
+  width: 100%;
+  box-sizing: border-box;
 
   .recover-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    max-width: 800px; /* Ancho máximo para pantallas grandes */
+    max-width: 800px;
     width: 100%;
-    gap: 150px; /* Separación entre formulario y logo en pantallas grandes */
+    gap: 150px; 
+    margin: 50px 0; 
 
     @media (max-width: 1024px) {
-      gap: 100px; /* Reducir separación en tablets */
+      gap: 100px; 
       max-width: 600px;
     }
 
     @media (max-width: 768px) {
-      flex-direction: column; /* Apilar elementos verticalmente */
-      gap: 30px; /* Menor separación en móviles */
+      flex-direction: column; 
+      gap: 30px; 
       align-items: center;
       text-align: center;
     }
@@ -84,7 +87,7 @@
         button {
           width: 100%;
           padding: 12px;
-          background-color: #ff8ac2; /* Color rosa del botón, ajustado a la imagen */
+          background-color: #ff8ac2; 
           color: white;
           border: none;
           border-radius: 5px;
@@ -111,19 +114,19 @@
   }
 
   .logo-container {
-    flex: 0 0 350px; /* Ancho fijo para el logo en pantallas grandes */
+    flex: 0 0 350px; 
 
     .logo {
-      width: 350px; /* Tamaño del logo en pantallas grandes */
+      width: 350px; 
       height: auto;
       border-radius: 10px;
 
       @media (max-width: 1024px) {
-        width: 250px; /* Reducir tamaño en tablets */
+        width: 250px; 
       }
 
       @media (max-width: 768px) {
-        width: 200px; /* Reducir tamaño en móviles */
+        width: 200px; 
       }
     }
   }

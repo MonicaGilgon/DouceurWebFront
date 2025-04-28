@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../pages/scss/AdminHeader.scss"
@@ -71,70 +69,51 @@ const AdminHeader = () => {
         >
           <FaUser style={{ marginRight: "0.5rem" }} />
           <div>{userName}</div>
+
         </button>
 
         {isDropdownOpen && (
           <div
             style={{
-              position: "absolute",
-              top: "100%",
+
+              position: 'absolute',
+              top: '100%',
               right: 0,
-              backgroundColor: "white",
-              border: "1px solid #e0e0e0",
-              borderRadius: "5px",
-              boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              backgroundColor: 'white',
+              border: '1px solid #e0e0e0',
+              borderRadius: '5px',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
               zIndex: 1000,
-              minWidth: "200px",
-              marginTop: "5px",
+              minWidth: '150px',
             }}
           >
-            <div
+            <Link
+              to="/profile"
+              onClick={() => setIsDropdownOpen(false)} 
               style={{
-                padding: "10px 20px",
-                borderBottom: "1px solid #e0e0e0",
-                fontWeight: "bold",
-                color: "#333",
+                display: 'block',
+                padding: '10px 20px',
+                color: '#333',
+                textDecoration: 'none',
               }}
             >
-              {userRole && (
-                <div style={{ fontSize: "0.8rem", color: "#666", marginBottom: "5px" }}>
-                  {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                </div>
-              )}
-              {userName}
-            </div>
-            <div
-              onClick={handleProfileClick}
-              style={{
-                padding: "10px 20px",
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                color: "#333",
-                transition: "background-color 0.3s",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-            >
-              <FaUserCog style={{ marginRight: "10px" }} />
               Mi Perfil
-            </div>
-            <div
-              onClick={handleLogout}
+            </Link>
+            <button
+              onClick={handleLogout} 
               style={{
-                padding: "10px 20px",
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                color: "#ff6b6b",
-                transition: "background-color 0.3s",
+                display: 'block',
+                padding: '10px 20px',
+                color: '#333',
+                border: 'none',
+                background: 'none',
+                width: '100%',
+                textAlign: 'left',
               }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
             >
-              <FaSignOutAlt style={{ marginRight: "10px" }} />
               Cerrar Sesión
-            </div>
+            </button>
+
           </div>
         )}
       </div>
@@ -142,4 +121,5 @@ const AdminHeader = () => {
   )
 }
 
-export default AdminHeader
+export default AdminHeader;
+

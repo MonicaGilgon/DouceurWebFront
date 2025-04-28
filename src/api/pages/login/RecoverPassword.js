@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Añadido para consistencia con el original
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../../../api/axios';
 import '../scss/RecoverPassword.scss';
-import douxceurLogo from '../../images/logo.png'; // Asegúrate de que la ruta sea correcta
+import douxceurLogo from '../../images/logo.png'; 
 
 const RecoverPassword = () => {
   const [correo, setCorreo] = useState(''); // Cambiado a 'correo' para coincidir con el original
@@ -45,7 +45,7 @@ const RecoverPassword = () => {
                     name="correo"
                     placeholder="Correo electrónico"
                     className="email"
-                    required // Mantener 'required' para validación básica
+                    required 
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
                   />

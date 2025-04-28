@@ -1,65 +1,34 @@
-"use client"
 
-import { useState, useEffect } from "react"
-import { useNavigate, useLocation, Link } from "react-router-dom"
-import logo2 from "../images/logo2.png"
-import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa"
-
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import logo2 from "../images/logo2.png";
+import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa";
+import "../pages/scss/PublicHeader.scss"; 
 const PublicHeader = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [masAbierto, setMasAbierto] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userName, setUserName] = useState("")
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const navigate = useNavigate();
+  const [catalogoAbierto, setCatalogoAbierto] = useState(false);
+  const [masAbierto, setMasAbierto] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para el buscador
 
-  // Función para verificar el estado de autenticación
-  const checkAuth = () => {
-    const token = localStorage.getItem("access_token")
-    if (token) {
-      setIsAuthenticated(true)
+  const catalogoRef = useRef(null);
+  const masRef = useRef(null);
 
-      // Intentar obtener el nombre del usuario si está almacenado
-      const userData = localStorage.getItem("user")
-      if (userData) {
-        try {
-          const user = JSON.parse(userData)
-          setUserName(user.nombre_completo || user.correo || "Usuario")
-        } catch (e) {
-          console.error("Error al parsear datos de usuario", e)
-        }
+  // Cerrar menús al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (catalogoRef.current && !catalogoRef.current.contains(event.target)) {
+        setCatalogoAbierto(false);
       }
-    } else {
-      setIsAuthenticated(false)
-    }
-  }
+      if (masRef.current && !masRef.current.contains(event.target)) {
+        setMasAbierto(false);
+      }
+    };
 
-  // Verificar autenticación cuando el componente se monta
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  // Verificar autenticación cuando cambia la ruta
-  useEffect(() => {
-    checkAuth()
-  }, [location.pathname])
-
-  // Escuchar el evento personalizado de cambio de autenticación
-  useEffect(() => {
-    const handleAuthChange = () => {
-      checkAuth()
-    }
-
-    window.addEventListener("auth-change", handleAuthChange)
-
-    // Verificar periódicamente el estado de autenticación (como respaldo)
-    const interval = setInterval(checkAuth, 2000)
-
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      window.removeEventListener("auth-change", handleAuthChange)
-      clearInterval(interval)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLoginClick = () => {
     navigate("/sign-in")
@@ -80,171 +49,92 @@ const PublicHeader = () => {
   }
 
   const handleCartClick = () => {
-    navigate("/cart")
-  }
+
+    navigate("/cart");
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Redirigir a una página de búsqueda con el query
+      navigate(`/search?q=${searchQuery}`);
+    }
+  };
+
 
   return (
-    <header
-      style={{
-        padding: "1rem 2rem",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-      }}
-    >
-      {/* Logo + Catálogo */}
-      <div style={{ alignItems: "center", gap: "1rem", marginLeft: 35 }}>
+    <header className="public-header">
+      {/* Logo + Navegación izquierda */}
+      <div className="header-left">
         <a href="/">
-          <img src={logo2 || "/placeholder.svg"} alt="Douceur Logo" style={{ width: "75px", height: "85px" }} />
-        </a>
-        <a
-          //href="/catalogo"
-          style={{
-            marginLeft: 30,
-            fontWeight: "bold",
-            padding: "0.5rem",
-            borderRadius: "5px",
-            textDecoration: "none",
-            color: "#000",
-            cursor: "pointer",
-          }}
-        >
-          Catálogo
-        </a>
 
-        <a
-          href="/nosotros"
-          style={{
-            marginLeft: 30,
-            fontWeight: "bold",
-            padding: "0.5rem",
-            borderRadius: "5px",
-            textDecoration: "none",
-            color: "#000",
-            cursor: "pointer",
-          }}
-        >
-          Nosotros
+          <img src={logo2} alt="Douceur Logo" className="logo" />
         </a>
-        <a
-          href="/dudas"
-          style={{
-            marginLeft: 30,
-            fontWeight: "bold",
-            padding: "0.5rem",
-            borderRadius: "5px",
-            textDecoration: "none",
-            color: "#000",
-            cursor: "pointer",
-          }}
-        >
-          Dudas
-        </a>
-
-        <div style={{ position: "relative", display: "inline-block" }}>
-          <button
-            onClick={() => setMasAbierto(!masAbierto)}
-            style={{
-              fontWeight: "bold",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "5px",
-              background: "#ffffff",
-              color: "#000",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              marginLeft: 35,
-            }}
-          >
-            Más
-          </button>
-          {masAbierto && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                background: "#fff",
-                border: "1px solid #ddd",
-                borderRadius: "5px",
-                marginTop: "0.5rem",
-                zIndex: 1000,
-                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-              }}
+        <nav className="nav-links">
+          <div className="dropdown" ref={catalogoRef}>
+            <button
+              onClick={() => setCatalogoAbierto(!catalogoAbierto)}
+              className="nav-button"
             >
-              <a
-                href="/politica-datos"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 1.5rem",
-                  textDecoration: "none",
-                  color: "#000",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Política de datos
-              </a>
-              <a
-                href="/terminos-y-condiciones"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 1rem",
-                  textDecoration: "none",
-                  color: "#000",
-                  fontWeight: "bold",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Términos y condiciones
-              </a>
-            </div>
-          )}
-        </div>
+              Catálogo
+            </button>
+            {catalogoAbierto && (
+              <div className="dropdown-menu">
+                <a href="/catalogo/categoria1" className="dropdown-item">
+                  categoria1
+                </a>
+                <a href="/catalogo/categoria2" className="dropdown-item">
+                  categoria2
+                </a>
+              </div>
+            )}
+          </div>
+          <a href="/nosotros" className="nav-link">
+            Nosotros
+          </a>
+          <a href="/dudas" className="nav-link">
+            Dudas
+          </a>
+          <div className="dropdown" ref={masRef}>
+            <button
+              onClick={() => setMasAbierto(!masAbierto)}
+              className="nav-button"
+
+            >
+              Más
+            </button>
+            {masAbierto && (
+              <div className="dropdown-menu">
+                <a href="/politica-datos" className="dropdown-item">
+                  Política de datos
+                </a>
+                <a href="/terminos-y-condiciones" className="dropdown-item">
+                  Términos y condiciones
+                </a>
+              </div>
+            )}
+          </div>
+        </nav>
       </div>
 
       {/* Navegación derecha */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1.5rem",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="header-right">
         {/* Buscador */}
-        <div style={{ position: "relative" }}>
-          <input
-            type="text"
-            placeholder="Buscar"
-            style={{
-              padding: "0.5rem 2.5rem 0.5rem 1rem",
-              borderRadius: "8px",
-              border: "none",
-              backgroundColor: "#f5f5f5",
-              fontSize: "0.9rem",
-              width: "350px",
-              outline: "none",
-              marginRight: 140,
-            }}
-          />
-          <FaSearch
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#999",
-              pointerEvents: "none",
-              marginRight: 150,
-            }}
-          />
-        </div>
+        <form onSubmit={handleSearch} className="search-form">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Buscar"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            <FaSearch className="search-icon" />
+          </div>
+        </form>
 
         {/* Botón de carrito */}
+
         <button
           onClick={handleCartClick}
           style={{
@@ -257,23 +147,11 @@ const PublicHeader = () => {
             marginRight: 15,
           }}
         >
+
           <FaShoppingBag size={20} />
-          <span
-            style={{
-              position: "absolute",
-              top: "-5px",
-              right: "-5px",
-              backgroundColor: "white",
-              color: "#ff83a2",
-              borderRadius: "50%",
-              padding: "2px 6px",
-              fontSize: "0.75rem",
-              fontWeight: "bold",
-            }}
-          >
-            3
-          </span>
+          <span className="cart-count">3</span>
         </button>
+
 
         {/* Mostrar botón de inicio de sesión o menú de usuario según el estado de autenticación */}
         {isAuthenticated ? (
@@ -365,9 +243,12 @@ const PublicHeader = () => {
             Iniciar sesión
           </button>
         )}
+
       </div>
     </header>
   )
 }
 
-export default PublicHeader
+
+export default PublicHeader;
+
