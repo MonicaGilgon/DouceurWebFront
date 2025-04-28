@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import "../pages/scss/AdminHeader.scss"
 import logo from "../images/logo2.png"
 import { FaUser, FaSignOutAlt, FaUserCog } from "react-icons/fa"
@@ -89,7 +89,7 @@ const AdminHeader = () => {
           >
             <Link
               to="/profile"
-              onClick={() => setIsDropdownOpen(false)} 
+              onClick={() => setIsDropdownOpen(false)}
               style={{
                 display: 'block',
                 padding: '10px 20px',
@@ -100,7 +100,7 @@ const AdminHeader = () => {
               Mi Perfil
             </Link>
             <button
-              onClick={handleLogout} 
+              onClick={handleLogout}
               style={{
                 display: 'block',
                 padding: '10px 20px',

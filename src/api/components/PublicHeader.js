@@ -1,14 +1,17 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import logo2 from "../images/logo2.png";
+import { useNavigate, Link } from "react-router-dom";
 import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa";
-import "../pages/scss/PublicHeader.scss"; 
+import logo2 from "../images/logo2.png";
+import "../pages/scss/PublicHeader.scss";
 const PublicHeader = () => {
   const navigate = useNavigate();
   const [catalogoAbierto, setCatalogoAbierto] = useState(false);
   const [masAbierto, setMasAbierto] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para el buscador
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const catalogoRef = useRef(null);
   const masRef = useRef(null);
