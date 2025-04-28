@@ -13,6 +13,7 @@ import {
   Switch,
   ConfigProvider,
 } from "antd";
+import { render } from "@testing-library/react";
 
 const CategoriaArticuloList = () => {
   const { Content, Header } = Layout;
@@ -22,6 +23,8 @@ const CategoriaArticuloList = () => {
   const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
   const [articulosAsociados, setArticulosAsociados] = useState({});
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -108,9 +111,9 @@ const CategoriaArticuloList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Nombre",
@@ -204,9 +207,15 @@ const CategoriaArticuloList = () => {
               loading={loading}
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
+                onChange: (page, pageSize) => {
+                  setCurrentPage(page);
+                  setPageSize(pageSize);
+                },
+                showTotal: (total) => `Total: ${total} categorias`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

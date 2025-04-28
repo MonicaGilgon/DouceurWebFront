@@ -25,6 +25,9 @@ const VendedorSidebarNav = () => {
           item.items = renderNavItems(item.items);
           return item.items.length > 0; // Solo mostramos el grupo si tiene subelementos permitidos
         }
+        if (!item.to) {
+          return true; // Si no tiene 'to', lo mostramos (puede ser un título o grupo)
+        }
         // Si es un elemento simple, verificamos si está permitido
         return isRouteAllowed(item.to);
       })

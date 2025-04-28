@@ -23,6 +23,8 @@ const ClienteList = () => {
   const { Title } = Typography;
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -42,7 +44,7 @@ const ClienteList = () => {
     {
       title: "#",
       key: "id",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Nombre",
@@ -111,10 +113,15 @@ const ClienteList = () => {
               loading={loading}
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
-                align: "center",
+                onChange: (page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                },
+                showTotal: (total) => `Total: ${total} clientes`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

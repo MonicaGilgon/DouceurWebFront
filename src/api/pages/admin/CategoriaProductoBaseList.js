@@ -22,6 +22,8 @@ const CategoriaProductoBaseList = () => {
   const { Title } = Typography;
   const [loading, setLoading] = useState(true);
   const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -97,9 +99,9 @@ const CategoriaProductoBaseList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Nombre",
@@ -187,10 +189,16 @@ const CategoriaProductoBaseList = () => {
               loading={loading}
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
                 align: "center",
+                onChange: (page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                },
+                showTotal: (total) => `Total: ${total} categorías`,
               }}
               scroll={{ x: "max-content" }}
               locale={{ emptyText: "No hay categorías disponibles" }}

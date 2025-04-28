@@ -15,19 +15,20 @@ import {
   Space,
   ConfigProvider,
 } from "antd";
+import { render } from "@testing-library/react";
 
 const SellerList = () => {
   const { Content, Header } = Layout;
   const { Title } = Typography;
   const [vendedores, setVendedores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchVendedores = async () => {
       try {
-        const response = await api.get(
-          "/listar-vendedores/"
-        );
+        const response = await api.get("/listar-vendedores/");
         setVendedores(response.data);
       } catch (error) {
         console.error("Error al cargar los vendedores", error);
@@ -40,9 +41,9 @@ const SellerList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Cedula",
@@ -78,12 +79,9 @@ const SellerList = () => {
           checked={record.estado}
           onChange={async (checked) => {
             try {
-              await api.patch(
-                `/cambiar-estado-vendedor/${record.id}/`,
-                {
-                  estado: checked,
-                }
-              );
+              await api.patch(`/cambiar-estado-vendedor/${record.id}/`, {
+                estado: checked,
+              });
               setVendedores((prevVendedores) =>
                 prevVendedores.map((vendedor) =>
                   vendedor.id === record.id
@@ -147,10 +145,16 @@ const SellerList = () => {
               loading={loading}
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
                 align: "center",
+                onChange: (page, pageSize) => {
+                  setCurrentPage(page);
+                  setPageSize(pageSize);
+                },
+                showTotal: (total) => `Total: ${total} vendedores`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal
