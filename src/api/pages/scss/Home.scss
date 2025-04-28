@@ -1,6 +1,103 @@
 .home-container {
     font-family: 'Arial', sans-serif;
     color: #333;
+
+    /* Añadir estos estilos a tu archivo Home.scss existente */
+    
+      .user-bar {
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px 20px;
+        background-color: #f8f8f8;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    
+      .login-btn {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+    
+      .login-btn:hover {
+        background-color: #ff5252;
+      }
+    
+      /* Estilos para el icono de perfil y menú desplegable */
+      .profile-icon-container {
+        position: relative;
+      }
+    
+      .profile-icon {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    
+      .profile-icon i {
+        font-size: 2rem;
+        color: #ff6b6b;
+        transition: color 0.3s;
+      }
+    
+      .profile-icon i:hover {
+        color: #ff5252;
+      }
+    
+      .profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 200px;
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        overflow: hidden;
+        margin-top: 5px;
+      }
+    
+      .profile-dropdown-header {
+        padding: 12px 16px;
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #eaeaea;
+        font-weight: 500;
+      }
+    
+      .profile-dropdown-items {
+        padding: 8px 0;
+      }
+    
+      .profile-dropdown-item {
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+    
+      .profile-dropdown-item:hover {
+        background-color: #f8f8f8;
+      }
+    
+      .profile-dropdown-item i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        color: #666;
+      }
+    
+      .profile-dropdown-item:first-child i {
+        color: #4dabf7;
+      }
+    
+      .profile-dropdown-item:last-child i {
+        color: #ff6b6b;
+      }
   
     .banner img {
       width: 100% !important;
@@ -44,6 +141,7 @@
     .categorias-section {
       padding: 2rem;
       background-color: #fff;
+
   
       h3 {
         color: #f9a8d4;
@@ -58,9 +156,13 @@
         justify-content: center; 
         align-items: center;        
         overflow-x: auto;
-        gap: 1rem;
+        gap: 3.9rem;
         min-width: 100px;
         color: #f9a8d4;
+
+        a {
+          text-decoration: none;
+        }
   
         .categoria {
           display: flex;
@@ -68,14 +170,15 @@
           align-items: center;
           min-width: 100px;
           text-align: center;
-  
+          font-weight: bold;
+
           p {
             margin-top: 0.5rem;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
             color: #f9a8d4;
           }
   
-          &.ver-todas {
+          &.catalogo {
             .mas {
               width: 80px;
               height: 80px;

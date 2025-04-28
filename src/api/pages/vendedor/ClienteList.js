@@ -76,7 +76,7 @@ const ClienteList = () => {
               type="primary"
               style={{ backgroundColor: "#FBD5E5", color: "#000" }}
             >
-              Editar
+              Ver
             </Button>
           </Link>
         </Space>
@@ -117,12 +117,11 @@ const ClienteList = () => {
                 pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
-                align: "center",
-                onChange: (page, pageSize) => {
+                onChange: (page, size) => {
                   setCurrentPage(page);
-                  setPageSize(pageSize);
+                  setPageSize(size);
                 },
-                showTotal: (total) => `Total: ${total} Clientes`,
+                showTotal: (total) => `Total: ${total} clientes`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

@@ -23,11 +23,13 @@ const ArticuloList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { Content, Header } = Layout;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await api.get("listar-articulos/");
+        const response = await api.get("/listar-articulos/");
         setArticulos(response.data);
       } catch (err) {
         console.error("Error al cargar los artículos:", err);
@@ -76,7 +78,11 @@ const ArticuloList = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
+    {
+      title: "#",
+      key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+    },
     { title: "Nombre", dataIndex: "nombre", key: "nombre" },
     {
       title: "Estado",
@@ -159,9 +165,15 @@ const ArticuloList = () => {
               rowKey="id"
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
+                onChange: (page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                },
+                showTotal: (total) => `Total: ${total} artículos`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }}

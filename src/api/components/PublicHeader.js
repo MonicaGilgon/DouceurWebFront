@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import logo2 from "../images/logo2.png";
@@ -30,10 +31,25 @@ const PublicHeader = () => {
   }, []);
 
   const handleLoginClick = () => {
-    navigate("/sign-in");
-  };
+    navigate("/sign-in")
+  }
+
+  const handleLogout = () => {
+    // Eliminar tokens y datos de usuario
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
+    localStorage.removeItem("user")
+
+    // Disparar evento de cambio de autenticación
+    window.dispatchEvent(new Event("auth-change"))
+
+    setIsAuthenticated(false)
+    navigate("/") // Redirigir a la página de inicio
+    setIsDropdownOpen(false) // Cerrar el dropdown
+  }
 
   const handleCartClick = () => {
+
     navigate("/cart");
   };
 
@@ -45,11 +61,13 @@ const PublicHeader = () => {
     }
   };
 
+
   return (
     <header className="public-header">
       {/* Logo + Navegación izquierda */}
       <div className="header-left">
         <a href="/">
+
           <img src={logo2} alt="Douceur Logo" className="logo" />
         </a>
         <nav className="nav-links">
@@ -81,6 +99,7 @@ const PublicHeader = () => {
             <button
               onClick={() => setMasAbierto(!masAbierto)}
               className="nav-button"
+
             >
               Más
             </button>
@@ -115,19 +134,121 @@ const PublicHeader = () => {
         </form>
 
         {/* Botón de carrito */}
-        <button onClick={handleCartClick} className="cart-button">
+
+        <button
+          onClick={handleCartClick}
+          style={{
+            backgroundColor: "#ffb9cb",
+            border: "none",
+            padding: "0.5rem 0.75rem",
+            borderRadius: "5px",
+            color: "white",
+            position: "relative",
+            marginRight: 15,
+          }}
+        >
+
           <FaShoppingBag size={20} />
           <span className="cart-count">3</span>
         </button>
 
-        {/* Botón de iniciar sesión */}
-        <button onClick={handleLoginClick} className="login-button">
-          <FaUser />
-          <span>Iniciar sesión</span>
-        </button>
+
+        {/* Mostrar botón de inicio de sesión o menú de usuario según el estado de autenticación */}
+        {isAuthenticated ? (
+          <div style={{ position: "relative", marginRight: 30 }}>
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              style={{
+                backgroundColor: "#ffb9cb",
+                border: "none",
+                borderRadius: "5px",
+                padding: "0.5rem 0.75rem",
+                display: "flex",
+                alignItems: "center",
+                color: "white",
+              }}
+            >
+              <FaUser style={{ marginRight: "0.5rem" }} />
+              Mi Cuenta
+            </button>
+
+            {isDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                  backgroundColor: "white",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "5px",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  zIndex: 1000,
+                  minWidth: "150px",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "10px 20px",
+                    borderBottom: "1px solid #e0e0e0",
+                    fontWeight: "bold",
+                    color: "#333",
+                  }}
+                >
+                  Hola, {userName}
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => setIsDropdownOpen(false)}
+                  style={{
+                    display: "block",
+                    padding: "10px 20px",
+                    color: "#333",
+                    textDecoration: "none",
+                  }}
+                >
+                  Mi Perfil
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    display: "block",
+                    padding: "10px 20px",
+                    color: "#333",
+                    border: "none",
+                    background: "none",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={handleLoginClick}
+            style={{
+              backgroundColor: "#ffb9cb",
+              border: "none",
+              borderRadius: "5px",
+              padding: "0.5rem 0.75rem",
+              display: "flex",
+              alignItems: "center",
+              color: "white",
+              marginRight: 30,
+            }}
+          >
+            <FaUser style={{ marginRight: "0.5rem" }} />
+            Iniciar sesión
+          </button>
+        )}
+
       </div>
     </header>
-  );
-};
+  )
+}
+
 
 export default PublicHeader;
+

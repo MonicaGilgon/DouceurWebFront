@@ -1,64 +1,78 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import logo from '../images/logo.png';
-import banner from '../images/banner-desayuno.png';
-import "./scss/Home.scss";
+import { useState, useEffect } from "react"
+import api from "../../api/axios"
+import { useNavigate, Link } from "react-router-dom"
+import logo from "../images/logo.png"
+import banner from "../images/banner-desayuno.png"
+import "./scss/Home.scss"
 
 const Home = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [categorias, setCategorias] = useState([])
 
-  const handleLoginClick = () => {
-    navigate("/sign-in");
-  };
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await api.get("listar-categoria-producto-base/")
+        setCategorias(response.data)
+      } catch (error) {
+        console.error("Error al cargar las categorías", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCategorias()
+  }, [])
+
+  const categoriasVisibles = categorias.slice(0, 5)
 
   return (
     <div className="home-container">
       {/* Banner principal */}
       <div className="banner">
-        <img src={banner} alt="Banner desayuno" />
+        <img src={banner || "/placeholder.svg"} alt="Banner desayuno" />
       </div>
 
       {/* Sección de bienvenida y logo */}
       <div className="intro-section">
         <div className="text">
-          <h2>Bienvenido a <br/> Douceur</h2>
+          <h2>
+            Bienvenido a <br /> Douceur
+          </h2>
           <p>
-            Somos una marca dedicada a crear detalles para que <br/> hagas de tus momentos especiales experiencias <br/> inolvidables.
+            Somos una marca dedicada a crear detalles para que <br /> hagas de tus momentos especiales experiencias{" "}
+            <br /> inolvidables.
           </p>
         </div>
         <div className="logo">
-          <img src={logo} alt="Logo Douceur" />
+          <img src={logo || "/placeholder.svg"} alt="Logo Douceur" />
         </div>
       </div>
 
       {/* Carrusel de categorías */}
       <div className="categorias-section">
         <h3>Categorías</h3>
-        <div className="categorias">
-          <div className="categoria">
-            <p>Amor y Amistad</p>
+        {loading ? (
+          <p>Cargando categorías...</p>
+        ) : (
+          <div className="categorias">
+            {categoriasVisibles.map((categoria) => (
+              <Link to={`/categoria/${categoria.id}`} className="categoria" key={categoria.id}>
+                <p>{categoria.nombre}</p>
+              </Link>
+            ))}
+
+            <Link /* to="/catalogo" */ className="categoria catalogo">
+              <div className="mas">+</div>
+              <p>Ver todas</p>
+            </Link>
           </div>
-          <div className="categoria">
-            <p>Flores</p>
-          </div>
-          <div className="categoria">
-            <p>Desayunos y Meriendas</p>
-          </div>
-          <div className="categoria">
-            <p>Caballero</p>
-          </div>
-          <div className="categoria">
-            <p>Chocolatería</p>
-          </div>
-          <div className="categoria ver-todas">
-            <div className="mas">+</div>
-            <p>Ver todas</p>
-          </div>
-        </div>
+        )}
       </div>
 
-        {/* Carrusel de PRODUCTOS */}
-        <div className="productos-section">
+      {/* Carrusel de PRODUCTOS */}
+      <div className="productos-section">
         <h3>Productos</h3>
         <div className="productos">
           <div className="producto">
@@ -77,7 +91,7 @@ const Home = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Typography } from "@mui/material";
@@ -14,9 +15,7 @@ const CreateCategoriaArticulo = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get(
-          "http://127.0.0.1:8000/listar-categoria-articulo/"
-        );
+        const response = await api.get("/listar-categoria-articulo/");
         setCategoriasExistentes(response.data);
       } catch (err) {
         toast.error(
@@ -44,7 +43,7 @@ const CreateCategoriaArticulo = () => {
 
     try {
       toast.success("Categoría creada correctamente.");
-      await api.post("http://127.0.0.1:8000/listar-categoria-articulo/", {
+      await api.post("/listar-categoria-articulo/", {
         nombre: nombre.trim(),
         estado,
       });
@@ -60,7 +59,7 @@ const CreateCategoriaArticulo = () => {
   };
 
   return (
-    <div>
+    <div className="edit-container">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -70,10 +69,11 @@ const CreateCategoriaArticulo = () => {
         pauseOnHover
         draggable
       />
-      <Typography variant="h4" gutterBottom>
-        Crear Nueva Categoría de Artículo
-      </Typography>
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit} className="edit-form">
+        <Typography variant="h4" gutterBottom>
+          Crear Nueva Categoría de Artículo
+        </Typography>
         <TextField
           label="Nombre"
           value={nombre}
@@ -90,17 +90,22 @@ const CreateCategoriaArticulo = () => {
             onChange={() => setEstado(!estado)}
           />
         </label>
-        <div style={{ marginTop: "16px" }}>
+        <div className="form-buttons">
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleCancel}
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginRight: "8px" }}
+            className="save-button"
           >
             Crear Categoría
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleCancel}>
-            Cancelar
           </Button>
         </div>
       </form>

@@ -22,8 +22,8 @@ const ClienteEdit = () => {
     const fetchClientes = async () => {
       try {
         const [clienteResponse, clientesResponse] = await Promise.all([
-          api.get(`http://localhost:8000/api/editar-cliente/${clienteId}/`),
-          api.get("http://localhost:8000/api/listar-clientes/"),
+          api.get(`/editar-cliente/${clienteId}/`),
+          api.get("/listar-clientes/"),
         ]);
 
         setCliente(clienteResponse.data);
@@ -67,7 +67,7 @@ const ClienteEdit = () => {
     }
 
     try {
-      await api.post(`http://localhost:8000/api/editar-cliente/${clienteId}/`, {
+      await api.post(`/editar-cliente/${clienteId}/`, {
         id: clienteId,
         nombre: cliente.nombre,
         correo: cliente.correo,

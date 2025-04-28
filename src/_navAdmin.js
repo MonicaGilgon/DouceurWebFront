@@ -1,11 +1,11 @@
-import React from 'react'
-import CIcon from '@coreui/icons-react'
-import { CNavItem, CNavTitle } from '@coreui/react'
+import React from "react";
+import CIcon from "@coreui/icons-react";
+import { CNavItem, CNavTitle } from "@coreui/react";
 import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
-import { NavLink } from 'react-router-dom'
-import { cilCart, cilList, cilUserPlus } from '@coreui/icons';
+import { NavLink } from "react-router-dom";
+import { cilCart, cilList, cilUserPlus } from "@coreui/icons";
 
-const _nav = [
+const _navAdmin = [
   {
     component: CNavTitle,
     name: "PRODUCTOS",
@@ -13,17 +13,17 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Categorías Producto Base',
-    to: '/admin/listar-categoria-producto-base',
+    name: "Categorías Producto Base",
+    to: "/admin/listar-categoria-producto-base",
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
     className: "categoria-producto-base-nav",
   },
   {
     component: CNavItem,
-    name: 'Productos Base',
-    to: '/admin/listar-producto-base',
+    name: "Productos Base",
+    to: "/admin/listar-producto-base",
     icon: <AiOutlineAppstoreAdd className="nav-icon" />,
-    className: 'categoria-articulo-nav'
+    className: "categoria-articulo-nav",
   },
   {
     component: CNavItem,
@@ -34,10 +34,10 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Artículos',
-    to: '/admin/listar-articulos',
+    name: "Artículos",
+    to: "/admin/listar-articulos",
     icon: <AiOutlineAppstoreAdd className="nav-icon" />,
-    className: 'categoria-articulo-nav'
+    className: "categoria-articulo-nav",
   },
   {
     component: CNavTitle,
@@ -68,5 +68,5 @@ const _nav = [
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
     className: "listar-clientes-nav",
   },
-]
-export default _nav;
+];
+export default _navAdmin;

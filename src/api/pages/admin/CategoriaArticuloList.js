@@ -13,6 +13,7 @@ import {
   Switch,
   ConfigProvider,
 } from "antd";
+import { render } from "@testing-library/react";
 
 const CategoriaArticuloList = () => {
   const { Content, Header } = Layout;
@@ -22,13 +23,13 @@ const CategoriaArticuloList = () => {
   const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
   const [articulosAsociados, setArticulosAsociados] = useState({});
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get(
-          "http://localhost:8000/listar-categoria-articulo/"
-        );
+        const response = await api.get("/listar-categoria-articulo/");
         setCategorias(response.data);
 
         const disabledStates = {};
@@ -55,7 +56,7 @@ const CategoriaArticuloList = () => {
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
       const response = await api.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+        `/articulos-por-categoria/${categoriaId}/`
       );
       const articulos = response.data;
       return articulos.every((articulo) => !articulo.estado);
@@ -68,7 +69,7 @@ const CategoriaArticuloList = () => {
   const obtenerArticulosPorCategoria = async (categoriaId) => {
     try {
       const response = await api.get(
-        `http://localhost:8000/articulos_por_categoria/${categoriaId}/`
+        `/articulos-por-categoria/${categoriaId}/`
       );
       return response.data.map((articulo) => articulo.nombre);
     } catch (error) {
@@ -100,12 +101,9 @@ const CategoriaArticuloList = () => {
       toast.success(
         `Categoría ${!estado ? "activada" : "desactivada"} correctamente`
       );
-      await api.patch(
-        `http://localhost:8000/cambiar-estado-categoria-articulo/${categoriaId}/`,
-        {
-          estado: !estado,
-        }
-      );
+      await api.patch(`/cambiar-estado-categoria-articulo/${categoriaId}/`, {
+        estado: !estado,
+      });
     } catch (error) {
       console.error("Error al cambiar el estado activo de la categoría", error);
     }
@@ -113,9 +111,9 @@ const CategoriaArticuloList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Nombre",
@@ -209,9 +207,15 @@ const CategoriaArticuloList = () => {
               loading={loading}
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
+                onChange: (page, pageSize) => {
+                  setCurrentPage(page);
+                  setPageSize(pageSize);
+                },
+                showTotal: (total) => `Total: ${total} categorias`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

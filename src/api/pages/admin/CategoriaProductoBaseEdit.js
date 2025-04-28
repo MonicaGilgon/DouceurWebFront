@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
@@ -84,8 +85,8 @@ const CategoriaProductoBaseEdit = () => {
   }
 
   return (
-    <div className="create-vendedor">
-      <form onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Editar Categoría de Producto Base
         </Typography>
@@ -99,27 +100,21 @@ const CategoriaProductoBaseEdit = () => {
           required
         />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="form-buttons">
+          <Button
+            type="default"
+            onClick={() => navigate(-1)}
+            className="cancel-button"
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            className="save-button"
           >
             Guardar Cambios
-          </Button>
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            style={{ width: "38%" }}
-          >
-            Cancelar
           </Button>
         </div>
         <ToastContainer position="top-right" autoClose={3000} />

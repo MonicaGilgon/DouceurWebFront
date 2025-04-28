@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
+import { render } from "@testing-library/react";
 
 const { Content, Header } = Layout;
 const { Title } = Typography;
@@ -23,6 +24,8 @@ const ProductosBaseList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -74,9 +77,9 @@ const ProductosBaseList = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "#",
       key: "id",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Nombre",
@@ -204,9 +207,16 @@ const ProductosBaseList = () => {
               rowKey="id"
               bordered
               pagination={{
-                pageSize: 10,
+                current: currentPage,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "30"],
+                onChange: (page, pageSize) => {
+                  setCurrentPage(page);
+                  setPageSize(pageSize);
+                },
+                align: "center",
+                showTotal: (total) => `Total: ${total} productos`,
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }}
