@@ -8,7 +8,7 @@ const PublicFooter = () => {
       className="footer"
       style={{
         backgroundColor: 'rgb(253, 199, 231)',
-        padding: '3rem 1rem',
+        padding: '2rem 1rem',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -19,8 +19,8 @@ const PublicFooter = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '3rem', // espacio entre logo e info
-          flexWrap: 'wrap', // permite adaptabilidad en pantallas pequeñas
+          gap: '3rem',
+          flexWrap: 'wrap',
           textAlign: 'left',
         }}
       >
@@ -48,7 +48,7 @@ const PublicFooter = () => {
             style={{ fontSize: 18, fontWeight: 'Bold', display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}>
             <FaInstagram style={{ marginRight: '0.5rem' }} />
             <span>@douceur.nl</span>
-          </a>          
+          </a>
         </div>
       </div>
     </footer>

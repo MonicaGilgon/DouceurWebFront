@@ -3,8 +3,8 @@
   justify-content: center;
   align-items: flex-start;
   background-color: #ffffff !important;
-  padding: 0 20px; 
-  height: auto; 
+  padding: 0 20px;
+  height: auto;
   width: 100%;
   box-sizing: border-box;
 
@@ -14,17 +14,17 @@
     align-items: flex-start;
     max-width: 800px;
     width: 100%;
-    gap: 150px; 
-    margin: 50px 0; 
+    gap: 150px;
+    margin: 50px 0;
 
     @media (max-width: 1024px) {
-      gap: 100px; 
+      gap: 100px;
       max-width: 600px;
     }
 
     @media (max-width: 768px) {
-      flex-direction: column; 
-      gap: 30px; 
+      flex-direction: column;
+      gap: 30px;
       align-items: center;
       text-align: center;
     }
@@ -87,7 +87,7 @@
         button {
           width: 100%;
           padding: 12px;
-          background-color: #ff8ac2; 
+          background-color: #ff8ac2;
           color: white;
           border: none;
           border-radius: 5px;
@@ -114,19 +114,19 @@
   }
 
   .logo-container {
-    flex: 0 0 350px; 
+    flex: 0 0 350px;
 
     .logo {
-      width: 350px; 
+      width: 300px;
       height: auto;
       border-radius: 10px;
 
       @media (max-width: 1024px) {
-        width: 250px; 
+        width: 250px;
       }
 
       @media (max-width: 768px) {
-        width: 200px; 
+        width: 200px;
       }
     }
   }

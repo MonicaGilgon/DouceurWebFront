@@ -4,7 +4,7 @@ import api from '../../../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../scss/Reset.scss';
-import douxceurLogo from '../../images/logo.png'; // Asegúrate de que la ruta sea correcta
+import douxceurLogo from '../../images/logo.png';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");

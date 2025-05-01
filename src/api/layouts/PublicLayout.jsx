@@ -9,14 +9,17 @@ const PublicLayout = () => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: 'auto', 
+        minHeight: '100vh',
       }}
     >
       <PublicHeader />
       <div
         className="public-content"
         style={{
-          flex: 'none', 
+          flex: '1',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Outlet />

@@ -2,7 +2,8 @@
 .app-container {
   display: flex;
   min-height: calc(100vh - 80px);
-  margin-top: 80px; /* Espacio para el header */
+  margin-top: 80px;
+  /* Espacio para el header */
   background-color: #f0f0f0;
   position: relative;
 }
@@ -13,13 +14,17 @@
   width: 250px !important;
   background-color: #fbd5e5;
   height: calc(100vh - 80px) !important;
-  position: fixed !important; /* Mantener fijo */
-  top: 80px !important; /* Colocar exactamente debajo del header */
+  position: fixed !important;
+  /* Mantener fijo */
+  top: 80px !important;
+  /* Colocar exactamente debajo del header */
   left: 0 !important;
-  z-index: 990 !important; /* Menor que el header pero aún visible */
+  z-index: 990 !important;
+  /* Menor que el header pero aún visible */
   padding: 20px 0;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  overflow-y: auto; /* Permitir scroll si el contenido es grande */
+  overflow-y: auto;
+  /* Permitir scroll si el contenido es grande */
   overflow-x: hidden;
 }
 
@@ -64,7 +69,8 @@
 /* Content Area */
 .app-content {
   flex: 1;
-  margin-left: 270px; /* Dejar espacio para el sidebar */
+  margin-left: 270px;
+  /* Dejar espacio para el sidebar */
   padding: 20px 30px;
   background-color: #fff;
   min-height: calc(100vh - 80px);
@@ -138,8 +144,8 @@
 }
 
 /* Eliminar espacio en blanco entre sidebar y contenido */
-.app-sidebar + .app-content,
-.c-sidebar + .c-wrapper {
+.app-sidebar+.app-content,
+.c-sidebar+.c-wrapper {
   margin-left: 0px !important;
   padding-left: 20px;
   transition: margin-left 0.3s ease;
@@ -160,7 +166,8 @@
 /* Estilo para encabezados de sección */
 .app-content h1,
 .app-content h2 {
-  background-color: #0f1e38; /* Color oscuro para el fondo del título */
+  background-color: #0f1e38;
+  /* Color oscuro para el fondo del título */
   color: white;
   padding: 15px;
   margin-top: 0;

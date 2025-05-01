@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../../../api/axios';
 import '../scss/RecoverPassword.scss';
-import douxceurLogo from '../../images/logo.png'; 
+import douxceurLogo from '../../images/logo.png';
 
 const RecoverPassword = () => {
-  const [correo, setCorreo] = useState(''); // Cambiado a 'correo' para coincidir con el original
+  const [correo, setCorreo] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
 
@@ -18,7 +18,7 @@ const RecoverPassword = () => {
 
 
     try {
-      const response = await api.post('/recover-password/', { correo }); // Usar 'correo' en la solicitud
+      const response = await api.post('/recover-password/', { correo });
       toast.success(response.data.message);
       setIsEmailSent(true);
     } catch (err) {
@@ -45,7 +45,7 @@ const RecoverPassword = () => {
                     name="correo"
                     placeholder="Correo electrónico"
                     className="email"
-                    required 
+                    required
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
                   />

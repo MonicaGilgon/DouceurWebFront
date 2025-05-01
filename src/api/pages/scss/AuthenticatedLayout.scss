@@ -1,0 +1,23 @@
+.app-container {
+    display: flex;
+    flex: 1;
+
+    &.no-sidebar {
+        background-color: white !important;
+    }
+}
+
+.app-content {
+    flex: 1;
+    background-color: white !important;
+
+    &.no-sidebar {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
