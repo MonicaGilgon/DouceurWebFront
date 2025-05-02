@@ -24,38 +24,45 @@ const SignIn = () => {
 
     try {
       const response = await api.post("/sign-in/", form)
+      if (response.data.usuario.estado) {
+        // Almacena el token en localStorage
+        localStorage.setItem("access_token", response.data.access_token)
+        localStorage.setItem("refresh_token", response.data.refresh_token)
 
-      // Almacena el token en localStorage
-      localStorage.setItem("access_token", response.data.access_token)
-      localStorage.setItem("refresh_token", response.data.refresh_token)
+        // Almacenar información del usuario si está disponible en la respuesta
+        if (response.data.usuario) {
+          localStorage.setItem("usuario", JSON.stringify(response.data.usuario))
+          console.log(response.data)
+        }
 
-      // Almacenar información del usuario si está disponible en la respuesta
-      if (response.data.usuario) {
-        localStorage.setItem("usuario", JSON.stringify(response.data.usuario))
+
+        // Disparar un evento personalizado para notificar el cambio de autenticación
+        window.dispatchEvent(new Event("auth-change"))
+
+        // Mostrar mensaje de éxito
+        toast.success("Inicio de sesión exitoso")
+
+        // Redirigir según el rol del usuario
+        const userRole = response.data.usuario?.rol || "cliente" // Valor por defecto: cliente
+        console.log(userRole)
+
+        switch (userRole.toLowerCase()) {
+          case "admin":
+            navigate("/admin/") // Redirigir a la página principal de admin
+            break
+          case "vendedor":
+            navigate("/vendedor/") // Redirigir a la página principal de vendedor
+            break
+          case "cliente":
+          default:
+            navigate("/") // Redirigir a la página de inicio para clientes
+            break
+        }
+        
+      }else{
+        toast.error("El usuario se encuentra deshabilitado")
       }
 
-      // Disparar un evento personalizado para notificar el cambio de autenticación
-      window.dispatchEvent(new Event("auth-change"))
-
-      // Mostrar mensaje de éxito
-      toast.success("Inicio de sesión exitoso")
-
-      // Redirigir según el rol del usuario
-      const userRole = response.data.usuario?.rol || "cliente" // Valor por defecto: cliente
-      console.log(userRole)
-
-      switch (userRole.toLowerCase()) {
-        case "admin":
-          navigate("/admin/") // Redirigir a la página principal de admin
-          break
-        case "vendedor":
-          navigate("/vendedor/") // Redirigir a la página principal de vendedor
-          break
-        case "cliente":
-        default:
-          navigate("/") // Redirigir a la página de inicio para clientes
-          break
-      }
     } catch (err) {
       toast.error(err.response?.data?.error || "Error al iniciar sesión")
     } finally {
