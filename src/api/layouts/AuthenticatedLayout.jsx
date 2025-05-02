@@ -7,6 +7,7 @@ import VendedorHeader from '../components/VendedorHeader'; // Header para vended
 import VendedorSidebar from '../components/VendedorSidebar'; // Sidebar para vendedores
 import PublicFooter from '../components/PublicFooter';
 import '../pages/scss/AuthenticatedLayout.scss';
+import PublicHeader from '../components/PublicHeader';
 
 const AuthenticatedLayout = () => {
   // Obtener la información del usuario desde localStorage
@@ -22,7 +23,7 @@ const AuthenticatedLayout = () => {
       case 'vendedor':
         return <VendedorHeader />;
       default:
-        return <Header />;
+        return <PublicHeader />;
     }
   };
 
