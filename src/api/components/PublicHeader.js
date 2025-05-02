@@ -1,16 +1,17 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useNavigate, useLocation, Link } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import logo2 from "../images/logo2.png"
-import { FaShoppingBag, FaUser, FaSearch } from "react-icons/fa"
+import { FaShoppingBag, FaUser, FaSearch, FaUserCog, FaSignOutAlt } from "react-icons/fa"
 
 const PublicHeader = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [masAbierto, setMasAbierto] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userName, setUserName] = useState("")
+  const [userName, setUserName] = useState(JSON.parse(localStorage.getItem("usuario")).nombre)
+  const [userRole, setUserRole] = useState("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   // Función para verificar el estado de autenticación
@@ -25,6 +26,7 @@ const PublicHeader = () => {
         try {
           const user = JSON.parse(userData)
           setUserName(user.nombre_completo || user.correo || "Usuario")
+          setUserRole(user.rol || "")
         } catch (e) {
           console.error("Error al parsear datos de usuario", e)
         }
@@ -77,6 +79,11 @@ const PublicHeader = () => {
     setIsAuthenticated(false)
     navigate("/") // Redirigir a la página de inicio
     setIsDropdownOpen(false) // Cerrar el dropdown
+  }
+
+  const handleProfileClick = () => {
+    navigate("/profile")
+    setIsDropdownOpen(false)
   }
 
   const handleCartClick = () => {
@@ -288,10 +295,12 @@ const PublicHeader = () => {
                 display: "flex",
                 alignItems: "center",
                 color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
               }}
             >
               <FaUser style={{ marginRight: "0.5rem" }} />
-              Mi Cuenta
+              <div>Mi cuenta</div>
             </button>
 
             {isDropdownOpen && (
@@ -305,7 +314,8 @@ const PublicHeader = () => {
                   borderRadius: "5px",
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   zIndex: 1000,
-                  minWidth: "150px",
+                  minWidth: "200px",
+                  marginTop: "5px",
                 }}
               >
                 <div
@@ -316,34 +326,45 @@ const PublicHeader = () => {
                     color: "#333",
                   }}
                 >
-                  Hola, {userName}
+                  {userRole && (
+                    <div style={{ fontSize: "0.8rem", color: "#666", marginBottom: "5px" }}>
+                      {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                    </div>
+                  )}
+                  {userName}
                 </div>
-                <Link
-                  to="/profile"
-                  onClick={() => setIsDropdownOpen(false)}
+                <div
+                  onClick={handleProfileClick}
                   style={{
-                    display: "block",
                     padding: "10px 20px",
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
                     color: "#333",
-                    textDecoration: "none",
+                    transition: "background-color 0.3s",
                   }}
+                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
+                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                 >
+                  <FaUserCog style={{ marginRight: "10px" }} />
                   Mi Perfil
-                </Link>
-                <button
+                </div>
+                <div
                   onClick={handleLogout}
                   style={{
-                    display: "block",
                     padding: "10px 20px",
-                    color: "#333",
-                    border: "none",
-                    background: "none",
-                    width: "100%",
-                    textAlign: "left",
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    color: "#ff6b6b",
+                    transition: "background-color 0.3s",
                   }}
+                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
+                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                 >
+                  <FaSignOutAlt style={{ marginRight: "10px" }} />
                   Cerrar Sesión
-                </button>
+                </div>
               </div>
             )}
           </div>

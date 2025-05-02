@@ -32,7 +32,6 @@ const SignIn = () => {
         // Almacenar información del usuario si está disponible en la respuesta
         if (response.data.usuario) {
           localStorage.setItem("usuario", JSON.stringify(response.data.usuario))
-          console.log(response.data)
         }
 
 
@@ -44,7 +43,6 @@ const SignIn = () => {
 
         // Redirigir según el rol del usuario
         const userRole = response.data.usuario?.rol || "cliente" // Valor por defecto: cliente
-        console.log(userRole)
 
         switch (userRole.toLowerCase()) {
           case "admin":

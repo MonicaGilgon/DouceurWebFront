@@ -8,7 +8,7 @@ import { FaUser, FaSignOutAlt, FaUserCog } from "react-icons/fa"
 
 const VendedorHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [userName, setUserName] = useState("Vendedor")
+  const [userName, setUserName] = useState(JSON.parse(localStorage.getItem("usuario")).nombre)
   const [userRole, setUserRole] = useState("")
   const navigate = useNavigate()
 
@@ -70,7 +70,7 @@ const VendedorHeader = () => {
           }}
         >
           <FaUser style={{ marginRight: "0.5rem" }} />
-          <div>{userName}</div>
+          <div>Vendedor</div>
         </button>
 
         {isDropdownOpen && (
