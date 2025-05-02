@@ -252,6 +252,10 @@
   }
 }
 
+
+
+
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -262,14 +266,16 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* fondo oscuro translúcido */
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: #ffffff !important;
+  opacity: 1;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   max-width: 400px;
   width: 90%;
 
