@@ -3,7 +3,7 @@ import CIcon from "@coreui/icons-react";
 import { CNavItem, CNavTitle } from "@coreui/react";
 import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
-import { cilCart, cilList, cilUserPlus } from "@coreui/icons";
+import { cilCart, cilClipboard, cilList, cilUserPlus } from "@coreui/icons";
 
 const _navAdmin = [
   {
@@ -42,6 +42,7 @@ const _navAdmin = [
   {
     component: CNavTitle,
     name: "VENDEDORES",
+    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -60,6 +61,7 @@ const _navAdmin = [
   {
     component: CNavTitle,
     name: "CLIENTES",
+    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

@@ -66,22 +66,6 @@ const ClienteList = () => {
       dataIndex: "direccion",
       key: "direccion",
     },
-    {
-      title: "Acciones",
-      key: "acciones",
-      render: (_, record) => (
-        <Space size="middle">
-          <Link to={`/admin/editar-cliente/${record.id}`}>
-            <Button
-              type="primary"
-              style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-            >
-              Ver
-            </Button>
-          </Link>
-        </Space>
-      ),
-    },
   ];
 
   return (
