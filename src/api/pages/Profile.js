@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import './scss/Profile.scss';
-
+import { useNavigate } from 'react-router-dom';
 const Profile = () => {
+    const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -68,7 +69,19 @@ const Profile = () => {
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
+    const handleGoBack = () => {
+        if (!userData || !userData.rol) {
+            navigate('/'); // O manejar el error de otra forma
+            return;
+        }
+        if (userData.rol === 'admin') {
+            navigate('/admin');
+        } else if (userData.rol === 'vendedor') {
+            navigate('/vendedor');
+        } else {
+            navigate('/');
+        }
+    };
     const validatePasswordForm = () => {
         const errors = {};
         if (!passwordData.current_password)
@@ -244,7 +257,7 @@ const Profile = () => {
                     {formErrors.general && <div className="error general-error">{formErrors.general}</div>}
                 </div>
 
-                {/* Botones para edición */}
+                {/* Botones para edición y volver */}
                 <div className="profile-actions">
                     {isEditing ? (
                         <>
@@ -267,7 +280,13 @@ const Profile = () => {
                         </>
                     ) : (
                         <>
-                            <button className="cancel-btn">{isClient ? 'Volver' : 'Cancelar'}</button>
+                            <button
+                                type="button"
+                                className="cancel-btn"
+                                onClick={handleGoBack} // Usar la función de navegación
+                            >
+                                Volver
+                            </button>
                             <button
                                 type="button"
                                 className="edit-btn"
@@ -294,6 +313,7 @@ const Profile = () => {
 
                 {isChangingPassword && (
                     <form onSubmit={handlePasswordSubmit} className="password-form">
+                        {/* ... (formulario de cambio de contraseña sin cambios) */}
                         <div className="form-group">
                             <label>Contraseña Actual:</label>
                             <input
@@ -347,6 +367,7 @@ const Profile = () => {
             {/* Sección de pedidos (solo para clientes) */}
             {isClient && userData.orders && userData.orders.length > 0 && (
                 <div className="orders-section">
+                    {/* ... (sección de pedidos sin cambios) */}
                     <h3>Tus Pedidos</h3>
                     <div className="orders-list">
                         {userData.orders.map(order => (
