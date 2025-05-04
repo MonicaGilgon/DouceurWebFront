@@ -9,6 +9,19 @@ const Home = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [categorias, setCategorias] = useState([])
+  const [productos, setProductos] = useState([])
+
+  useEffect(() => {
+   const fetchProductos = async () => {
+      try {
+        const response = await api.get("listar-producto-base/")
+        setProductos(response.data)
+      } catch (error) {
+        console.error("Error al cargar los productos", error)
+      }
+    }
+    fetchProductos()
+  }, [])
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -25,7 +38,8 @@ const Home = () => {
     fetchCategorias()
   }, [])
 
-  const categoriasVisibles = categorias.slice(0, 5)
+  const categoriasHabilitadas = categorias.filter((c) => c.estado === true).slice(0, 5)
+
 
   return (
     <div className="home-container">
@@ -57,7 +71,7 @@ const Home = () => {
           <p>Cargando categorías...</p>
         ) : (
           <div className="categorias">
-            {categoriasVisibles.map((categoria) => (
+            {categoriasHabilitadas.map((categoria) => (
               <Link to={`/categoria/${categoria.id}`} className="categoria" key={categoria.id}>
                 <p>{categoria.nombre}</p>
               </Link>
@@ -73,23 +87,55 @@ const Home = () => {
 
       {/* Carrusel de PRODUCTOS */}
       <div className="productos-section">
-        <h3>Productos</h3>
-        <div className="productos">
-          <div className="producto">
-            <p>Hecho con amor 1</p>
-          </div>
-          <div className="producto">
-            <p>Hecho con amor 2</p>
-          </div>
-          <div className="producto">
-            <p>Hecho con amor 3</p>
-          </div>
-          <div className="producto ver-todos">
-            <div className="mas">+</div>
-            <p>Ver todos</p>
+  <h3>Productos</h3>
+  <div className="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+    {productos.map((p) => (
+      <div className="col" key={p.id}>
+        <div className="product-item">
+          <figure>
+            <Link to={`/producto/${p.id}`} title={p.nombre}>
+              <img src={p.imagen || "/placeholder.svg"} alt={p.nombre} className="tab-image" />
+            </Link>
+          </figure>
+          <div className="d-flex flex-column text-center">
+            <h3 className="fs-6 fw-normal">{p.nombre}</h3>
+            <div>
+              <span className="rating">
+                {[1,2,3,4].map((i) => (
+                  <svg key={i} width="18" height="18" className="text-warning">
+                    <use xlinkHref="#star-full"></use>
+                  </svg>
+                ))}
+                <svg width="18" height="18" className="text-warning">
+                  <use xlinkHref="#star-half"></use>
+                </svg>
+              </span>
+            </div>
+            <div className="d-flex justify-content-center align-items-center gap-2">
+              <span className="text-dark fw-semibold">${p.precio}</span>
+            </div>
+            <div className="button-area p-3 pt-0">
+              <div className="row g-1 mt-2">
+                <div className="col-7">
+                  <a href="#" className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart">
+                    <svg width="18" height="18"><use xlinkHref="#cart"></use></svg> Comprar
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    ))}
+  </div>
+</div>
+
+      
+      
+
+
+
+
     </div>
   )
 }

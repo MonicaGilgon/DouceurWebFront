@@ -1,247 +1,196 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
+import api from "../../../api/axios";
+import { useParams, useNavigate } from 'react-router-dom'
 import {
   TextField,
-  Typography,
   Button,
+  Typography,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
-  FormControlLabel,
-  Switch,
-  Checkbox,
-  ListItemText,
-  OutlinedInput,
-} from "@mui/material";
-import { ToastContainer, toast } from "react-toastify";
-import { useParams, useNavigate } from "react-router-dom";
-import api from "../../../api/axios";
-import "react-toastify/dist/ReactToastify.css";
-import "../scss/EditView.scss";
+  Select,
+  InputLabel,
+  FormControl,
+  Alert,
+} from '@mui/material'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-const ProductBaseEdit = () => {
-  const { productId } = useParams();
-  const navigate = useNavigate();
-  const [product, setProduct] = useState({
-    nombre: "",
-    descripcion: "",
-    precio: "",
+const ProductoBaseEdit = () => {
+  const { productoId } = useParams()
+  const navigate = useNavigate()
+  const [producto, setProducto] = useState({
+    nombre: '',
+    descripcion: '',
+    precio: '',
     estado: true,
-    categoriaProductoBase: "",
+    categoriaProductoBase: '',
     articulos: [],
-  });
-  const [categorias, setCategorias] = useState([]);
-  const [articulos, setArticulos] = useState([]);
-  const [imagenPreview, setImagenPreview] = useState(null);
-  const [imagenArchivo, setImagenArchivo] = useState(null);
-  const [loading, setLoading] = useState(true);
+    imagen: '',
+  })
+  const [categorias, setCategorias] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!productoId) {
+      console.error('Producto ID no está disponible')
+      return
+    }
+    const fetchProducto = async () => {
       try {
-        const [productoRes, categoriasRes, articulosRes] = await Promise.all([
-          api.get(`/editar-producto-base/${productId}/`),
-          api.get(`/listar-categorias-producto-base/`),
-          api.get(`/listar-articulos/`),
-        ]);
-
-        setProduct({
-          ...productoRes.data,
-          categoriaProductoBase: productoRes.data.categoriaProductoBase?.id || "",
-          articulos: productoRes.data.articulos?.map((a) => a.id) || [],
-        });
-
-        if (productoRes.data.imagen) {
-          setImagenPreview(productoRes.data.imagen);
-        }
-
-        setCategorias(categoriasRes.data);
-        setArticulos(articulosRes.data);
+        const response = await api.get(
+          `editar-producto-base/${productoId}/`,
+        )
+        setProducto(response.data)
       } catch (error) {
-        console.error("Error al cargar datos:", error);
-        toast.error("Error al cargar los datos del producto.");
+        console.error('Error al cargar el producto:', error)
+        setError('Error al cargar el producto')
+        toast.error('Error al cargar el producto')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [productId]);
+    const fetchCategorias = async () => {
+      try {
+        const response = await api.get('categoria-producto-base/')
+        setCategorias(response.data)
+      } catch (err) {
+        console.error('Error al cargar las categorías:', err)
+        setError('Error al cargar las categorías de productos')
+        toast.error('Error al cargar las categorías de productos')
+      }
+    }
+
+
+    fetchProducto()
+    fetchCategorias()
+  }, [productoId])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setProducto((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
 
-  const handleSwitchChange = (e) => {
-    setProduct((prev) => ({ ...prev, estado: e.target.checked }));
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
-  const handleArticulosChange = (e) => {
-    setProduct((prev) => ({ ...prev, articulos: e.target.value }));
-  };
-
-  const handleImagenChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagenArchivo(file);
-      setImagenPreview(URL.createObjectURL(file));
+    // Validación del formulario
+    if (!producto.nombre) {
+      toast.error('El nombre no puede estar vacío.')
+      return
     }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    // Verificar si todos los campos obligatorios están completos
-    if (!product.nombre.trim() || !product.descripcion.trim() || !product.precio) {
-      toast.error("Todos los campos obligatorios deben ser llenados.");
-      return;
+    if (!producto.precio || producto.precio <= 0) {
+      toast.error('El precio debe ser mayor a 0.')
+      return
     }
-  
+
+    const formData = {
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
+      estado: producto.estado,
+      categoriaProductoBase: producto.categoriaProductoBase,
+      imagen: producto.imagen, // Si se quiere permitir cambiar la imagen, esto debería manejarse adecuadamente
+    }
+
+    console.log('Datos a enviar:', formData)
+
     try {
-      const formData = new FormData();
-      formData.append("nombre", product.nombre);
-      formData.append("descripcion", product.descripcion);
-      formData.append("precio", product.precio);
-      formData.append("estado", product.estado);
-      formData.append("categoriaProductoBase", product.categoriaProductoBase);
-      product.articulos.forEach((art) => formData.append("articulos", art));
-      if (imagenArchivo) {
-        formData.append("imagen", imagenArchivo);
-      }
-  
-      const response = await api.put(`/editar-producto-base/${productId}/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      if (response.status === 200) {
-        toast.success("Producto editado con éxito.");
-        navigate("/admin/listar-producto-base"); // Cambié la ruta de redirección a la correcta
-      }
+      //toast.success('Producto editado correctamente.');
+      await api.post(`editar-producto-base/${productoId}/`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          // Si es necesario incluir un token CSRF, agregarlo aquí
+        },
+      })
+      navigate('/admin/productos-base') // Redirigir a la lista de productos base después de la edición
     } catch (error) {
-      console.error("Error al editar el producto:", error);
-      toast.error("Error al editar el producto.");
+      console.error('Error al editar el producto', error)
+      toast.error('Error al editar el producto.')
     }
-  };
-  
+  }
 
-  if (loading) return <CircularProgress />;
+  const handleCancel = () => {
+    navigate('/admin/productos-base') // Redirigir a la lista de productos base si se cancela
+  }
+
+  if (loading) {
+    return <CircularProgress />
+  }
 
   return (
-    <div className="edit-container">
-      <form onSubmit={handleSubmit} className="edit-form">
+    <div className="create-vendedor">
+      <form onSubmit={handleSubmit}>
         <Typography variant="h4" gutterBottom>
           Editar Producto Base
         </Typography>
-
+        {error && <Alert severity="error">{error}</Alert>}
         <TextField
-          name="nombre"
           label="Nombre"
-          value={product.nombre}
+          name="nombre"
+          value={producto.nombre}
           onChange={handleChange}
           fullWidth
           margin="normal"
           required
         />
         <TextField
-          name="descripcion"
           label="Descripción"
-          value={product.descripcion}
+          name="descripcion"
+          value={producto.descripcion}
           onChange={handleChange}
           fullWidth
           margin="normal"
-          required
         />
         <TextField
-          name="precio"
           label="Precio"
+          name="precio"
           type="number"
-          value={product.precio}
+          value={producto.precio}
           onChange={handleChange}
           fullWidth
           margin="normal"
           required
         />
-
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin="normal" required>
           <InputLabel>Categoría</InputLabel>
           <Select
             name="categoriaProductoBase"
-            value={product.categoriaProductoBase}
+            value={producto.categoriaProductoBase}
             onChange={handleChange}
-            required
+            label="Categoría"
           >
-            {categorias.map((cat) => (
-              <MenuItem key={cat.id} value={cat.id}>
-                {cat.nombre}
+            {categorias.map((categoria) => (
+              <MenuItem key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Artículos</InputLabel>
-          <Select
-            multiple
-            value={product.articulos}
-            onChange={handleArticulosChange}
-            input={<OutlinedInput label="Artículos" />}
-            renderValue={(selected) =>
-              articulos
-                .filter((a) => selected.includes(a.id))
-                .map((a) => a.nombre)
-                .join(", ")
-            }
-          >
-            {articulos.map((art) => (
-              <MenuItem key={art.id} value={art.id}>
-                <Checkbox checked={product.articulos.includes(art.id)} />
-                <ListItemText primary={art.nombre} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Typography variant="body1" style={{ marginTop: "1rem" }}>
-          Imagen:
-        </Typography>
-        {imagenPreview && (
-          <img
-            src={imagenPreview}
-            alt="Vista previa"
-            style={{ width: "150px", marginTop: "0.5rem" }}
-          />
-        )}
-        <input type="file" accept="image/*" onChange={handleImagenChange} style={{ marginTop: "0.5rem" }} />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={product.estado}
-              onChange={handleSwitchChange}
-              color="primary"
-            />
-          }
-          label={product.estado ? "Activo" : "Inactivo"}
-          style={{ marginTop: "1rem" }}
+        <TextField
+          label=""
+          name="imagen"
+          type="file"
+          onChange={(e) => setProducto({ ...producto, imagen: e.target.files[0] })}
+          fullWidth
+          margin="normal"
         />
-
-        <div className="form-buttons">
-          <Button
-            variant="outlined"
-            onClick={() => navigate("../listar-productosbase")}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Button type="submit" variant="contained" color="primary" style={{ marginRight: '10px' }}>
+          Guardar Cambios
+        </Button>
+        <Button type="default" onClick={() => navigate(-1)} style={{ width: '38%' }}>
             Cancelar
           </Button>
-          <Button variant="contained" type="submit">
-            Guardar Cambios
-          </Button>
         </div>
+        <ToastContainer />
       </form>
-      <ToastContainer />
     </div>
-  );
-};
+  )
+}
 
-export default ProductBaseEdit;
+export default ProductoBaseEdit

@@ -77,7 +77,6 @@ const SellerEdit = () => {
     }
 
     try {
-      toast.success("Vendedor editado con éxito.");
       await api.post(`/editar-vendedor/${sellerId}/`, {
         id: sellerId,
         document_number: seller.document_number,
@@ -87,7 +86,7 @@ const SellerEdit = () => {
         direccion: seller.direccion,
         estado: seller.estado,
       });
-
+      toast.success("Vendedor editado con éxito.");
       navigate("../listar-vendedores");
     } catch (error) {
       console.error("Error al editar el vendedor", error);
@@ -110,7 +109,7 @@ const SellerEdit = () => {
           Editar Vendedor
         </Typography>
         <TextField
-          name="documento"
+          name="document_number"
           label="Documento"
           value={seller.document_number}
           onChange={handleChange}

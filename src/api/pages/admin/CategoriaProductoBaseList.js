@@ -35,7 +35,7 @@ const CategoriaProductoBaseList = () => {
         const disabledStates = {};
         for (const categoria of response.data) {
           const puedeDesactivar = await puedeDesactivarCategoria(categoria.id);
-          disabledStates[categoria.id] = !puedeDesactivar;
+          disabledStates[categoria.id] = categoria.estado && !puedeDesactivar;
         }
         setEstadoDeshabilitado(disabledStates);
       } catch (error) {
@@ -51,9 +51,9 @@ const CategoriaProductoBaseList = () => {
   const puedeDesactivarCategoria = async (categoriaId) => {
     try {
       const response = await api
-        .get
-        //`productos-por-categoria/${categoriaId}/`,
-        ();
+        .get(
+        `productos-por-categoria/${categoriaId}/`,
+        );
       const productos = response.data;
       return productos.every((producto) => !producto.estado);
     } catch (error) {
