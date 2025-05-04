@@ -195,4 +195,4 @@ const SellerEdit = () => {
   );
 };
 
-export default SellerEdit;
+  export default SellerEdit;
