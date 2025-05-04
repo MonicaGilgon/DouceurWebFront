@@ -29,7 +29,8 @@ const CreateProductoBase = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get("listar-categoria-producto-base/");
-        setCategorias(response.data);
+        const categoriasActivas = response.data.filter(c => c.estado === true);
+        setCategorias(categoriasActivas);
       } catch (error) {
         toast.error("Error al cargar categorías");
       }
@@ -127,13 +128,14 @@ const CreateProductoBase = () => {
         imageInputRef.current.value = null;
       }
 
-      /*navigate("/admin/productos-base");*/
+      navigate("/admin/listar-producto-base");
     } catch (err) {
-      const msg = err.response?.data?.detail || "Error al crear producto";
-      toast.error(msg);
-    } finally {
-      setLoading(false);
-    }
+        const errorData = err.response?.data;
+        const msg = typeof errorData === "string" ? errorData : errorData?.error || errorData?.detail || "Error al crear producto";
+        toast.error(msg);
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (

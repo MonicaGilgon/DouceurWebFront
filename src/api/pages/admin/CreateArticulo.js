@@ -19,6 +19,7 @@ const CreateArticulo = () => {
   const [categorias, setCategorias] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -40,23 +41,20 @@ const CreateArticulo = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      toast.success("Artículo creado correctamente.");
+    try {      
       await api.post("/crear-articulo/", {
         nombre,
         categoriaArticulo,
       });
       navigate("/admin/listar-articulos");
+      toast.success("Artículo creado correctamente.");
     } catch (err) {
-      setError(
-        err.response
-          ? err.response.data
-          : { message: "Error al crear el artículo." }
-      );
-      toast.error(
-        err.response ? err.response.data.message : "Error al crear el artículo."
-      );
-    }
+      const errorData = err.response?.data;
+        const msg = typeof errorData === "string" ? errorData : errorData?.error || errorData?.detail || "Error al crear producto";
+        toast.error(msg);
+        } finally {
+          setLoading(false);
+        }
   };
 
   const handleCancel = () => {
