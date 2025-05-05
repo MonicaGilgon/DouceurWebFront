@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
+import "../scss/EditView.scss";
 import api from "../../../api/axios";
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -11,102 +12,104 @@ import {
   InputLabel,
   FormControl,
   Alert,
-} from '@mui/material'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+} from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ArticuloEdit = () => {
-  const { articuloId } = useParams()
-  const navigate = useNavigate()
+  const { articuloId } = useParams();
+  const navigate = useNavigate();
   const [articulo, setArticulo] = useState({
-    nombre: '',
-    categoriaArticulo: '',
-  })
-  const [categorias, setCategoriasArticuloActivas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+    nombre: "",
+    categoriaArticulo: "",
+  });
+  const [categorias, setCategoriasArticuloActivas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchArticulo = async () => {
       try {
-        const response = await api.get(`editar-articulo/${articuloId}/`)
-        console.log('Datos del artículo:', response.data)
-        setArticulo(response.data)
+        const response = await api.get(`editar-articulo/${articuloId}/`);
+        console.log("Datos del artículo:", response.data);
+        setArticulo(response.data);
       } catch (error) {
-        console.error('Error al cargar el artículo:', error)
-        setError('Error al cargar el artículo')
-        toast.error('Error al cargar el artículo')
+        console.error("Error al cargar el artículo:", error);
+        setError("Error al cargar el artículo");
+        toast.error("Error al cargar el artículo");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     const fetchCategorias = async () => {
       try {
-        const response = await api.get('listar-categoria-articulo/')
-        const categoriasActivas = response.data.filter(c => c.estado === true);
+        const response = await api.get("listar-categoria-articulo/");
+        const categoriasActivas = response.data.filter(
+          (c) => c.estado === true
+        );
         setCategoriasArticuloActivas(categoriasActivas);
       } catch (err) {
-        console.error('Error al cargar las categorías:', err)
-        setError('Error al cargar las categorías de artículo')
-        toast.error('Error al cargar las categorías de artículo')
+        console.error("Error al cargar las categorías:", err);
+        setError("Error al cargar las categorías de artículo");
+        toast.error("Error al cargar las categorías de artículo");
       }
-    }
+    };
 
-    fetchArticulo()
-    fetchCategorias()
-  }, [articuloId])
+    fetchArticulo();
+    fetchCategorias();
+  }, [articuloId]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setArticulo((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     // Validación del formulario
     if (!articulo.nombre) {
-      toast.error('El nombre no puede estar vacío.')
-      return
+      toast.error("El nombre no puede estar vacío.");
+      return;
     }
 
     const formData = {
       nombre: articulo.nombre,
       categoriaArticulo: articulo.categoriaArticulo,
-    }
+    };
 
-    console.log('Datos a enviar:', formData)
+    console.log("Datos a enviar:", formData);
 
     try {
-      toast.success('Artículo editado correctamente.')
+      toast.success("Artículo editado correctamente.");
       await api.put(`editar-articulo/${articuloId}/`, formData, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': articulo.csrf_token,
+          "Content-Type": "application/json",
+          "X-CSRFToken": articulo.csrf_token,
         },
-      })
-      navigate('/admin/listar-articulos')
+      });
+      navigate("/admin/listar-articulos");
     } catch (error) {
-      console.error('Error al editar el artículo', error)
-      toast.error('Error al editar el artículo.')
+      console.error("Error al editar el artículo", error);
+      toast.error("Error al editar el artículo.");
     }
-  }
+  };
 
   const handleCancel = () => {
-    navigate('/admin/listar-articulos')
-  }
+    navigate("/admin/listar-articulos");
+  };
 
   if (loading) {
-    return <CircularProgress />
+    return <CircularProgress />;
   }
 
   return (
-    <div className="create-vendedor">
-      <form onSubmit={handleSubmit}>
+    <div className="edit-container">
+      <form onSubmit={handleSubmit} className="edit-form">
         <Typography variant="h4" gutterBottom>
           Editar Artículo
         </Typography>
@@ -136,18 +139,27 @@ const ArticuloEdit = () => {
           </Select>
         </FormControl>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Button type="submit" variant="contained" color="primary" style={{ marginRight: '10px' }}>
-            Guardar Cambios
-          </Button>
-          <Button type="default" onClick={() => navigate(-1)} style={{ width: '38%' }}>
+        <div className="form-buttons">
+          <Button
+            type="default"
+            onClick={() => navigate(-1)}
+            className="cancel-button"
+          >
             Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="save-button"
+          >
+            Guardar Cambios
           </Button>
         </div>
         <ToastContainer />
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default ArticuloEdit
+export default ArticuloEdit;

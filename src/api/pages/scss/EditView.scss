@@ -54,3 +54,64 @@
     background-color: #f89bb5;
   }
 }
+
+.MuiTextField-root {
+  margin-bottom: 1rem;
+
+  .MuiOutlinedInput-root {
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border-color: #fbd5e5; // Cambia el color del borde al seleccionar
+    }
+  }
+
+  .MuiInputLabel-root {
+    &.Mui-focused {
+      color: #000000; // Cambia el color del texto del label al seleccionar
+    }
+  }
+}
+
+.MuiFormControl-root {
+  margin-bottom: 1rem;
+
+  .MuiInputLabel-root {
+    &.Mui-focused {
+      color: #000000; // Cambia el color del texto del label al seleccionar
+    }
+  }
+
+  .MuiOutlinedInput-root {
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border-color: #fbd5e5; // Cambia el color del borde al seleccionar
+    }
+  }
+}
+
+.MuiSwitch-root {
+  .Mui-checked {
+    color: #fbd5e5; // Cambia el color del botón deslizante cuando está activado
+
+    .MuiSwitch-thumb {
+      color: #fbd5e5; // Cambia el color del círculo del switch
+    }
+
+    + .MuiSwitch-track {
+      background-color: #fbd5e5; // Cambia el color de la pista cuando está activado
+    }
+  }
+
+  .MuiSwitch-track {
+    background-color: #e0e0e0; // Cambia el color de la pista cuando está desactivado
+  }
+}
+
+.MuiFormControlLabel-root {
+  .MuiFormControlLabel-label {
+    color: #000; // Color predeterminado del texto del label
+
+    // Cambia el color del texto del label cuando el switch está activado
+    .MuiSwitch-root .Mui-checked ~ & {
+      color: #fbd5e5;
+    }
+  }
+}
