@@ -18,7 +18,7 @@ const CreateProductoBase = () => {
   });
 
   const navigate = useNavigate();
-  const [categorias, setCategorias] = useState([]);
+  const [CategoriasProductoActivas, setCategoriasProductoActivas] = useState([]);
   const [articulos, setArticulos] = useState([]); // Artículos disponibles
   const [selectedArticulo, setSelectedArticulo] = useState(""); // Artículo seleccionado
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ const CreateProductoBase = () => {
       try {
         const response = await api.get("listar-categoria-producto-base/");
         const categoriasActivas = response.data.filter(c => c.estado === true);
-        setCategorias(categoriasActivas);
+        setCategoriasProductoActivas(categoriasActivas);
       } catch (error) {
         toast.error("Error al cargar categorías");
       }
@@ -187,7 +187,7 @@ const CreateProductoBase = () => {
           required
           margin="normal"
         >
-          {categorias.map((categoria) => (
+          {CategoriasProductoActivas.map((categoria) => (
             <MenuItem key={categoria.id} value={categoria.id}>
               {categoria.nombre}
             </MenuItem>

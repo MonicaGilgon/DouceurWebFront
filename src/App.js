@@ -11,6 +11,7 @@ import CategoriaArticuloList from "./api/pages/admin/CategoriaArticuloList";
 import CategoriaArticuloEdit from "./api/pages/admin/CategoriaArticuloEdit";
 import CreateArticulo from "./api/pages/admin/CreateArticulo";
 import ArticuloList from "./api/pages/admin/ArticuloList";
+import ArticuloEdit from "./api/pages/admin/ArticuloEdit";
 import CreateCategoriaProductoBase from "./api/pages/admin/CreateCategoriaProductoBase";
 import CategoriaProductoBaseList from "./api/pages/admin/CategoriaProductoBaseList";
 import CategoriaProductoBaseEdit from "./api/pages/admin/CategoriaProductoBaseEdit";
@@ -83,7 +84,7 @@ function App() {
 
             <Route path="crear-articulo" element={<CreateArticulo />} />
             <Route path="listar-articulos" element={<ArticuloList />} />
-            {/* <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} /> */}
+            <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} />
 
             <Route
               path="crear-categoria-producto-base"

@@ -27,7 +27,7 @@ const ProductoBaseEdit = () => {
     articulos: [],
     imagen: '',
   })
-  const [categorias, setCategorias] = useState([])
+  const [categoriasProductoActivas, setCategoriasProductoActivas] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -53,8 +53,9 @@ const ProductoBaseEdit = () => {
 
     const fetchCategorias = async () => {
       try {
-        const response = await api.get('categoria-producto-base/')
-        setCategorias(response.data)
+        const response = await api.get("listar-categoria-producto-base/");
+        const categoriasActivas = response.data.filter(c => c.estado === true);
+        setCategoriasProductoActivas(categoriasActivas);
       } catch (err) {
         console.error('Error al cargar las categorías:', err)
         setError('Error al cargar las categorías de productos')
@@ -87,35 +88,44 @@ const ProductoBaseEdit = () => {
       toast.error('El precio debe ser mayor a 0.')
       return
     }
-
     const formData = {
       nombre: producto.nombre,
       descripcion: producto.descripcion,
       precio: producto.precio,
       estado: producto.estado,
       categoriaProductoBase: producto.categoriaProductoBase,
+      articulos: producto.articulos.map((articulo) => articulo.id),
       imagen: producto.imagen, // Si se quiere permitir cambiar la imagen, esto debería manejarse adecuadamente
-    }
-
-    console.log('Datos a enviar:', formData)
+    };
+    
 
     try {
-      //toast.success('Producto editado correctamente.');
-      await api.post(`editar-producto-base/${productoId}/`, formData, {
+      const response = await api.put(`editar-producto-base/${productoId}/`, formData, {
         headers: {
           'Content-Type': 'application/json',
-          // Si es necesario incluir un token CSRF, agregarlo aquí
+          // Agrega el token CSRF si es necesario
         },
-      })
-      navigate('/admin/productos-base') // Redirigir a la lista de productos base después de la edición
+      });
+    
+      // Mostrar mensaje de éxito
+      toast.success(response.data.message || "Producto editado correctamente.");
+    
+      // Redirigir después del éxito
+      navigate('/admin/listar-producto-base');
     } catch (error) {
-      console.error('Error al editar el producto', error)
-      toast.error('Error al editar el producto.')
+      if (error.response && error.response.data) {
+        const errorMsg = error.response.data.error || "Error al editar el producto.";
+        toast.error(errorMsg);
+      } else {
+        toast.error("Error al conectar con el servidor.");
+      }
+      console.error("Error al editar el producto", error);
     }
-  }
+  };
+    
 
   const handleCancel = () => {
-    navigate('/admin/productos-base') // Redirigir a la lista de productos base si se cancela
+    navigate('/admin/listar-producto-base') // Redirigir a la lista de productos base si se cancela
   }
 
   if (loading) {
@@ -164,7 +174,7 @@ const ProductoBaseEdit = () => {
             onChange={handleChange}
             label="Categoría"
           >
-            {categorias.map((categoria) => (
+            {categoriasProductoActivas.map((categoria) => (
               <MenuItem key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
               </MenuItem>
