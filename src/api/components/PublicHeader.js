@@ -6,11 +6,13 @@ import logo2 from "../images/logo2.png"
 import { FaShoppingBag, FaUser, FaSearch, FaUserCog, FaSignOutAlt } from "react-icons/fa"
 
 const PublicHeader = () => {
+  const usuarioLocal = localStorage.getItem("usuario")
+  const usuarioParseado = usuarioLocal ? JSON.parse(usuarioLocal) : null
   const navigate = useNavigate()
   const location = useLocation()
   const [masAbierto, setMasAbierto] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userName, setUserName] = useState(JSON.parse(localStorage.getItem("usuario")).nombre)
+  const [userName, setUserName] = useState(usuarioParseado?.nombre || "")
   const [userRole, setUserRole] = useState("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
