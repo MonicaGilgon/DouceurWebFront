@@ -35,6 +35,8 @@ import AccessDenied from "./api/pages/AccessDenied"; // Crea esta página para m
 import ClienteListVendedor from "./api/pages/vendedor/ClienteList";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./api/components/Cart";
+import CheckoutPage from "./api/pages/checkout/CheckoutPage"
+
 
 function App() {
   return (
@@ -60,6 +62,7 @@ function App() {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="access-denied" element={<AccessDenied />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 
         {/* Rutas autenticadas (como Perfil) */}
