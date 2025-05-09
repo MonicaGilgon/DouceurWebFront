@@ -33,10 +33,12 @@ import VendedorRoute from "./api/components/ProtectedRoutes/VendedorRoute";
 import AuthenticatedRoute from "./api/components/ProtectedRoutes/AuthenticatedRoute";
 import AccessDenied from "./api/pages/AccessDenied"; // Crea esta página para mostrar un mensaje de acceso denegado
 import ClienteListVendedor from "./api/pages/vendedor/ClienteList";
+import { CartProvider } from "./context/CartContext";
+import Cart from "./api/components/Cart";
 
 function App() {
   return (
-    <>
+    <CartProvider>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -57,12 +59,13 @@ function App() {
           <Route path="recover-password" element={<RecoverPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="access-denied" element={<AccessDenied />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
 
         {/* Rutas autenticadas (como Perfil) */}
         <Route element={<AuthenticatedRoute />}>
           <Route path="/profile" element={<AuthenticatedLayout />}>
-            <Route path="" element={<Profile />} />
+            <Route path="" element={<Profile />} />            
           </Route>
         </Route>
 
@@ -131,7 +134,7 @@ function App() {
         {/* Ruta para manejar rutas no encontradas */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+    </CartProvider>
   );
 }
 

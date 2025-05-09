@@ -4,15 +4,30 @@ import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import logo2 from "../images/logo2.png"
 import { FaShoppingBag, FaUser, FaSearch, FaUserCog, FaSignOutAlt } from "react-icons/fa"
+import { useCart } from '../../context/CartContext';
+
 
 const PublicHeader = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [masAbierto, setMasAbierto] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userName, setUserName] = useState(JSON.parse(localStorage.getItem("usuario")).nombre)
   const [userRole, setUserRole] = useState("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+
+  const [userName, setUserName] = useState(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("usuario"))
+      return user?.nombre || "Usuario"
+    } catch {
+      return "Usuario"
+    }
+  })
+
+
+  const { cartItems } = useCart(); // obtener el carrito
+  
 
   // Función para verificar el estado de autenticación
   const checkAuth = () => {
@@ -87,6 +102,7 @@ const PublicHeader = () => {
   }
 
   const handleCartClick = () => {
+    console.log("Navegando al carrito...");
     navigate("/cart")
   }
 
@@ -278,7 +294,8 @@ const PublicHeader = () => {
               fontWeight: "bold",
             }}
           >
-            3
+             <span>{cartItems?.length || 0}</span>
+
           </span>
         </button>
 

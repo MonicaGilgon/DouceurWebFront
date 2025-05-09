@@ -1,0 +1,158 @@
+// Variables personalizables
+$primary-color: #ff83a2;
+$secondary-color: #ffb9cb;
+$bg-empty-cart: #fff5fa;
+$text-color: #333;
+$border-radius: 8px;
+$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.cart-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: $font-family;
+}
+
+.cart-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// Lista de productos en el carrito
+.cart-items {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Resumen del carrito
+.cart-summary {
+  flex: 1;
+  background-color: #fff0f6;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  border: 1px solid $secondary-color;
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: $text-color;
+  }
+
+  .btn-checkout,
+  .btn-clear {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-checkout {
+    background-color: $primary-color;
+    color: white;
+    margin-bottom: 1rem;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+
+  .btn-clear {
+    background-color: transparent;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+
+    &:hover {
+      background-color: #ffe6ec;
+    }
+  }
+}
+
+// Cada ítem del carrito
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #eaeaea;
+  border-radius: $border-radius;
+  background-color: #fff;
+  gap: 1rem;
+
+  .item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .item-details {
+    h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0.25rem 0 0 0;
+      color: #555;
+    }
+  }
+
+  .btn-remove {
+    margin-left: auto;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &:hover {
+      background-color: darken(#ff6b6b, 10%);
+    }
+  }
+}
+
+// Vista cuando el carrito está vacío
+.empty-cart {
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 2px dashed $secondary-color;
+  border-radius: 10px;
+  background-color: $bg-empty-cart;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: $text-color;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-explore {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}
