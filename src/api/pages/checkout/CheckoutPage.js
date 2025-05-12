@@ -4,19 +4,23 @@ import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useCart } from "../../../context/CartContext"
 import "../../pages/scss/Checkout.scss"
-import { FaUser, FaUserPlus } from "react-icons/fa"
+import { FaUser, FaUserPlus, FaWhatsapp } from "react-icons/fa"
 
 const CheckoutPage = () => {
-    const { cartItems } = useCart()
+    const { cartItems, clearCart } = useCart()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [userData, setUserData] = useState({
         nombre: "",
         correo: "",
         telefono: "",
         direccion: "",
+        horarioEntrega: "",
     })
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
+
+    // Número de WhatsApp de la tienda (reemplazar con el número real)
+    const whatsappNumber = "573142853147" // Ejemplo: 573001234567 para Colombia
 
     // Verificar si el usuario está autenticado
     useEffect(() => {
@@ -39,7 +43,6 @@ const CheckoutPage = () => {
         try {
             // Intentar obtener datos del localStorage primero
             const storedUser = localStorage.getItem("usuario")
-            console.log(storedUser)
             if (storedUser) {
                 const user = JSON.parse(storedUser)
                 setUserData({
@@ -47,18 +50,9 @@ const CheckoutPage = () => {
                     correo: user.correo || "",
                     telefono: user.telefono || "",
                     direccion: user.direccion || "",
+                    horarioEntrega: "",
                 })
             }
-
-            // Opcionalmente, también podríamos hacer una petición al API para obtener datos más actualizados
-            // const response = await api.get("/perfil/")
-            // const user = response.data
-            // setUserData({
-            //   nombre: user.nombre_completo || "",
-            //   correo: user.correo || "",
-            //   telefono: user.telefono || "",
-            //   direccion: user.direccion || "",
-            // })
         } catch (error) {
             console.error("Error al obtener datos del usuario:", error)
         } finally {
@@ -75,20 +69,67 @@ const CheckoutPage = () => {
         })
     }
 
+    // Generar mensaje de WhatsApp
+    const generateWhatsAppMessage = () => {
+        // Crear la sección de productos
+        let productosTexto = "*Detalles del pedido:*\n"
+        cartItems.forEach((item, index) => {
+            productosTexto += `${index + 1}. ${item.nombre} - $${Number.parseFloat(item.precio).toFixed(2)}\n`
+        })
+
+        // Calcular el subtotal
+        const subtotal = cartItems.reduce((sum, item) => sum + Number.parseFloat(item.precio), 0).toFixed(2)
+        productosTexto += `\n*Subtotal:* $${subtotal}\n\n`
+
+        // Datos del cliente
+        const datosCliente =
+            `*Datos de entrega:*\n` +
+            `Nombre: ${userData.nombre}\n` +
+            `Teléfono: ${userData.telefono}\n` +
+            `Correo: ${userData.correo}\n` +
+            `Dirección: ${userData.direccion}\n` +
+            `Horario de entrega: ${userData.horarioEntrega}\n\n`
+
+        // Mensaje final
+        const mensajeFinal =
+            "Hola, acabo de realizar un pedido en Douceur. " +
+            "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!"
+
+        // Mensaje completo
+        return productosTexto + datosCliente + mensajeFinal
+    }
+
     // Manejar envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        try {
-            // Aquí iría la lógica para procesar el pedido
-            // Por ejemplo:
-            // await api.post("/crear-pedido/", {
-            //   productos: cartItems,
-            //   datosEnvio: userData,
-            // })
+        // Validar que todos los campos estén completos
+        const requiredFields = ["nombre", "correo", "telefono", "direccion", "horarioEntrega"]
+        const missingFields = requiredFields.filter((field) => !userData[field])
 
-            // Redirigir a una página de confirmación
-            navigate("/confirmacion-pedido")
+        if (missingFields.length > 0) {
+            alert("Por favor completa todos los campos requeridos")
+            return
+        }
+
+        try {
+            // Generar el mensaje para WhatsApp
+            const mensaje = generateWhatsAppMessage()
+
+            // Codificar el mensaje para URL
+            const mensajeCodificado = encodeURIComponent(mensaje)
+
+            // Crear la URL de WhatsApp
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${mensajeCodificado}`
+
+            // Limpiar el carrito
+            clearCart()
+
+            // Abrir WhatsApp en una nueva pestaña
+            window.open(whatsappUrl, "_blank")
+
+            // Redirigir a la página de inicio o a una página de confirmación
+            navigate("/")
         } catch (error) {
             console.error("Error al procesar el pedido:", error)
         }
@@ -164,7 +205,7 @@ const CheckoutPage = () => {
                     <form onSubmit={handleSubmit} className="checkout-form">
                         <h3>Datos de envío</h3>
                         <div className="form-group">
-                            <label htmlFor="nombre">Nombre completo</label>
+                            <label htmlFor="nombre">Nombre de quien recibe*</label>
                             <input
                                 type="text"
                                 id="nombre"
@@ -172,11 +213,11 @@ const CheckoutPage = () => {
                                 value={userData.nombre}
                                 onChange={handleChange}
                                 required
-                                placeholder="Tu nombre completo"
+                                placeholder="Nombre completo"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="correo">Correo electrónico</label>
+                            <label htmlFor="correo">Correo electrónico*</label>
                             <input
                                 type="email"
                                 id="correo"
@@ -188,7 +229,7 @@ const CheckoutPage = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="telefono">Teléfono</label>
+                            <label htmlFor="telefono">Teléfono de contacto*</label>
                             <input
                                 type="tel"
                                 id="telefono"
@@ -196,23 +237,38 @@ const CheckoutPage = () => {
                                 value={userData.telefono}
                                 onChange={handleChange}
                                 required
-                                placeholder="Tu número de teléfono"
+                                placeholder="Número de teléfono"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="direccion">Dirección de envío</label>
+                            <label htmlFor="direccion">Dirección de entrega*</label>
                             <textarea
                                 id="direccion"
                                 name="direccion"
                                 value={userData.direccion}
                                 onChange={handleChange}
                                 required
-                                placeholder="Tu dirección completa"
+                                placeholder="Dirección completa"
                                 rows={3}
                             ></textarea>
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="horarioEntrega">Horario de entrega preferido*</label>
+                            <select
+                                id="horarioEntrega"
+                                name="horarioEntrega"
+                                value={userData.horarioEntrega}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Selecciona un horario</option>
+                                <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
+                                <option value="Tarde (12:00 PM - 5:00 PM)">Tarde (12:00 PM - 5:00 PM)</option>
+                                <option value="Noche (5:00 PM - 8:00 PM)">Noche (5:00 PM - 8:00 PM)</option>
+                            </select>
+                        </div>
                         <button type="submit" className="btn-complete-order">
-                            Completar Pedido
+                            <FaWhatsapp style={{ marginRight: "8px" }} /> Completar Pedido por WhatsApp
                         </button>
                     </form>
                 </div>
