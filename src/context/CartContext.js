@@ -1,21 +1,31 @@
 // src/context/CartContext.js
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    // Recupera los elementos del carrito del localStorage al cargar la aplicación
+    const stored = localStorage.getItem("cartItems");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  useEffect(() => {
+    // Guarda los elementos del carrito en el localStorage cada vez que cambian
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Función para agregar un producto al carrito
-  const addToCart = (product) => {
-    setCartItems((prevItems) => [...prevItems, product]);
+  const addToCart = (item) => {
+    setCartItems((prevItems) => [
+      ...prevItems,
+      { ...item, cantidad: 1 }, // Inicializa la cantidad en 1
+    ]);
   };
 
   // Función para eliminar un producto del carrito
-  const removeFromCart = (productId) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.id !== productId)
-    );
+  const removeFromCart = (itemId) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
   // Función para limpiar todo el carrito
@@ -24,7 +34,9 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
