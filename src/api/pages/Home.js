@@ -4,12 +4,16 @@ import { useNavigate, Link } from "react-router-dom"
 import logo from "../images/logo.png"
 import banner from "../images/banner-desayuno.png"
 import "./scss/Home.scss"
+import { useCart } from "../../context/CartContext";
+
 
 const Home = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [categorias, setCategorias] = useState([])
   const [productos, setProductos] = useState([])
+  const { addToCart } = useCart();
+
 
   useEffect(() => {
    const fetchProductos = async () => {
@@ -117,9 +121,11 @@ const Home = () => {
             <div className="button-area p-3 pt-0">
               <div className="row g-1 mt-2">
                 <div className="col-7">
-                  <a href="#" className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart">
+                  <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart"
+                  onClick={() => addToCart(p.id)}
+                  >
                     <svg width="18" height="18"><use xlinkHref="#cart"></use></svg> Comprar
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

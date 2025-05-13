@@ -11,6 +11,7 @@ import CategoriaArticuloList from "./api/pages/admin/CategoriaArticuloList";
 import CategoriaArticuloEdit from "./api/pages/admin/CategoriaArticuloEdit";
 import CreateArticulo from "./api/pages/admin/CreateArticulo";
 import ArticuloList from "./api/pages/admin/ArticuloList";
+import ArticuloEdit from "./api/pages/admin/ArticuloEdit";
 import CreateCategoriaProductoBase from "./api/pages/admin/CreateCategoriaProductoBase";
 import CategoriaProductoBaseList from "./api/pages/admin/CategoriaProductoBaseList";
 import CategoriaProductoBaseEdit from "./api/pages/admin/CategoriaProductoBaseEdit";
@@ -32,10 +33,14 @@ import VendedorRoute from "./api/components/ProtectedRoutes/VendedorRoute";
 import AuthenticatedRoute from "./api/components/ProtectedRoutes/AuthenticatedRoute";
 import AccessDenied from "./api/pages/AccessDenied"; // Crea esta página para mostrar un mensaje de acceso denegado
 import ClienteListVendedor from "./api/pages/vendedor/ClienteList";
+import { CartProvider } from "./context/CartContext";
+import Cart from "./api/components/Cart";
+import CheckoutPage from "./api/pages/checkout/CheckoutPage"
+
 
 function App() {
   return (
-    <>
+    <CartProvider>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -56,12 +61,14 @@ function App() {
           <Route path="recover-password" element={<RecoverPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="access-denied" element={<AccessDenied />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 
         {/* Rutas autenticadas (como Perfil) */}
         <Route element={<AuthenticatedRoute />}>
           <Route path="/profile" element={<AuthenticatedLayout />}>
-            <Route path="" element={<Profile />} />
+            <Route path="" element={<Profile />} />            
           </Route>
         </Route>
 
@@ -83,7 +90,7 @@ function App() {
 
             <Route path="crear-articulo" element={<CreateArticulo />} />
             <Route path="listar-articulos" element={<ArticuloList />} />
-            {/* <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} /> */}
+            <Route path="editar-articulo/:articuloId" element={<ArticuloEdit />} />
 
             <Route
               path="crear-categoria-producto-base"
@@ -130,7 +137,7 @@ function App() {
         {/* Ruta para manejar rutas no encontradas */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+    </CartProvider>
   );
 }
 
