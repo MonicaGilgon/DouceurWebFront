@@ -8,6 +8,8 @@ import { useCart } from '../../context/CartContext';
 
 
 const PublicHeader = () => {
+  const usuarioLocal = localStorage.getItem("usuario")
+  const usuarioParseado = usuarioLocal ? JSON.parse(usuarioLocal) : null
   const navigate = useNavigate()
   const location = useLocation()
   const [masAbierto, setMasAbierto] = useState(false)

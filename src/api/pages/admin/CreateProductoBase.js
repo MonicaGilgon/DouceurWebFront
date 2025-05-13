@@ -17,8 +17,11 @@ const CreateProductoBase = () => {
     articulos: [], // Lista de artículos seleccionados
   });
 
+  const [fotos, setFotos] = useState([]);
   const navigate = useNavigate();
-  const [CategoriasProductoActivas, setCategoriasProductoActivas] = useState([]);
+  const [CategoriasProductoActivas, setCategoriasProductoActivas] = useState(
+    []
+  );
   const [articulos, setArticulos] = useState([]); // Artículos disponibles
   const [selectedArticulo, setSelectedArticulo] = useState(""); // Artículo seleccionado
   const [loading, setLoading] = useState(false);
@@ -29,7 +32,9 @@ const CreateProductoBase = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get("listar-categoria-producto-base/");
-        const categoriasActivas = response.data.filter(c => c.estado === true);
+        const categoriasActivas = response.data.filter(
+          (c) => c.estado === true
+        );
         setCategoriasProductoActivas(categoriasActivas);
       } catch (error) {
         toast.error("Error al cargar categorías");
@@ -105,7 +110,18 @@ const CreateProductoBase = () => {
     if (formData.imagen) {
       formDataToSend.append("imagen", formData.imagen);
     }
+    
+    fotos.forEach((foto) => {
+      formDataToSend.append("fotos", foto);
+    });
+    
     formDataToSend.append("articulos", JSON.stringify(formData.articulos)); // Enviar artículos como JSON
+
+    if (fotos.length > 5) {
+      toast.error("Solo puedes subir hasta 5 imágenes adicionales.");
+      setLoading(false);
+      return;
+    }
 
     try {
       await api.post("crear-producto-base/", formDataToSend, {
@@ -130,12 +146,15 @@ const CreateProductoBase = () => {
 
       navigate("/admin/listar-producto-base");
     } catch (err) {
-        const errorData = err.response?.data;
-        const msg = typeof errorData === "string" ? errorData : errorData?.error || errorData?.detail || "Error al crear producto";
-        toast.error(msg);
-      } finally {
-        setLoading(false);
-      }
+      const errorData = err.response?.data;
+      const msg =
+        typeof errorData === "string"
+          ? errorData
+          : errorData?.error || errorData?.detail || "Error al crear producto";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -143,8 +162,7 @@ const CreateProductoBase = () => {
       <form
         id="crearProductoBaseForm"
         onSubmit={handleSubmit}
-        className="edit-form"
-      >
+        className="edit-form">
         <Typography variant="h4" align="center" gutterBottom>
           Crear Producto
         </Typography>
@@ -185,8 +203,7 @@ const CreateProductoBase = () => {
           onChange={handleChange}
           fullWidth
           required
-          margin="normal"
-        >
+          margin="normal">
           {CategoriasProductoActivas.map((categoria) => (
             <MenuItem key={categoria.id} value={categoria.id}>
               {categoria.nombre}
@@ -203,14 +220,67 @@ const CreateProductoBase = () => {
           required
           margin="normal"
         />
+
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(e) => {
+            const files = Array.from(e.target.files);
+
+            if (files.length > 5) {
+              toast.error("Máximo 5 imágenes permitidas.");
+              return;
+            }
+
+            const archivosValidos = files.filter((file) => {
+              if (!file.type.startsWith("image/")) {
+                toast.error(`Archivo no válido: ${file.name}`);
+                return false;
+              }
+              if (file.size > 5 * 1024 * 1024) {
+                toast.error(`'${file.name}' excede los 5MB`);
+                return false;
+              }
+              return true;
+            });
+
+            if (archivosValidos.length > 5) {
+              toast.error("Solo puedes subir hasta 5 imágenes válidas.");
+              return;
+            }
+
+            setFotos(archivosValidos);
+          }}
+          fullWidth
+          margin="normal"
+        />
+
+        {fotos.length > 0 && (
+          <div style={{ marginTop: "10px" }}>
+            <Typography variant="subtitle2">
+              Imágenes adicionales seleccionadas:
+            </Typography>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              {fotos.map((foto, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(foto)}
+                  alt={`Foto ${index + 1}`}
+                  style={{ width: "100px", borderRadius: "8px" }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         <TextField
           select
           label="Seleccionar Artículo"
           value={selectedArticulo}
           onChange={(e) => setSelectedArticulo(e.target.value)}
           fullWidth
-          margin="normal"
-        >
+          margin="normal">
           {articulos.map((articulo) => (
             <MenuItem key={articulo.id} value={articulo.id}>
               {articulo.nombre}
@@ -222,8 +292,7 @@ const CreateProductoBase = () => {
           variant="outlined"
           color="secondary"
           fullWidth
-          margin="normal"
-        >
+          margin="normal">
           Añadir Artículo
         </Button>
         <TextField
@@ -244,8 +313,7 @@ const CreateProductoBase = () => {
           <Button
             type="default"
             onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+            className="cancel-button">
             Cancelar
           </Button>
           <Button
@@ -253,8 +321,7 @@ const CreateProductoBase = () => {
             variant="contained"
             color="primary"
             disabled={loading}
-            className="save-button"
-          >
+            className="save-button">
             {loading ? "Cargando..." : "Crear Producto"}
           </Button>
         </div>

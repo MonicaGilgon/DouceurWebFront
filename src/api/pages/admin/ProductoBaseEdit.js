@@ -19,6 +19,8 @@ import "react-toastify/dist/ReactToastify.css";
 const ProductoBaseEdit = () => {
   const { productoId } = useParams();
   const navigate = useNavigate();
+  const [nuevasFotos, setNuevasFotos] = useState([]);
+  const [fotosActuales, setFotosActuales] = useState([]);
   const [producto, setProducto] = useState({
     nombre: "",
     descripcion: "",
@@ -43,6 +45,7 @@ const ProductoBaseEdit = () => {
       try {
         const response = await api.get(`editar-producto-base/${productoId}/`);
         setProducto(response.data);
+        setFotosActuales(response.data.fotos || []);
       } catch (error) {
         console.error("Error al cargar el producto:", error);
         setError("Error al cargar el producto");
@@ -81,7 +84,6 @@ const ProductoBaseEdit = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validación del formulario
     if (!producto.nombre) {
       toast.error("El nombre no puede estar vacío.");
       return;
@@ -90,41 +92,40 @@ const ProductoBaseEdit = () => {
       toast.error("El precio debe ser mayor a 0.");
       return;
     }
-    const formData = {
-      nombre: producto.nombre,
-      descripcion: producto.descripcion,
-      precio: producto.precio,
-      estado: producto.estado,
-      categoriaProductoBase: producto.categoriaProductoBase,
-      articulos: producto.articulos.map((articulo) => articulo.id),
-      imagen: producto.imagen, // Si se quiere permitir cambiar la imagen, esto debería manejarse adecuadamente
-    };
+
+    const formData = new FormData();
+    formData.append("nombre", producto.nombre);
+    formData.append("descripcion", producto.descripcion);
+    formData.append("precio", parseFloat(producto.precio));
+    formData.append("estado", producto.estado);
+    formData.append("categoriaProductoBase", producto.categoriaProductoBase);
+
+    const articulosIds = producto.articulos.map((a) =>
+      typeof a === "object" ? a.id : a
+    );
+    formData.append("articulos", JSON.stringify(articulosIds));
+
+    if (producto.imagen instanceof File) {
+      formData.append("imagen", producto.imagen);
+    }
+    
+    nuevasFotos.forEach((foto) => {
+      formData.append("fotos", foto);
+    });
+    
 
     try {
-      const response = await api.put(
-        `editar-producto-base/${productoId}/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            // Agrega el token CSRF si es necesario
-          },
-        }
-      );
+      await api.put(`editar-producto-base/${productoId}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      // Mostrar mensaje de éxito
-      toast.success(response.data.message || "Producto editado correctamente.");
-
-      // Redirigir después del éxito
+      toast.success("Producto editado correctamente.");
       navigate("/admin/listar-producto-base");
     } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMsg =
-          error.response.data.error || "Error al editar el producto.";
-        toast.error(errorMsg);
-      } else {
-        toast.error("Error al conectar con el servidor.");
-      }
+      const msg = error.response?.data?.error || "Error al editar el producto.";
+      toast.error(msg);
       console.error("Error al editar el producto", error);
     }
   };
@@ -177,8 +178,7 @@ const ProductoBaseEdit = () => {
             name="categoriaProductoBase"
             value={producto.categoriaProductoBase}
             onChange={handleChange}
-            label="Categoría"
-          >
+            label="Categoría">
             {categoriasProductoActivas.map((categoria) => (
               <MenuItem key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
@@ -186,30 +186,100 @@ const ProductoBaseEdit = () => {
             ))}
           </Select>
         </FormControl>
-        <TextField
-          label=""
-          name="imagen"
+        <input
           type="file"
-          onChange={(e) =>
-            setProducto({ ...producto, imagen: e.target.files[0] })
-          }
-          fullWidth
-          margin="normal"
+          multiple
+          accept="image/*"
+          onChange={(e) => {
+            const files = Array.from(e.target.files);
+            const validas = files.filter(
+              (f) => f.type.startsWith("image/") && f.size <= 5 * 1024 * 1024
+            );
+            if (validas.length + fotosActuales.length > 5) {
+              toast.error("Máximo 5 imágenes (entre nuevas y actuales).");
+              return;
+            }
+            setNuevasFotos(validas);
+          }}
         />
+
+        {/* Mostrar preview de la imagen actual si es una URL */}
+        {producto.imagen && !(producto.imagen instanceof File) && (
+          <div style={{ marginTop: "10px" }}>
+            <Typography variant="subtitle2">Imagen actual:</Typography>
+            <img
+              src={`http://localhost:8000${producto.imagen}`}
+              alt="Imagen actual"
+              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
+            />
+          </div>
+        )}
+
+        {/* Mostrar preview si el usuario sube una nueva imagen */}
+        {producto.imagen && producto.imagen instanceof File && (
+          <div style={{ marginTop: "10px" }}>
+            <Typography variant="subtitle2">
+              Nueva imagen seleccionada:
+            </Typography>
+            <img
+              src={URL.createObjectURL(producto.imagen)}
+              alt="Nueva imagen"
+              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
+            />
+          </div>
+        )}
+        {fotosActuales.map((foto) => (
+          <div
+            key={foto.id}
+            style={{
+              position: "relative",
+              display: "inline-block",
+              margin: "5px",
+            }}>
+            <img
+              src={`http://localhost:8000${foto.url}`}
+              style={{ width: "100px", borderRadius: "8px" }}
+            />
+            <button
+              onClick={async () => {
+                try {
+                  await api.delete(`foto-producto/${foto.id}/`);
+                  setFotosActuales(
+                    fotosActuales.filter((f) => f.id !== foto.id)
+                  );
+                  toast.success("Imagen eliminada.");
+                } catch (err) {
+                  toast.error("Error al eliminar imagen.");
+                }
+              }}
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: "20px",
+                height: "20px",
+              }}>
+              ×
+            </button>
+          </div>
+        ))}
+
         <div className="form-buttons">
           <Button
             type="default"
             onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+            className="cancel-button">
             Cancelar
           </Button>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            className="save-button"
-          >
+            className="save-button">
             Guardar Cambios
           </Button>
         </div>
