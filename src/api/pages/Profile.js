@@ -28,6 +28,18 @@ const Profile = () => {
     const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [passwordVisibility, setPasswordVisibility] = useState({
+        current_password: false,
+        new_password: false,
+        confirm_password: false
+    });
+
+    const togglePasswordVisibility = (field) => {
+        setPasswordVisibility({
+            ...passwordVisibility,
+            [field]: !passwordVisibility[field]
+        });
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -313,41 +325,67 @@ const Profile = () => {
 
                 {isChangingPassword && (
                     <form onSubmit={handlePasswordSubmit} className="password-form">
-                        {/* ... (formulario de cambio de contraseña sin cambios) */}
                         <div className="form-group">
                             <label>Contraseña Actual:</label>
-                            <input
-                                type="password"
-                                name="current_password"
-                                value={passwordData.current_password}
-                                onChange={handlePasswordChange}
-                                className={passwordErrors.current_password ? 'input-error' : ''}
-                                disabled={isSubmittingPassword}
-                            />
+                            <div className="password-input-container">
+                                <input
+                                    type={passwordVisibility.current_password ? 'text' : 'password'}
+                                    name="current_password"
+                                    value={passwordData.current_password}
+                                    onChange={handlePasswordChange}
+                                    className={passwordErrors.current_password ? 'input-error' : ''}
+                                    disabled={isSubmittingPassword}
+                                />
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => togglePasswordVisibility('current_password')}
+                                    aria-label={passwordVisibility.current_password ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                >
+                                    <i className={passwordVisibility.current_password ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                                </span>
+                            </div>
                             {passwordErrors.current_password && <span className="error">{passwordErrors.current_password}</span>}
                         </div>
                         <div className="form-group">
                             <label>Nueva Contraseña:</label>
-                            <input
-                                type="password"
-                                name="new_password"
-                                value={passwordData.new_password}
-                                onChange={handlePasswordChange}
-                                className={passwordErrors.new_password ? 'input-error' : ''}
-                                disabled={isSubmittingPassword}
-                            />
+                            <div className="password-input-container">
+                                <input
+                                    type={passwordVisibility.new_password ? 'text' : 'password'}
+                                    name="new_password"
+                                    value={passwordData.new_password}
+                                    onChange={handlePasswordChange}
+                                    className={passwordErrors.new_password ? 'input-error' : ''}
+                                    disabled={isSubmittingPassword}
+                                />
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => togglePasswordVisibility('new_password')}
+                                    aria-label={passwordVisibility.new_password ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                >
+                                    <i className={passwordVisibility.new_password ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                                </span>
+                            </div>
                             {passwordErrors.new_password && <span className="error">{passwordErrors.new_password}</span>}
                         </div>
                         <div className="form-group">
                             <label>Confirmar Nueva Contraseña:</label>
-                            <input
-                                type="password"
-                                name="confirm_password"
-                                value={passwordData.confirm_password}
-                                onChange={handlePasswordChange}
-                                className={passwordErrors.confirm_password ? 'input-error' : ''}
-                                disabled={isSubmittingPassword}
-                            />
+                            <div className="password-input-container">
+                                <input
+                                    type={passwordVisibility.confirm_password ? 'text' : 'password'}
+                                    name="confirm_password"
+                                    value={passwordData.confirm_password}
+                                    onChange={handlePasswordChange}
+                                    className={passwordErrors.confirm_password ? 'input-error' : ''}
+                                    disabled={isSubmittingPassword}
+                                />
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => togglePasswordVisibility('confirm_password')}
+                                    aria-label={passwordVisibility.confirm_password ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                >
+                                    <i className={passwordVisibility.confirm_password ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                                </span>
+                            </div>
                             {passwordErrors.confirm_password && <span className="error">{passwordErrors.confirm_password}</span>}
                         </div>
                         {passwordErrors.general && <div className="error general-error">{passwordErrors.general}</div>}
@@ -362,6 +400,7 @@ const Profile = () => {
                         </div>
                     </form>
                 )}
+
             </div>
 
             {/* Sección de pedidos (solo para clientes) */}

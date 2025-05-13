@@ -10,6 +10,31 @@
 
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 16px;
+  /* Ajusta el tamaño del ícono */
+  color: #555;
+}
+
+.password-toggle:hover {
+  color: #000;
+}
+
 .profile-container {
   padding: 20px;
   background-color: white;
