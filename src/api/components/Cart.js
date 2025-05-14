@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import "../pages/scss/Cart.scss";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, clearCart } = useCart();
+  const { cartItems, removeFromCart, clearCart, removeOneFromCart, addToCart } =
+    useCart();
   const navigate = useNavigate();
 
   if (cartItems.length === 0) {
@@ -22,6 +23,8 @@ const Cart = () => {
               key={item.id}
               item={item}
               removeFromCart={removeFromCart}
+              addToCart={addToCart}
+              removeOneFromCart={removeOneFromCart}
             />
           ))}
         </div>
@@ -36,7 +39,10 @@ const Cart = () => {
             <strong>
               $
               {cartItems
-                .reduce((sum, item) => sum + parseFloat(item.precio), 0)
+                .reduce(
+                  (sum, item) => sum + parseFloat(item.precio) * item.cantidad,
+                  0
+                )
                 .toFixed(2)}
             </strong>
           </div>
@@ -56,7 +62,7 @@ const Cart = () => {
 };
 
 // Componente individual del producto en el carrito
-const CartItem = ({ item, removeFromCart }) => {
+const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart }) => {
   return (
     <div className="cart-item">
       <img
@@ -67,10 +73,22 @@ const CartItem = ({ item, removeFromCart }) => {
       <div className="item-details">
         <h4>{item.nombre}</h4>
         <p>${parseFloat(item.precio).toFixed(2)}</p>
+        <div className="cantidad-row">
+          <span>Cantidad</span>
+          <div className="cantidad-controls">
+            <button
+              onClick={() => removeOneFromCart(item.id)}
+              className="btn-cantidad"
+            >
+              -
+            </button>
+            <span>{item.cantidad}</span>
+            <button onClick={() => addToCart(item)} className="btn-cantidad">
+              +
+            </button>
+          </div>
+        </div>
       </div>
-      <button className="btn-remove" onClick={() => removeFromCart(item.id)}>
-        Eliminar
-      </button>
     </div>
   );
 };

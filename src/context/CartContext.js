@@ -16,11 +16,19 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   // Función para agregar un producto al carrito
-  const addToCart = (item) => {
-    setCartItems((prevItems) => [
-      ...prevItems,
-      { ...item, cantidad: 1 }, // Inicializa la cantidad en 1
-    ]);
+  const addToCart = (producto) => {
+    setCartItems((prevItems) => {
+      const foundItem = prevItems.find((item) => item.id === producto.id);
+      if (foundItem) {
+        // Si el producto ya está en el carrito, actualiza la cantidad
+        return prevItems.map((item) =>
+          item.id === producto.id
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        );
+      }
+      return [...prevItems, { ...producto, cantidad: 1 }];
+    });
   };
 
   // Función para eliminar un producto del carrito
@@ -28,6 +36,17 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
+  const removeOneFromCart = (itemId) => {
+    setCartItems((prev) =>
+      prev
+        .map((prevItems) =>
+          prevItems.id === itemId
+            ? { ...prevItems, cantidad: prevItems.cantidad - 1 }
+            : prevItems
+        )
+        .filter((item) => item.cantidad > 0)
+    );
+  };
   // Función para limpiar todo el carrito
   const clearCart = () => {
     setCartItems([]);
@@ -35,7 +54,13 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        removeOneFromCart,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>
