@@ -31,10 +31,57 @@ const Cart = () => {
 
         <div className="cart-summary">
           <h3>Resumen</h3>
+
+          <div style={{ marginBottom: "1rem" }}>
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontSize: "0.98em",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <span style={{ fontWeight: 500 }}>{item.nombre}</span>
+                <span>
+                  x {item.cantidad} &nbsp;|&nbsp; $
+                  {parseFloat(item.precio).toLocaleString("es-CO", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            ))}
+          </div>
+
           <div className="summary-row">
-            <span>
-              Subtotal ({cartItems.length} producto
-              {cartItems.length > 1 ? "s" : ""})
+            <span
+              style={{ display: "flex", flexDirection: "column", minWidth: 0 }}
+            >
+              <span
+                style={{
+                  fontSize: "0.98em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Subtotal
+              </span>
+              <span
+                style={{
+                  fontSize: "0.98em",
+                  color: "#888",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                ({cartItems.reduce((acc, item) => acc + item.cantidad, 0)}{" "}
+                producto
+                {cartItems.reduce((acc, item) => acc + item.cantidad, 0) !== 1
+                  ? "s"
+                  : ""}
+                )
+              </span>
             </span>
             <strong>
               $
@@ -43,7 +90,10 @@ const Cart = () => {
                   (sum, item) => sum + parseFloat(item.precio) * item.cantidad,
                   0
                 )
-                .toFixed(2)}
+                .toLocaleString("es-CO", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
             </strong>
           </div>
           <button
@@ -72,17 +122,24 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart }) => {
       />
       <div className="item-details">
         <h4>{item.nombre}</h4>
-        <p>${parseFloat(item.precio).toFixed(2)}</p>
+        <p>
+          $
+          {parseFloat(item.precio).toLocaleString("es-CO", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </p>
         <div className="cantidad-row">
           <span>Cantidad</span>
           <div className="cantidad-controls">
+            <span>{item.cantidad}</span>
             <button
               onClick={() => removeOneFromCart(item.id)}
               className="btn-cantidad"
             >
               -
             </button>
-            <span>{item.cantidad}</span>
+
             <button onClick={() => addToCart(item)} className="btn-cantidad">
               +
             </button>

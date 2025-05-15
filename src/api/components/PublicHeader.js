@@ -86,11 +86,15 @@ const PublicHeader = () => {
   };
 
   const handleLogout = () => {
+    const userData = localStorage.getItem("usuario");
+    const user = JSON.parse(userData);
+
     // Eliminar tokens y datos de usuario
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("usuario");
-    localStorage.removeItem(`cartItems_${userId}`);
+
+    localStorage.removeItem(`cartItems_${user.id}`);
     clearCart(); // Limpiar el carrito
 
     // Disparar evento de cambio de autenticación
