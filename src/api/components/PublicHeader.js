@@ -1,112 +1,115 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import logo2 from "../images/logo2.png"
-import { FaShoppingBag, FaUser, FaSearch, FaUserCog, FaSignOutAlt } from "react-icons/fa"
-import { useCart } from '../../context/CartContext';
-
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo2 from "../images/logo2.png";
+import {
+  FaShoppingBag,
+  FaUser,
+  FaSearch,
+  FaUserCog,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { useCart } from "../../context/CartContext";
 
 const PublicHeader = () => {
-  const usuarioLocal = localStorage.getItem("usuario")
-  const usuarioParseado = usuarioLocal ? JSON.parse(usuarioLocal) : null
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [masAbierto, setMasAbierto] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userRole, setUserRole] = useState("")
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
+  const usuarioLocal = localStorage.getItem("usuario");
+  const usuarioParseado = usuarioLocal ? JSON.parse(usuarioLocal) : null;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [masAbierto, setMasAbierto] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { clearCart, cartItems } = useCart();
 
   const [userName, setUserName] = useState(() => {
     try {
-      const user = JSON.parse(localStorage.getItem("usuario"))
-      return user?.nombre || "Usuario"
+      const user = JSON.parse(localStorage.getItem("usuario"));
+      return user?.nombre || "Usuario";
     } catch {
-      return "Usuario"
+      return "Usuario";
     }
-  })
-
-
-  const { cartItems } = useCart(); // obtener el carrito
-  
+  });
 
   // Función para verificar el estado de autenticación
   const checkAuth = () => {
-    const token = localStorage.getItem("access_token")
+    const token = localStorage.getItem("access_token");
     if (token) {
-      setIsAuthenticated(true)
+      setIsAuthenticated(true);
 
       // Intentar obtener el nombre del usuario si está almacenado
-      const userData = localStorage.getItem("user")
+      const userData = localStorage.getItem("usuario");
       if (userData) {
         try {
-          const user = JSON.parse(userData)
-          setUserName(user.nombre_completo || user.correo || "Usuario")
-          setUserRole(user.rol || "")
+          const user = JSON.parse(userData);
+          setUserName(user.nombre || user.correo || "Usuario");
+          setUserRole(user.rol || "");
         } catch (e) {
-          console.error("Error al parsear datos de usuario", e)
+          console.error("Error al parsear datos de usuario", e);
         }
       }
     } else {
-      setIsAuthenticated(false)
+      setIsAuthenticated(false);
     }
-  }
+  };
 
   // Verificar autenticación cuando el componente se monta
   useEffect(() => {
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   // Verificar autenticación cuando cambia la ruta
   useEffect(() => {
-    checkAuth()
-  }, [location.pathname])
+    checkAuth();
+  }, [location.pathname]);
 
   // Escuchar el evento personalizado de cambio de autenticación
   useEffect(() => {
     const handleAuthChange = () => {
-      checkAuth()
-    }
+      checkAuth();
+    };
 
-    window.addEventListener("auth-change", handleAuthChange)
+    window.addEventListener("auth-change", handleAuthChange);
 
     // Verificar periódicamente el estado de autenticación (como respaldo)
-    const interval = setInterval(checkAuth, 2000)
+    const interval = setInterval(checkAuth, 2000);
 
     return () => {
-      window.removeEventListener("auth-change", handleAuthChange)
-      clearInterval(interval)
-    }
-  }, [])
+      window.removeEventListener("auth-change", handleAuthChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleLoginClick = () => {
-    navigate("/sign-in")
-  }
+    navigate("/sign-in");
+  };
 
   const handleLogout = () => {
     // Eliminar tokens y datos de usuario
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("refresh_token")
-    localStorage.removeItem("user")
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("usuario");
+    localStorage.removeItem(`cartItems_${userId}`);
+    clearCart(); // Limpiar el carrito
 
     // Disparar evento de cambio de autenticación
-    window.dispatchEvent(new Event("auth-change"))
+    window.dispatchEvent(new Event("auth-change"));
 
-    setIsAuthenticated(false)
-    navigate("/") // Redirigir a la página de inicio
-    setIsDropdownOpen(false) // Cerrar el dropdown
-  }
+    setIsAuthenticated(false);
+    navigate("/"); // Redirigir a la página de inicio
+    setIsDropdownOpen(false); // Cerrar el dropdown
+  };
 
   const handleProfileClick = () => {
-    navigate("/profile")
-    setIsDropdownOpen(false)
-  }
+    navigate("/profile");
+    setIsDropdownOpen(false);
+  };
 
   const handleCartClick = () => {
     console.log("Navegando al carrito...");
-    navigate("/cart")
-  }
+    navigate("/cart");
+  };
 
   return (
     <header
@@ -121,7 +124,11 @@ const PublicHeader = () => {
       {/* Logo + Catálogo */}
       <div style={{ alignItems: "center", gap: "1rem", marginLeft: 35 }}>
         <a href="/">
-          <img src={logo2 || "/placeholder.svg"} alt="Douceur Logo" style={{ width: "75px", height: "85px" }} />
+          <img
+            src={logo2 || "/placeholder.svg"}
+            alt="Douceur Logo"
+            style={{ width: "75px", height: "85px" }}
+          />
         </a>
         <a
           //href="/catalogo"
@@ -296,8 +303,7 @@ const PublicHeader = () => {
               fontWeight: "bold",
             }}
           >
-             <span>{cartItems?.length || 0}</span>
-
+            <span>{cartItems?.length || 0}</span>
           </span>
         </button>
 
@@ -346,7 +352,13 @@ const PublicHeader = () => {
                   }}
                 >
                   {userRole && (
-                    <div style={{ fontSize: "0.8rem", color: "#666", marginBottom: "5px" }}>
+                    <div
+                      style={{
+                        fontSize: "0.8rem",
+                        color: "#666",
+                        marginBottom: "5px",
+                      }}
+                    >
                       {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
                     </div>
                   )}
@@ -362,8 +374,12 @@ const PublicHeader = () => {
                     color: "#333",
                     transition: "background-color 0.3s",
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <FaUserCog style={{ marginRight: "10px" }} />
                   Mi Perfil
@@ -378,8 +394,12 @@ const PublicHeader = () => {
                     color: "#ff6b6b",
                     transition: "background-color 0.3s",
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <FaSignOutAlt style={{ marginRight: "10px" }} />
                   Cerrar Sesión
@@ -407,7 +427,7 @@ const PublicHeader = () => {
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default PublicHeader
+export default PublicHeader;

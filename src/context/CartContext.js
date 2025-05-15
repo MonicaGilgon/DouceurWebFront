@@ -1,19 +1,34 @@
 // src/context/CartContext.js
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  use,
+} from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  // Supón que tienes acceso a userId o email
+  const user = JSON.parse(localStorage.getItem("usuario")); // Recupera el usuario del localStorage
+  const userId = user?.id || "anonimo"; // Usa un valor por defecto si no hay usuario
+  const CART_KEY = `cartItems_${userId}`;
+
   const [cartItems, setCartItems] = useState(() => {
-    // Recupera los elementos del carrito del localStorage al cargar la aplicación
-    const stored = localStorage.getItem("cartItems");
+    const stored = localStorage.getItem(CART_KEY);
     return stored ? JSON.parse(stored) : [];
   });
 
   useEffect(() => {
     // Guarda los elementos del carrito en el localStorage cada vez que cambian
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
+  }, [cartItems, CART_KEY]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(CART_KEY);
+    setCartItems(stored ? JSON.parse(stored) : []);
+  }, [userId]);
 
   // Función para agregar un producto al carrito
   const addToCart = (producto) => {
