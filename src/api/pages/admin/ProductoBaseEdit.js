@@ -35,6 +35,8 @@ const ProductoBaseEdit = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [categoriasArticulo, setCategoriasArticulo] = useState([]);
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
 
   useEffect(() => {
     if (!productoId) {
@@ -44,8 +46,13 @@ const ProductoBaseEdit = () => {
     const fetchProducto = async () => {
       try {
         const response = await api.get(`editar-producto-base/${productoId}/`);
+
         setProducto(response.data);
         setFotosActuales(response.data.fotos || []);
+
+        setCategoriasSeleccionadas(
+          response.data.categorias_articulo.map((c) => c.id)
+        );
       } catch (error) {
         console.error("Error al cargar el producto:", error);
         setError("Error al cargar el producto");
@@ -69,8 +76,20 @@ const ProductoBaseEdit = () => {
       }
     };
 
+    const fetchCategoriasArticulo = async () => {
+      try {
+        const response = await api.get("listar-categoria-articulo/");
+        const activas = response.data.filter((cat) => cat.estado === true);
+        setCategoriasArticulo(activas);
+      } catch (error) {
+        console.error("Error al cargar categorías de artículo:", error);
+        toast.error("Error al cargar categorías de artículo");
+      }
+    };
+
     fetchProducto();
     fetchCategorias();
+    fetchCategoriasArticulo();
   }, [productoId]);
 
   const handleChange = (e) => {
@@ -105,14 +124,18 @@ const ProductoBaseEdit = () => {
     );
     formData.append("articulos", JSON.stringify(articulosIds));
 
+    formData.append(
+      "categorias_articulo",
+      JSON.stringify(categoriasSeleccionadas)
+    );
+
     if (producto.imagen instanceof File) {
       formData.append("imagen", producto.imagen);
     }
-    
+
     nuevasFotos.forEach((foto) => {
       formData.append("fotos", foto);
     });
-    
 
     try {
       await api.put(`editar-producto-base/${productoId}/`, formData, {
@@ -186,6 +209,31 @@ const ProductoBaseEdit = () => {
             ))}
           </Select>
         </FormControl>
+        <FormControl fullWidth required margin="normal">
+          <InputLabel id="categorias-personalizables-label">
+            Categorías personalizables
+          </InputLabel>
+          <Select
+            labelId="categorias-personalizables-label"
+            multiple
+            value={categoriasSeleccionadas}
+            onChange={(e) => setCategoriasSeleccionadas(e.target.value)}
+            renderValue={(selected) =>
+              selected
+                .map(
+                  (id) =>
+                    categoriasArticulo.find((cat) => cat.id === id)?.nombre
+                )
+                .join(", ")
+            }>
+            {categoriasArticulo.map((categoria) => (
+              <MenuItem key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <input
           type="file"
           multiple

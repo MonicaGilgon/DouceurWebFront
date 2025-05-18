@@ -1,7 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../scss/EditView.scss";
 import api from "../../../api/axios";
-import { TextField, Button, Typography, MenuItem } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +34,8 @@ const CreateProductoBase = () => {
   const [selectedArticulo, setSelectedArticulo] = useState(""); // Artículo seleccionado
   const [loading, setLoading] = useState(false);
   const imageInputRef = useRef(null);
+  const [categoriasArticulo, setCategoriasArticulo] = useState([]);
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
 
   // Cargar categorías y artículos al montar
   useEffect(() => {
@@ -50,8 +60,19 @@ const CreateProductoBase = () => {
       }
     };
 
+    const fetchCategoriasArticulo = async () => {
+      try {
+        const response = await api.get("listar-categoria-articulo/");
+        const activas = response.data.filter((cat) => cat.estado === true);
+        setCategoriasArticulo(activas);
+      } catch (error) {
+        toast.error("Error al cargar categorías de artículo");
+      }
+    };
+
     fetchCategorias();
     fetchArticulos();
+    fetchCategoriasArticulo();
   }, []);
 
   const handleChange = (e) => {
@@ -69,6 +90,13 @@ const CreateProductoBase = () => {
       return;
     }
     setFormData({ ...formData, imagen: file });
+  };
+
+  const handleSeleccionCategoriasArticulo = (e) => {
+    const seleccionadas = Array.from(e.target.selectedOptions).map((opt) =>
+      parseInt(opt.value)
+    );
+    setCategoriasSeleccionadas(seleccionadas);
   };
 
   const handleAddArticulo = () => {
@@ -110,18 +138,22 @@ const CreateProductoBase = () => {
     if (formData.imagen) {
       formDataToSend.append("imagen", formData.imagen);
     }
-    
-    fotos.forEach((foto) => {
-      formDataToSend.append("fotos", foto);
-    });
-    
+
     formDataToSend.append("articulos", JSON.stringify(formData.articulos)); // Enviar artículos como JSON
+    formDataToSend.append(
+      "categorias_articulo",
+      JSON.stringify(categoriasSeleccionadas)
+    );
 
     if (fotos.length > 5) {
       toast.error("Solo puedes subir hasta 5 imágenes adicionales.");
       setLoading(false);
       return;
     }
+
+    fotos.forEach((foto) => {
+      formDataToSend.append("fotos", foto);
+    });
 
     try {
       await api.post("crear-producto-base/", formDataToSend, {
@@ -210,6 +242,31 @@ const CreateProductoBase = () => {
             </MenuItem>
           ))}
         </TextField>
+
+        <FormControl fullWidth required margin="normal">
+          <InputLabel id="categorias-personalizables-label">
+            Categorías personalizables
+          </InputLabel>
+          <Select
+            labelId="categorias-personalizables-label"
+            multiple
+            value={categoriasSeleccionadas}
+            onChange={(e) => setCategoriasSeleccionadas(e.target.value)}
+            renderValue={(selected) =>
+              selected
+                .map(
+                  (id) =>
+                    categoriasArticulo.find((cat) => cat.id === id)?.nombre
+                )
+                .join(", ")
+            }>
+            {categoriasArticulo.map((categoria) => (
+              <MenuItem key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <TextField
           type="file"
