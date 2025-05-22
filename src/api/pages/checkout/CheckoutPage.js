@@ -1,102 +1,106 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useCart } from "../../../context/CartContext"
-import api from "../../../api/axios"
-import "../../pages/scss/Checkout.scss"
-import { FaUser, FaUserPlus, FaWhatsapp, FaArrowLeft } from "react-icons/fa"
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../../../context/CartContext";
+import api from "../../../api/axios";
+import "../../pages/scss/Checkout.scss";
+import { FaUser, FaUserPlus, FaWhatsapp, FaArrowLeft } from "react-icons/fa";
 
 const CheckoutPage = () => {
-  const { cartItems, clearCart } = useCart()
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { cartItems, clearCart } = useCart();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState({
     nombre: "",
     correo: "",
     telefono: "",
     direccion: "",
     horarioEntrega: "",
-  })
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  });
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Número de WhatsApp de la tienda (reemplazar con el número real)
-  const whatsappNumber = "573142853147" // Ejemplo: 573001234567 para Colombia
+  const whatsappNumber = "573142853147"; // Ejemplo: 573001234567 para Colombia
 
   // Verificar si el usuario está autenticado
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("access_token")
+      const token = localStorage.getItem("access_token");
       if (token) {
-        setIsAuthenticated(true)
-        fetchUserData()
+        setIsAuthenticated(true);
+        fetchUserData();
       } else {
-        setIsAuthenticated(false)
-        setLoading(false)
+        setIsAuthenticated(false);
+        setLoading(false);
       }
-    }
+    };
 
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   // Obtener datos del usuario si está autenticado
   const fetchUserData = async () => {
     try {
       // Intentar obtener datos del localStorage primero
-      const storedUser = localStorage.getItem("usuario")
+      const storedUser = localStorage.getItem("usuario");
       if (storedUser) {
-        const user = JSON.parse(storedUser)
+        const user = JSON.parse(storedUser);
         setUserData({
           nombre: user.nombre || "",
           correo: user.correo || "",
           telefono: user.telefono || "",
           direccion: user.direccion || "",
           horarioEntrega: "",
-        })
+        });
       }
     } catch (error) {
-      console.error("Error al obtener datos del usuario:", error)
+      console.error("Error al obtener datos del usuario:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Manejar cambios en el formulario
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setUserData({
       ...userData,
       [name]: value,
-    })
-  }
+    });
+  };
 
   // Calcular el subtotal para un item específico
   const calculateItemSubtotal = (item) => {
-    return Number.parseFloat(item.precio) * item.cantidad
-  }
+    return Number.parseFloat(item.precio) * item.cantidad;
+  };
 
   // Calcular el total del pedido
   const calculateTotal = () => {
-    return cartItems.reduce((sum, item) => sum + calculateItemSubtotal(item), 0).toFixed(2)
-  }
+    return cartItems
+      .reduce((sum, item) => sum + calculateItemSubtotal(item), 0)
+      .toFixed(2);
+  };
 
   // Función para volver atrás
   const handleGoBack = () => {
-    navigate(-1) // Vuelve a la página anterior
-  }
+    navigate(-1); // Vuelve a la página anterior
+  };
 
   // Generar mensaje de WhatsApp
   const generateWhatsAppMessage = () => {
     // Crear la sección de productos
-    let productosTexto = "*Detalles del pedido:*\n"
+    let productosTexto = "*Detalles del pedido:*\n";
     cartItems.forEach((item, index) => {
-      const subtotal = calculateItemSubtotal(item).toFixed(2)
-      productosTexto += `${index + 1}. ${item.nombre} - ${item.cantidad} x $${Number.parseFloat(item.precio).toFixed(2)} = $${subtotal}\n`
-    })
+      const subtotal = calculateItemSubtotal(item).toFixed(2);
+      productosTexto += `${index + 1}. ${item.nombre} - ${
+        item.cantidad
+      } x $${Number.parseFloat(item.precio).toFixed(2)} = $${subtotal}\n`;
+    });
 
     // Calcular el subtotal
-    const total = calculateTotal()
-    productosTexto += `\n*Total:* $${total}\n\n`
+    const total = calculateTotal();
+    productosTexto += `\n*Total:* $${total}\n\n`;
 
     // Datos del cliente
     const datosCliente =
@@ -105,23 +109,29 @@ const CheckoutPage = () => {
       `Teléfono: ${userData.telefono}\n` +
       `Correo: ${userData.correo}\n` +
       `Dirección: ${userData.direccion}\n` +
-      `Horario de entrega: ${userData.horarioEntrega}\n\n`
+      `Horario de entrega: ${userData.horarioEntrega}\n\n`;
 
     // Mensaje final
     const mensajeFinal =
       "Hola, acabo de realizar un pedido en Douceur. " +
-      "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!"
+      "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!";
 
     // Mensaje completo
-    return productosTexto + datosCliente + mensajeFinal
-  }
+    return productosTexto + datosCliente + mensajeFinal;
+  };
 
   // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validar que todos los campos estén completos
-    const requiredFields = ["nombre", "correo", "telefono", "direccion", "horarioEntrega"];
+    const requiredFields = [
+      "nombre",
+      "correo",
+      "telefono",
+      "direccion",
+      "horarioEntrega",
+    ];
     const missingFields = requiredFields.filter((field) => !userData[field]);
 
     if (missingFields.length > 0) {
@@ -132,16 +142,16 @@ const CheckoutPage = () => {
     try {
       // Preparar los datos del pedido
       const orderData = {
-        items: cartItems.map(item => ({
+        items: cartItems.map((item) => ({
           producto_id: item.id,
           cantidad: item.cantidad,
-          precio_unitario: parseFloat(item.precio)
+          precio_unitario: parseFloat(item.precio),
         })),
         nombre_receptor: userData.nombre,
         direccion_entrega: userData.direccion,
         telefono_contacto: userData.telefono,
         correo_electronico: userData.correo,
-        horario_entrega: userData.horarioEntrega
+        horario_entrega: userData.horarioEntrega,
       };
 
       // Enviar los datos al backend
@@ -169,7 +179,9 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error al procesar el pedido:", error);
-      alert("Hubo un error al procesar tu pedido. Por favor intenta nuevamente.");
+      alert(
+        "Hubo un error al procesar tu pedido. Por favor intenta nuevamente."
+      );
     }
   };
 
@@ -183,7 +195,7 @@ const CheckoutPage = () => {
           Volver a la tienda
         </Link>
       </div>
-    )
+    );
   }
 
   // Mostrar indicador de carga
@@ -192,7 +204,7 @@ const CheckoutPage = () => {
       <div className="checkout-loading">
         <p>Cargando...</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -210,8 +222,8 @@ const CheckoutPage = () => {
           <div className="auth-message">
             <h3>¡Hola! Para proceder con la compra, ingresa a tu cuenta</h3>
             <p>
-              Necesitas iniciar sesión para completar tu compra. Si aún no tienes una cuenta, puedes crear una
-              rápidamente.
+              Necesitas iniciar sesión para completar tu compra. Si aún no
+              tienes una cuenta, puedes crear una rápidamente.
             </p>
           </div>
           <div className="auth-buttons">
@@ -231,10 +243,19 @@ const CheckoutPage = () => {
             <div className="checkout-items">
               {cartItems.map((item) => (
                 <div key={item.id} className="checkout-item">
-                  <img src={item.imagen || "/placeholder.svg"} alt={item.nombre} className="item-thumbnail" />
+                  <img
+                    src={
+                      `http://localhost:8000${item.imagen}` ||
+                      "/placeholder.svg"
+                    }
+                    alt={item.nombre}
+                    className="item-thumbnail"
+                  />
                   <div className="item-info">
                     <h4>{item.nombre}</h4>
-                    <p className="item-price">${Number.parseFloat(item.precio).toFixed(2)}</p>
+                    <p className="item-price">
+                      ${Number.parseFloat(item.precio).toFixed(2)}
+                    </p>
                     <p className="item-quantity">Cantidad: {item.cantidad}</p>
                     <p className="item-subtotal">
                       Subtotal: ${calculateItemSubtotal(item).toFixed(2)}
@@ -300,7 +321,9 @@ const CheckoutPage = () => {
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="horarioEntrega">Horario de entrega preferido*</label>
+              <label htmlFor="horarioEntrega">
+                Horario de entrega preferido*
+              </label>
               <select
                 id="horarioEntrega"
                 name="horarioEntrega"
@@ -309,19 +332,26 @@ const CheckoutPage = () => {
                 required
               >
                 <option value="">Selecciona un horario</option>
-                <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
-                <option value="Tarde (12:00 PM - 5:00 PM)">Tarde (12:00 PM - 5:00 PM)</option>
-                <option value="Noche (5:00 PM - 8:00 PM)">Noche (5:00 PM - 8:00 PM)</option>
+                <option value="Mañana (8:00 AM - 12:00 PM)">
+                  Mañana (8:00 AM - 12:00 PM)
+                </option>
+                <option value="Tarde (12:00 PM - 5:00 PM)">
+                  Tarde (12:00 PM - 5:00 PM)
+                </option>
+                <option value="Noche (5:00 PM - 8:00 PM)">
+                  Noche (5:00 PM - 8:00 PM)
+                </option>
               </select>
             </div>
             <button type="submit" className="btn-complete-order">
-              <FaWhatsapp style={{ marginRight: "8px" }} /> Completar Pedido por WhatsApp
+              <FaWhatsapp style={{ marginRight: "8px" }} /> Completar Pedido por
+              WhatsApp
             </button>
           </form>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutPage
+export default CheckoutPage;
