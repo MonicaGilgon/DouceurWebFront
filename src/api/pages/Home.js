@@ -139,7 +139,13 @@ const Home = () => {
                     </span>
                   </div>*/}
                     <div className="d-flex  gap-2">
-                      <span className="text-dark fw-semibold">${p.precio}</span>
+                      <span className="text-dark fw-semibold">
+                        $
+                        {parseFloat(p.precio).toLocaleString("es-CO", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
                     </div>
                     <div className="button-area p-0 pt-3">
                       <div className="">

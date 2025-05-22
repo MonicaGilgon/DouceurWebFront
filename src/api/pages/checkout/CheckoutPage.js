@@ -79,9 +79,11 @@ const CheckoutPage = () => {
   const calculateTotal = () => {
     return cartItems
       .reduce((sum, item) => sum + calculateItemSubtotal(item), 0)
-      .toFixed(2);
+      .toLocaleString("es-CO", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   };
-
   // Función para volver atrás
   const handleGoBack = () => {
     navigate(-1); // Vuelve a la página anterior
@@ -254,11 +256,19 @@ const CheckoutPage = () => {
                   <div className="item-info">
                     <h4>{item.nombre}</h4>
                     <p className="item-price">
-                      ${Number.parseFloat(item.precio).toFixed(2)}
+                      $
+                      {parseFloat(item.precio).toLocaleString("es-CO", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                     <p className="item-quantity">Cantidad: {item.cantidad}</p>
                     <p className="item-subtotal">
-                      Subtotal: ${calculateItemSubtotal(item).toFixed(2)}
+                      Subtotal: $
+                      {parseFloat(item.precio).toLocaleString("es-CO", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                   </div>
                 </div>
