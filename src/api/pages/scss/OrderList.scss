@@ -1,0 +1,24 @@
+.order-list-container {
+    .search-container {
+        width: 300px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .pagination-container {
+        .page-item.active .page-link {
+            background-color: #ffb9cb;
+            border-color: #ffb9cb;
+        }
+
+        .page-link {
+            color: #ff83a2;
+
+            &:hover {
+                color: #ff6b6b;
+            }
+        }
+    } }

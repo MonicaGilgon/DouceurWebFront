@@ -1,9 +1,8 @@
-import React from "react";
 import CIcon from "@coreui/icons-react";
 import { CNavItem, CNavTitle } from "@coreui/react";
-import { AiOutlineAppstoreAdd, AiOutlineProduct } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
-import { cilCart, cilClipboard, cilList, cilUserPlus } from "@coreui/icons";
+import { AiOutlineAppstoreAdd, AiOutlineShoppingCart } from "react-icons/ai";
+import { cilCart, cilClipboard, cilList, cilUserPlus, cilMoney, cilNotes } from "@coreui/icons";
+import { FaBoxOpen, FaTruck, FaClipboardCheck } from "react-icons/fa";
 
 const _navAdmin = [
   {
@@ -69,6 +68,47 @@ const _navAdmin = [
     to: "/admin/listar-clientes",
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
     className: "listar-clientes-nav",
+  },
+  // Nueva sección de Ventas
+  {
+    component: CNavTitle,
+    name: "VENTAS",
+    icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Todos los Pedidos",
+    to: "/admin/pedidos",
+    icon: <AiOutlineShoppingCart className="nav-icon" />,
+    className: "pedidos-nav",
+  },
+  {
+    component: CNavItem,
+    name: "Pedidos Pendientes",
+    to: "/admin/pedidos/pendientes",
+    icon: <FaBoxOpen className="nav-icon" />,
+    className: "pedidos-pendientes-nav",
+  },
+  {
+    component: CNavItem,
+    name: "Pedidos en Envío",
+    to: "/admin/pedidos/enviados",
+    icon: <FaTruck className="nav-icon" />,
+    className: "pedidos-enviados-nav",
+  },
+  {
+    component: CNavItem,
+    name: "Pedidos Entregados",
+    to: "/admin/pedidos/entregados",
+    icon: <FaClipboardCheck className="nav-icon" />,
+    className: "pedidos-entregados-nav",
+  },
+  {
+    component: CNavItem,
+    name: "Informes de Ventas",
+    to: "/admin/informes-ventas",
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+    className: "informes-ventas-nav",
   },
 ];
 export default _navAdmin;

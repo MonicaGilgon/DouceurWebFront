@@ -36,6 +36,17 @@ import ClienteListVendedor from "./api/pages/vendedor/ClienteList";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./api/components/Cart";
 import CheckoutPage from "./api/pages/checkout/CheckoutPage"
+import OrderList from "./api/pages/admin/OrderList";
+import OrderDetail from "./api/pages/admin/OrderDetail";
+import PendingOrders from "./api/pages/admin/PendingOrders";
+import ShippedOrders from "./api/pages/admin/ShippedOrders";
+import DeliveredOrders from "./api/pages/admin/DeliveredOrders";
+import SalesReport from "./api/pages/admin/SalesReport";
+import VendedorOrderList from "./api/pages/vendedor/VendedorOrderList";
+import VendedorOrderDetail from "./api/pages/vendedor/VendedorOrderDetail";
+import VendedorPendingOrders from "./api/pages/vendedor/VendedorPendingOrders";
+import VendedorShippedOrders from "./api/pages/vendedor/VendedorShippedOrders";
+import VendedorDeliveredOrders from "./api/pages/vendedor/VendedorDeliveredOrders";
 
 
 function App() {
@@ -124,6 +135,13 @@ function App() {
 
             <Route path="listar-clientes" element={<ClienteList />} />
             <Route path="editar-cliente/:clienteId" element={<ClienteEdit />} />
+            
+            <Route path="pedidos" element={<OrderList />} />
+            <Route path="pedidos/:id" element={<OrderDetail />} />
+            <Route path="pedidos/pendientes" element={<PendingOrders />} />
+            <Route path="pedidos/enviados" element={<ShippedOrders />} />
+            <Route path="pedidos/entregados" element={<DeliveredOrders />} />
+            <Route path="informes-ventas" element={<SalesReport />} />
           </Route>
         </Route>
 
@@ -131,6 +149,12 @@ function App() {
         <Route element={<VendedorRoute />}>
           <Route path="/vendedor" element={<VendedorLayout />}>
             <Route path="listar-clientes" element={<ClienteListVendedor />} />
+
+            <Route path="pedidos" element={<VendedorOrderList />} />
+            <Route path="pedidos/:id" element={<VendedorOrderDetail />} />
+            <Route path="pedidos/pendientes" element={<VendedorPendingOrders />} />
+            <Route path="pedidos/enviados" element={<VendedorShippedOrders />} />
+            <Route path="pedidos/entregados" element={<VendedorDeliveredOrders />} />
           </Route>
         </Route>
 

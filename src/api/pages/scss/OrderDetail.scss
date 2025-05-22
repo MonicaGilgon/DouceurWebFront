@@ -1,0 +1,50 @@
+.order-detail-container {
+    .product-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .product-thumbnail {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-name {
+            font-weight: 500;
+        }
+
+        .product-id {
+            font-size: 0.8rem;
+            color: #666;
+        }
+    }
+
+    .info-group {
+        margin-bottom: 0.75rem;
+        display: flex;
+
+        .info-label {
+            font-weight: 500;
+            width: 100px;
+        }
+
+        .info-value {
+            flex: 1;
+        }
+    }
+
+    .status-actions {
+        .dropdown-toggle {
+            background-color: #ffb9cb;
+            border-color: #ffb9cb;
+            color: white;
+
+            &:hover,
+            &:focus {
+                background-color: #ff83a2;
+                border-color: #ff83a2;
+            }
+        }
+    } }

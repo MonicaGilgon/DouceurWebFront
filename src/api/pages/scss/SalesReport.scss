@@ -1,0 +1,17 @@
+.sales-report-container {
+    .summary-card {
+        text-align: center;
+        border-left: 4px solid #ffb9cb;
+
+        h5 {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+    } }
