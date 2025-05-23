@@ -1,8 +1,8 @@
-// src/api/pages/Profile.js
 import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import './scss/Profile.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Añadir Link para los enlaces
+
 const Profile = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
@@ -41,26 +41,34 @@ const Profile = () => {
         });
     };
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await api.get("/profile/");
-                setUserData(response.data);
-                setFormData({
-                    document_number: response.data.document_number || "",
-                    nombre_completo: response.data.nombre_completo || "",
-                    direccion: response.data.direccion || "",
-                    telefono: response.data.telefono || "",
-                    correo: response.data.correo || "",
-                });
-                setLoading(false);
-            } catch (err) {
-                setError("Error al cargar el perfil: " + err.message);
-                setLoading(false);
-            }
-        };
+    const fetchProfile = async () => {
+        try {
+            const response = await api.get("/profile/");
+            setUserData(response.data);
+            setFormData({
+                document_number: response.data.document_number || "",
+                nombre_completo: response.data.nombre_completo || "",
+                direccion: response.data.direccion || "",
+                telefono: response.data.telefono || "",
+                correo: response.data.correo || "",
+            });
+            setLoading(false);
+        } catch (err) {
+            setError("Error al cargar el perfil: " + err.message);
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchProfile();
+
+        // Configurar polling para actualizar los pedidos cada 5 segundos
+        const interval = setInterval(() => {
+            fetchProfile();
+        }, 5000);
+
+        // Limpiar el intervalo al desmontar el componente
+        return () => clearInterval(interval);
     }, []);
 
     const validateForm = () => {
@@ -81,9 +89,10 @@ const Profile = () => {
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
+
     const handleGoBack = () => {
         if (!userData || !userData.rol) {
-            navigate('/'); // O manejar el error de otra forma
+            navigate('/');
             return;
         }
         if (userData.rol === 'admin') {
@@ -94,6 +103,7 @@ const Profile = () => {
             navigate('/');
         }
     };
+
     const validatePasswordForm = () => {
         const errors = {};
         if (!passwordData.current_password)
@@ -133,7 +143,6 @@ const Profile = () => {
     };
 
     const handleSubmit = async () => {
-        console.log('handleSubmit ejecutado');
         if (!validateForm()) return;
 
         setIsSubmittingData(true);
@@ -153,12 +162,10 @@ const Profile = () => {
     };
 
     const handleEditClick = () => {
-        console.log('Botón Editar Información clickeado');
         setIsEditing(true);
     };
 
     const handleCancelEdit = () => {
-        console.log('Botón Cancelar clickeado');
         setIsEditing(false);
         setFormData({
             document_number: userData.document_number || '',
@@ -184,7 +191,6 @@ const Profile = () => {
             setShowSuccessModal(true);
         } catch (err) {
             const errorMsg = err.response?.data?.error || 'Error al cambiar la contraseña.';
-            console.log('Error del backend:', errorMsg);
             setPasswordErrors({ general: errorMsg });
         } finally {
             setIsSubmittingPassword(false);
@@ -295,7 +301,7 @@ const Profile = () => {
                             <button
                                 type="button"
                                 className="cancel-btn"
-                                onClick={handleGoBack} // Usar la función de navegación
+                                onClick={handleGoBack}
                             >
                                 Volver
                             </button>
@@ -400,13 +406,11 @@ const Profile = () => {
                         </div>
                     </form>
                 )}
-
             </div>
 
             {/* Sección de pedidos (solo para clientes) */}
             {isClient && userData.orders && userData.orders.length > 0 && (
                 <div className="orders-section">
-                    {/* ... (sección de pedidos sin cambios) */}
                     <h3>Tus Pedidos</h3>
                     <div className="orders-list">
                         {userData.orders.map(order => (
@@ -426,6 +430,9 @@ const Profile = () => {
                                 <span className={`order-status ${order.status}`}>
                                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                 </span>
+                                <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-sm btn-info">
+                                    Ver Detalles
+                                </Link>
                             </div>
                         ))}
                     </div>

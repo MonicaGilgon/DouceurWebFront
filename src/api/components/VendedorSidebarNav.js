@@ -1,14 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { CNavGroup, CNavItem } from "@coreui/react";
-import _navVendedor from "../../_navVendedor"; // Asegúrate de que la ruta sea correcta
+import _navVendedor from "../../_navVendedor";
 
 const VendedorSidebarNav = () => {
   // Lista de rutas permitidas para el vendedor
   const allowedRoutes = [
     "/vendedor",
     "/vendedor/listar-clientes",
-    // Agrega aquí más rutas permitidas para el vendedor
+    "/vendedor/pedidos",
+    "/vendedor/pedidos/pendientes",
+    "/vendedor/pedidos/enviados",
+    "/vendedor/pedidos/entregados",
   ];
 
   // Función para verificar si una ruta está permitida
@@ -58,12 +61,12 @@ const VendedorSidebarNav = () => {
         }
 
         return (
-          <CNavItem key={index} className={className}>
-            <NavLink to={to}>
+          <Component key={index} className={className}>
+            <NavLink to={to} className={({ isActive }) => (isActive ? "active" : "")}>
               {icon}
               {name}
             </NavLink>
-          </CNavItem>
+          </Component>
         );
       });
   };

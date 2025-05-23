@@ -1,56 +1,50 @@
+// src/api/pages/ClientOrderDetail.js
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../../api/axios";
-import { Card, Row, Col, Table, Badge, Button } from "react-bootstrap";
-import { FaArrowLeft, FaTruck, FaCheck, FaWhatsapp } from "react-icons/fa";
-import "../scss/OrderDetail.scss";
+import api from "../../api/axios";
+import { Card, Badge, Button, Table, Row, Col } from "react-bootstrap";
+import { FaArrowLeft } from "react-icons/fa";
+import "./scss/ClientOrderDetail.scss";
 
-const VendedorOrderDetail = () => {
-    const { id } = useParams();
+const ClientOrderDetail = () => {
+    const { orderId } = useParams();
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetchOrderDetails();
-    }, [id]);
+    const [error, setError] = useState(null);
 
     const fetchOrderDetails = async () => {
         try {
-            setLoading(true);
-            const response = await api.get(`/vendedor/detalle-pedido/${id}/`);
+            const response = await api.get(`/cliente/pedidos/${orderId}/`);
             setOrder(response.data);
-        } catch (error) {
-            console.error("Error al cargar los detalles del pedido:", error);
-        } finally {
+            setLoading(false);
+        } catch (err) {
+            setError("Error al cargar los detalles del pedido: " + err.message);
             setLoading(false);
         }
     };
 
-    const handleStatusChange = async (newStatus) => {
-        try {
-            await api.patch(`/vendedor/actualizar-estado-pedido/${id}/`, {
-                status: newStatus,
-            });
-            // Actualizar los detalles del pedido
+    useEffect(() => {
+        fetchOrderDetails();
+
+        // Configurar polling para actualizar los detalles cada 5 segundos
+        const interval = setInterval(() => {
             fetchOrderDetails();
-        } catch (error) {
-            console.error("Error al actualizar el estado del pedido:", error);
-        }
-    };
+        }, 5000);
+
+        // Limpiar el intervalo al desmontar el componente
+        return () => clearInterval(interval);
+    }, [orderId]);
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case "pendiente":
-                return <Badge bg="warning">Pendiente</Badge>;
-            case "enviado":
-                return <Badge bg="primary">Enviado</Badge>;
-            case "entregado":
-                return <Badge bg="success">Entregado</Badge>;
-            case "cancelado":
-                return <Badge bg="danger">Cancelado</Badge>;
-            default:
-                return <Badge bg="secondary">{status}</Badge>;
+            case "pendiente": return <Badge bg="warning">Pendiente</Badge>;
+            case "pago_confirmado": return <Badge bg="info">Pago Confirmado</Badge>;
+            case "en_preparacion": return <Badge bg="secondary">En Preparación</Badge>;
+            case "enviado": return <Badge bg="primary">Enviado</Badge>;
+            case "entregado": return <Badge bg="success">Entregado</Badge>;
+            case "cancelado": return <Badge bg="danger">Cancelado</Badge>;
+            default: return <Badge bg="secondary">{status}</Badge>;
         }
     };
 
@@ -59,44 +53,17 @@ const VendedorOrderDetail = () => {
         return new Date(dateString).toLocaleDateString("es-ES", options);
     };
 
-    const handleContactWhatsApp = () => {
-        if (order && order.shipping_info && order.shipping_info.telefono_contacto) {
-            const phoneNumber = order.shipping_info.telefono_contacto.replace(/\D/g, "");
-            const message = encodeURIComponent(
-                `Hola ${order.shipping_info.nombre_receptor}, nos comunicamos de Douceur respecto a tu pedido #${order.id}.`
-            );
-            window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
-        }
-    };
-
-    if (loading) {
-        return <div className="text-center py-5">Cargando detalles del pedido...</div>;
-    }
-
-    if (!order) {
-        return <div className="text-center py-5">No se encontró el pedido</div>;
-    }
+    if (loading) return <div className="text-center py-5">Cargando detalles del pedido...</div>;
+    if (error) return <div className="text-center py-5">{error}</div>;
+    if (!order) return <div className="text-center py-5">No se encontró el pedido</div>;
 
     return (
-        <div className="order-detail-container">
+        <div className="client-order-detail-container">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <Button variant="outline-secondary" onClick={() => navigate(-1)}>
                     <FaArrowLeft className="me-2" /> Volver
                 </Button>
                 <h2>Detalles del Pedido #{order.id}</h2>
-                <div className="status-actions">
-                    {/* Los vendedores solo pueden actualizar a enviado o entregado */}
-                    {order.status === "pendiente" && (
-                        <Button variant="primary" onClick={() => handleStatusChange("enviado")}>
-                            <FaTruck className="me-2" /> Marcar como Enviado
-                        </Button>
-                    )}
-                    {order.status === "enviado" && (
-                        <Button variant="success" onClick={() => handleStatusChange("entregado")}>
-                            <FaCheck className="me-2" /> Marcar como Entregado
-                        </Button>
-                    )}
-                </div>
             </div>
 
             <Row>
@@ -122,7 +89,10 @@ const VendedorOrderDetail = () => {
                                                 <div className="product-info">
                                                     {item.producto.imagen && (
                                                         <img
-                                                            src={item.producto.imagen || "/placeholder.svg"}
+                                                            src={
+                                                                `http://localhost:8000${item.producto.imagen}` ||
+                                                                "/placeholder.svg"
+                                                            }
                                                             alt={item.producto.nombre}
                                                             className="product-thumbnail"
                                                         />
@@ -166,23 +136,12 @@ const VendedorOrderDetail = () => {
                                 <div className="info-label">Fecha:</div>
                                 <div className="info-value">{formatDate(order.order_date)}</div>
                             </div>
-                            <div className="info-group">
-                                <div className="info-label">Cliente:</div>
-                                <div className="info-value">{order.user.nombre_completo}</div>
-                            </div>
-                            <div className="info-group">
-                                <div className="info-label">Correo:</div>
-                                <div className="info-value">{order.user.correo}</div>
-                            </div>
                         </Card.Body>
                     </Card>
 
                     <Card className="mb-4">
-                        <Card.Header className="d-flex justify-content-between align-items-center">
+                        <Card.Header>
                             <h4>Información de Envío</h4>
-                            <Button variant="success" size="sm" onClick={handleContactWhatsApp}>
-                                <FaWhatsapp className="me-1" /> Contactar
-                            </Button>
                         </Card.Header>
                         <Card.Body>
                             <div className="info-group">
@@ -213,4 +172,4 @@ const VendedorOrderDetail = () => {
     );
 };
 
-export default VendedorOrderDetail;
+export default ClientOrderDetail;

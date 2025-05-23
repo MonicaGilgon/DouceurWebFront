@@ -173,3 +173,19 @@
   margin-top: 0;
   margin-bottom: 20px;
 }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: #fff; // Color del texto
+
+  &.active {
+    background-color: #007bff; // Fondo para la ruta activa
+    color: #fff;
+  }
+}
+
+.nav-icon {
+  margin-right: 0.5rem;
+}

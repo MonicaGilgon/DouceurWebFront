@@ -32,6 +32,8 @@
     "react-router-dom": "^7.5.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
+    "resolve-url-loader": "^5.0.0",
+    "sass-loader": "^16.0.5",
     "simplebar-react": "^3.3.0",
     "web-vitals": "^2.1.4"
   },
@@ -60,6 +62,6 @@
     ]
   },
   "devDependencies": {
-    "sass": "^1.86.3"
+    "sass": "^1.89.0"
   }
 }
