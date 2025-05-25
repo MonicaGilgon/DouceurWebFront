@@ -47,6 +47,26 @@ const ProductosBaseList = () => {
     setModalVisible(true);
   };
 
+  const handleDelete = async (id) => {
+    Modal.confirm({
+      title: "¿Estás seguro?",
+      content: "Esta acción eliminará el producto base permanentemente.",
+      okText: "Sí, eliminar",
+      cancelText: "Cancelar",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await api.delete(`eliminar-producto-base/${id}/`);
+          setProductos(productos.filter((p) => p.id !== id));
+          message.success("Producto eliminado correctamente");
+        } catch (error) {
+          console.error("Error al eliminar el producto", error);
+          message.error("Error al eliminar el producto");
+        }
+      },
+    });
+  };
+
   const toggleActivo = async (producto_id, estado) => {
     setProductos((prevProductos) =>
       prevProductos.map((producto) =>
@@ -174,13 +194,18 @@ const ProductosBaseList = () => {
       title: "Acciones",
       key: "acciones",
       render: (_, record) => (
-        <Link to={`/admin/editar-producto-base/${record.id}`}>
-          <Button
-            type="primary"
-            style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
-            Editar
+        <Space>
+          <Link to={`/admin/editar-producto-base/${record.id}`}>
+            <Button
+              type="primary"
+              style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
+              Editar
+            </Button>
+          </Link>
+          <Button danger onClick={() => handleDelete(record.id)}>
+            Eliminar
           </Button>
-        </Link>
+        </Space>
       ),
     },
   ];

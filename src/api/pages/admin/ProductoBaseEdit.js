@@ -38,6 +38,8 @@ const ProductoBaseEdit = () => {
   const [categoriasArticulo, setCategoriasArticulo] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
   const [articulosDisponibles, setArticulosDisponibles] = useState([]);
+  const [fotosAEliminar, setFotosAEliminar] = useState([]);
+  const [eliminarImagenPrincipal, setEliminarImagenPrincipal] = useState(false);
 
   useEffect(() => {
     if (!productoId) {
@@ -167,6 +169,16 @@ const ProductoBaseEdit = () => {
     nuevasFotos.forEach((foto) => {
       formData.append("fotos", foto);
     });
+
+    if (fotosAEliminar.length > 0) {
+      fotosAEliminar.forEach((id) => {
+        formData.append("fotos_a_eliminar", id);
+      });
+    }
+
+    if (eliminarImagenPrincipal) {
+      formData.append("eliminar_imagen_principal", "true");
+    }
 
     try {
       await api.put(`editar-producto-base/${productoId}/`, formData, {
@@ -301,28 +313,43 @@ const ProductoBaseEdit = () => {
             setNuevasFotos(validas);
           }}
         />
-        {producto.imagen && !(producto.imagen instanceof File) && (
-          <div style={{ marginTop: "10px" }}>
-            <Typography variant="subtitle2">Imagen actual:</Typography>
-            <img
-              src={producto.imagen}
-              alt="Imagen actual"
-              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
-            />
-          </div>
-        )}
-        {producto.imagen && producto.imagen instanceof File && (
-          <div style={{ marginTop: "10px" }}>
-            <Typography variant="subtitle2">
-              Nueva imagen seleccionada:
-            </Typography>
-            <img
-              src={URL.createObjectURL(producto.imagen)}
-              alt="Nueva imagen"
-              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
-            />
-          </div>
-        )}
+        {producto.imagen &&
+          !(producto.imagen instanceof File) &&
+          !eliminarImagenPrincipal && (
+            <div style={{ marginTop: "10px", position: "relative" }}>
+              <Typography variant="subtitle2">Imagen actual:</Typography>
+              <img
+                src={producto.imagen}
+                alt="Imagen actual"
+                style={{
+                  width: "120px",
+                  borderRadius: "8px",
+                  marginTop: "5px",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setEliminarImagenPrincipal(true);
+                  setProducto((prev) => ({ ...prev, imagen: "" }));
+                }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  background: "red",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "20px",
+                  height: "20px",
+                  cursor: "pointer",
+                }}>
+                X
+              </button>
+            </div>
+          )}
+
         {fotosActuales.map((foto) => (
           <div
             key={foto.id}
@@ -330,24 +357,21 @@ const ProductoBaseEdit = () => {
               position: "relative",
               display: "inline-block",
               margin: "5px",
+              opacity: fotosAEliminar.includes(foto.id) ? 0.4 : 1,
             }}>
             <img
               src={foto.url}
               alt={`Foto ${foto.id}`}
               style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
             />
-
             <button
-              onClick={async () => {
-                try {
-                  await api.delete(`foto-producto/${foto.id}/`);
-                  setFotosActuales(
-                    fotosActuales.filter((f) => f.id !== foto.id)
-                  );
-                  toast.success("Imagen eliminada.");
-                } catch (err) {
-                  toast.error("Error al eliminar imagen.");
-                }
+              type="button"
+              onClick={() => {
+                setFotosAEliminar((prev) =>
+                  prev.includes(foto.id)
+                    ? prev.filter((id) => id !== foto.id)
+                    : [...prev, foto.id]
+                );
               }}
               style={{
                 position: "absolute",
@@ -359,7 +383,10 @@ const ProductoBaseEdit = () => {
                 borderRadius: "50%",
                 width: "20px",
                 height: "20px",
-              }}></button>
+                cursor: "pointer",
+              }}>
+              X
+            </button>
           </div>
         ))}
 

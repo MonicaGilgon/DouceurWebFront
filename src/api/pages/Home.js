@@ -83,8 +83,7 @@ const Home = () => {
               <Link
                 to={`/categoria/${categoria.id}`}
                 className="categoria"
-                key={categoria.id}
-              >
+                key={categoria.id}>
                 <p>{categoria.nombre}</p>
               </Link>
             ))}
@@ -111,8 +110,9 @@ const Home = () => {
                     <Link to={`/producto/${p.id}`} title={p.nombre}>
                       <img
                         src={
-                          `http://localhost:8000${p.imagen}` ||
-                          "/placeholder.svg"
+                          p.imagen?.startsWith("http")
+                            ? p.imagen
+                            : "/placeholder.svg"
                         }
                         alt={p.nombre}
                         className="tab-image"
@@ -158,8 +158,7 @@ const Home = () => {
                           </button>
                           <button
                             className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart "
-                            onClick={() => addToCart(p)}
-                          >
+                            onClick={() => addToCart(p)}>
                             <CIcon icon={cilCart} /> Añadir al carrito
                           </button>
                         </div>
