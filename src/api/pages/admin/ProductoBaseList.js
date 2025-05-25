@@ -148,14 +148,27 @@ const ProductosBaseList = () => {
     {
       title: "Imagen",
       key: "imagen",
-      render: (_, record) => (
-        <img
-          src={`http://localhost:8000${record.imagen}`}
-          alt="Producto"
-          style={{ width: "80px", cursor: "pointer" }}
-          onClick={() => handleImageClick(record.imagen)}
-        />
-      ),
+      render: (_, record) => {
+        const imagenPrincipal =
+          record.imagen && record.imagen.startsWith("http")
+            ? record.imagen
+            : record.imagen
+            ? `http://localhost:8000${record.imagen}`
+            : record.fotos?.[0]?.url || ""; // fallback a primera imagen de Cloudinary
+
+        return imagenPrincipal ? (
+          <img
+            src={imagenPrincipal}
+            alt="Producto"
+            style={{ width: "80px", cursor: "pointer" }}
+            onClick={() =>
+              setModalVisible(true) || setSelectedImage(imagenPrincipal)
+            }
+          />
+        ) : (
+          <span>Sin imagen</span>
+        );
+      },
     },
     {
       title: "Acciones",

@@ -124,25 +124,44 @@ const ProductoBaseEdit = () => {
       return;
     }
 
+    console.log(
+      "Tipo de categoriaProductoBase:",
+      producto.categoriaProductoBase
+    );
+    console.log("typeof:", typeof producto.categoriaProductoBase);
+
     const formData = new FormData();
     formData.append("nombre", producto.nombre);
     formData.append("descripcion", producto.descripcion);
     formData.append("precio", parseFloat(producto.precio));
-    formData.append("estado", producto.estado);
-    formData.append("categoriaProductoBase", producto.categoriaProductoBase);
+    formData.append("estado", producto.estado ? "true" : "false");
+    formData.append("categoriaProductoBase_id", producto.categoriaProductoBase);
 
     const articulosIds = producto.articulos.map((a) =>
       typeof a === "object" ? a.id : a
     );
-    formData.append("articulos", JSON.stringify(articulosIds));
 
-    formData.append(
-      "categorias_articulo",
-      JSON.stringify(categoriasSeleccionadas)
-    );
+    if (articulosIds.length === 1) {
+      formData.append("articulos_ids", articulosIds[0]);
+    } else {
+      articulosIds.forEach((id) => {
+        formData.append("articulos_ids", id);
+      });
+    }
+
+    categoriasSeleccionadas.forEach((id) => {
+      formData.append("categorias_articulo", id);
+    });
 
     if (producto.imagen instanceof File) {
       formData.append("imagen", producto.imagen);
+    }
+
+    for (const foto of nuevasFotos) {
+      if (!foto || foto.size === 0) {
+        toast.error(`La imagen "${foto?.name}" está vacía o es inválida.`);
+        return;
+      }
     }
 
     nuevasFotos.forEach((foto) => {
@@ -221,8 +240,17 @@ const ProductoBaseEdit = () => {
           <InputLabel>Categoría</InputLabel>
           <Select
             name="categoriaProductoBase"
-            value={producto.categoriaProductoBase}
-            onChange={handleChange}
+            value={
+              producto.categoriaProductoBase?.id ||
+              producto.categoriaProductoBase ||
+              ""
+            }
+            onChange={(e) =>
+              setProducto((prev) => ({
+                ...prev,
+                categoriaProductoBase: parseInt(e.target.value),
+              }))
+            }
             label="Categoría">
             {categoriasProductoActivas.map((categoria) => (
               <MenuItem key={categoria.id} value={categoria.id}>
@@ -231,6 +259,7 @@ const ProductoBaseEdit = () => {
             ))}
           </Select>
         </FormControl>
+
         <FormControl fullWidth required margin="normal">
           <InputLabel id="categorias-personalizables-label">
             Categorías personalizables
@@ -276,7 +305,7 @@ const ProductoBaseEdit = () => {
           <div style={{ marginTop: "10px" }}>
             <Typography variant="subtitle2">Imagen actual:</Typography>
             <img
-              src={`http://localhost:8000${producto.imagen}`}
+              src={producto.imagen}
               alt="Imagen actual"
               style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
             />
@@ -303,9 +332,11 @@ const ProductoBaseEdit = () => {
               margin: "5px",
             }}>
             <img
-              src={`http://localhost:8000${foto.url}`}
-              style={{ width: "100px", borderRadius: "8px" }}
+              src={foto.url}
+              alt={`Foto ${foto.id}`}
+              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
             />
+
             <button
               onClick={async () => {
                 try {
@@ -328,9 +359,7 @@ const ProductoBaseEdit = () => {
                 borderRadius: "50%",
                 width: "20px",
                 height: "20px",
-              }}>
-              ×
-            </button>
+              }}></button>
           </div>
         ))}
 
