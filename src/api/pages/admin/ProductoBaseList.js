@@ -124,8 +124,26 @@ const ProductosBaseList = () => {
     {
       title: "Artículos",
       key: "articulos",
-      render: (_, record) =>
-        record.articulos.map((articulo) => articulo.nombre).join(", "),
+      render: (_, record) => (
+        <span style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          {record.articulos.map((articulo) => (
+            <span
+              key={articulo.id}
+              style={{
+                color: articulo.estado ? "#000" : "#999",
+                fontStyle: articulo.estado ? "normal" : "italic",
+                backgroundColor: "#f5f5f5",
+                padding: "2px 8px",
+                borderRadius: "5px",
+                fontSize: "0.85em",
+                border: "1px solid #ddd",
+              }}>
+              {articulo.nombre}
+              {!articulo.estado && " (deshabilitado)"}
+            </span>
+          ))}
+        </span>
+      ),
     },
     {
       title: "Imagen",
@@ -146,8 +164,7 @@ const ProductosBaseList = () => {
         <Link to={`/admin/editar-producto-base/${record.id}`}>
           <Button
             type="primary"
-            style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-          >
+            style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
             Editar
           </Button>
         </Link>
@@ -159,8 +176,7 @@ const ProductosBaseList = () => {
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
         <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
-        >
+          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <div>
             <Title level={3} style={{ textAlign: "center", color: "#001529" }}>
               Lista de Productos Base
@@ -173,15 +189,13 @@ const ProductosBaseList = () => {
             margin: "20px",
             borderRadius: "10px",
             boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
-          }}
-        >
+          }}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
                 <Button
                   type="default"
-                  style={{ marginBottom: "20px", marginTop: "20px" }}
-                >
+                  style={{ marginBottom: "20px", marginTop: "20px" }}>
                   Regresar
                 </Button>
               </Link>
@@ -193,8 +207,7 @@ const ProductosBaseList = () => {
                     marginTop: "20px",
                     backgroundColor: "#FBD5E5",
                     color: "#000",
-                  }}
-                >
+                  }}>
                   Crear Producto Base
                 </Button>
               </Link>
@@ -226,8 +239,7 @@ const ProductosBaseList = () => {
         <Modal
           visible={modalVisible}
           footer={null}
-          onCancel={() => setModalVisible(false)}
-        >
+          onCancel={() => setModalVisible(false)}>
           <img src={selectedImage} alt="Producto" style={{ width: "100%" }} />
         </Modal>
       </Layout>

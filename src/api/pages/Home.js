@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await api.get("listar-producto-base/");
+        const response = await api.get("catalogo-productos/");
         setProductos(response.data);
       } catch (error) {
         console.error("Error al cargar los productos", error);

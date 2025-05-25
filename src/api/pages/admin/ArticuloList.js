@@ -49,7 +49,7 @@ const ArticuloList = () => {
   const toggleActivo = async (articuloId, estado) => {
     try {
       await api.patch(
-        `articulos/cambio_estado/${articuloId}/`,
+        `cambiar_estado_articulo/${articuloId}/`,
         { estado: !estado },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -106,8 +106,7 @@ const ArticuloList = () => {
         <Link to={`/admin/editar-articulo/${record.id}`}>
           <Button
             type="primary"
-            style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-          >
+            style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
             Editar
           </Button>
         </Link>
@@ -119,8 +118,7 @@ const ArticuloList = () => {
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
         <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
-        >
+          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <Title level={3} style={{ color: "#001529", textAlign: "center" }}>
             Lista de Articulos
           </Title>
@@ -131,15 +129,13 @@ const ArticuloList = () => {
             margin: "20px",
             borderRadius: "10px",
             boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
-          }}
-        >
+          }}>
           <div className="articulos-list">
             <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
                 <Button
                   type="default"
-                  style={{ marginBottom: "20px", marginTop: "20px" }}
-                >
+                  style={{ marginBottom: "20px", marginTop: "20px" }}>
                   Regresar
                 </Button>
               </Link>
@@ -151,8 +147,7 @@ const ArticuloList = () => {
                     marginTop: "20px",
                     backgroundColor: "#FBD5E5",
                     color: "#000",
-                  }}
-                >
+                  }}>
                   Crear Artículo
                 </Button>
               </Link>
