@@ -37,6 +37,7 @@ const ProductoBaseEdit = () => {
   const [error, setError] = useState("");
   const [categoriasArticulo, setCategoriasArticulo] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [articulosDisponibles, setArticulosDisponibles] = useState([]);
 
   useEffect(() => {
     if (!productoId) {
@@ -87,9 +88,20 @@ const ProductoBaseEdit = () => {
       }
     };
 
+    const fetchArticulos = async () => {
+      try {
+        const response = await api.get("listar-articulos/");
+        const activos = response.data.filter((a) => a.estado === true);
+        setArticulosDisponibles(activos);
+      } catch (err) {
+        console.error("Error al cargar artículos disponibles", err);
+      }
+    };
+
     fetchProducto();
     fetchCategorias();
     fetchCategoriasArticulo();
+    fetchArticulos();
   }, [productoId]);
 
   const handleChange = (e) => {
@@ -155,6 +167,16 @@ const ProductoBaseEdit = () => {
 
   const handleCancel = () => {
     navigate("/admin/listar-producto-base"); // Redirigir a la lista de productos base si se cancela
+  };
+
+  const handleEliminarArticulo = (articuloId) => {
+    setProducto((prevState) => ({
+      ...prevState,
+      articulos: prevState.articulos.filter(
+        (articulo) =>
+          (typeof articulo === "object" ? articulo.id : articulo) !== articuloId
+      ),
+    }));
   };
 
   if (loading) {
@@ -250,8 +272,6 @@ const ProductoBaseEdit = () => {
             setNuevasFotos(validas);
           }}
         />
-
-        {/* Mostrar preview de la imagen actual si es una URL */}
         {producto.imagen && !(producto.imagen instanceof File) && (
           <div style={{ marginTop: "10px" }}>
             <Typography variant="subtitle2">Imagen actual:</Typography>
@@ -262,8 +282,6 @@ const ProductoBaseEdit = () => {
             />
           </div>
         )}
-
-        {/* Mostrar preview si el usuario sube una nueva imagen */}
         {producto.imagen && producto.imagen instanceof File && (
           <div style={{ marginTop: "10px" }}>
             <Typography variant="subtitle2">
@@ -315,6 +333,52 @@ const ProductoBaseEdit = () => {
             </button>
           </div>
         ))}
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="articulos-label">Artículos relacionados</InputLabel>
+          <Select
+            labelId="articulos-label"
+            multiple
+            value={producto.articulos.map((a) =>
+              typeof a === "object" ? a.id : a
+            )}
+            onChange={(e) => {
+              const nuevosIds = e.target.value;
+              const nuevosArticulos = nuevosIds.map((id) => {
+                const existente = producto.articulos.find((a) =>
+                  typeof a === "object" ? a.id === id : a === id
+                );
+                return existente || { id }; // si ya tienes el objeto, reutilízalo
+              });
+              setProducto((prev) => ({ ...prev, articulos: nuevosArticulos }));
+            }}
+            renderValue={(selected) => (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                {selected.map((id) => {
+                  const articulo = articulosDisponibles.find(
+                    (a) => a.id === id
+                  );
+                  return (
+                    <div
+                      key={id}
+                      style={{
+                        background: "#e0e0e0",
+                        padding: "4px 8px",
+                        borderRadius: "16px",
+                      }}>
+                      {articulo?.nombre || `ID: ${id}`}
+                    </div>
+                  );
+                })}
+              </div>
+            )}>
+            {articulosDisponibles.map((articulo) => (
+              <MenuItem key={articulo.id} value={articulo.id}>
+                {articulo.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <div className="form-buttons">
           <Button
