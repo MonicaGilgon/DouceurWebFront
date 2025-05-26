@@ -269,10 +269,7 @@ const OrderDetail = () => {
                         <div className="product-info">
                           {item.producto && item.producto.imagen ? (
                             <img
-                              src={
-                                `http://localhost:8000${item.producto.imagen}` ||
-                                "/placeholder.svg"
-                              }
+                              src={item.producto.imagen}
                               alt={item.producto.nombre || "Producto sin nombre"}
                               className="product-thumbnail"
                             />

@@ -30,6 +30,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
             }
             const response = await api.get(endpoint);
             setOrders(response.data || []);
+            console.log(response.data)
         } catch (error) {
             console.error("Error al cargar los pedidos:", error);
             setOrders([]);
@@ -121,13 +122,14 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
         (order) =>
             order.id.toString().includes(searchTerm) ||
             order.user.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (order.shipping_details?.nombre_receptor?.toLowerCase().includes(searchTerm.toLowerCase()) || "")
+            (order.shipping_info?.nombre_receptor?.toLowerCase().includes(searchTerm.toLowerCase()) || "")
     );
 
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
     const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
     const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+    
 
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
@@ -198,7 +200,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                             <td>#{order.id}</td>
                                             <td>{formatDate(order.order_date)}</td>
                                             <td>{order.user.nombre_completo}</td>
-                                            <td>{order.shipping_details?.nombre_receptor || "Sin información"}</td>
+                                            <td>{order.shipping_info?.nombre_receptor || "Sin información"}</td>
                                             <td>${parseFloat(order.total_amount).toFixed(2)}</td>
                                             <td>{getStatusBadge(order.status)}</td>
                                             <td>

@@ -116,7 +116,7 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart }) => {
   return (
     <div className="cart-item">
       <img
-        src={`http://localhost:8000${item.imagen}` || "/placeholder.svg"}
+        src={item.imagen}
         alt={item.nombre}
         className="item-image"
       />

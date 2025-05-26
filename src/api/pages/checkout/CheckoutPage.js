@@ -246,10 +246,7 @@ const CheckoutPage = () => {
               {cartItems.map((item) => (
                 <div key={item.id} className="checkout-item">
                   <img
-                    src={
-                      `http://localhost:8000${item.imagen}` ||
-                      "/placeholder.svg"
-                    }
+                    src={item.imagen}
                     alt={item.nombre}
                     className="item-thumbnail"
                   />
