@@ -135,7 +135,7 @@ const PublicHeader = () => {
           />
         </a>
         <a
-          //href="/catalogo"
+          href="/catalogo"
           style={{
             marginLeft: 30,
             fontWeight: "bold",

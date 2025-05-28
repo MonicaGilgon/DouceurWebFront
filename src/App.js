@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./api/pages/Home";
+import Catalogo from "./api/pages/Catalogo";
 import PublicLayout from "./api/layouts/PublicLayout";
 import AuthenticatedLayout from "./api/layouts/AuthenticatedLayout";
 import AdminLayout from "./api/layouts/AdminLayout";
@@ -70,6 +71,7 @@ function App() {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="access-denied" element={<AccessDenied />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="catalogo" element={<Catalogo />} />
           <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 

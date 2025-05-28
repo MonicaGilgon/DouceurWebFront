@@ -39,6 +39,7 @@ const SignUp = () => {
       const res = await api.post("/sign-up/", form)
       toast.success(res.data.success || "Cuenta creada exitosamente")
       setIsRegistered(true)
+      
 
       // 2. Iniciar sesión automáticamente
       try {

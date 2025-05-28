@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await api.get("catalogo-productos/");
+        const response = await api.get("catalogo/");
         setProductos(response.data);
       } catch (error) {
         console.error("Error al cargar los productos", error);
@@ -88,7 +88,7 @@ const Home = () => {
               </Link>
             ))}
 
-            <Link /* to="/catalogo" */ className="categoria catalogo">
+            <Link to="/catalogo" className="catalogo">
               <div className="mas">+</div>
               <p>Ver todas</p>
             </Link>
