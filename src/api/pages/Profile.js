@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import './scss/Profile.scss';
-import { useNavigate, Link } from 'react-router-dom'; // Añadir Link para los enlaces
+import { useNavigate, Link } from 'react-router-dom';
+
+const formatStatus = (status) => {
+    return status
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+};
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -45,13 +52,15 @@ const Profile = () => {
         try {
             const response = await api.get("/profile/");
             setUserData(response.data);
-            setFormData({
-                document_number: response.data.document_number || "",
-                nombre_completo: response.data.nombre_completo || "",
-                direccion: response.data.direccion || "",
-                telefono: response.data.telefono || "",
-                correo: response.data.correo || "",
-            });
+            if (!formData.document_number) { // Solo inicializa formData en la primera carga
+                setFormData({
+                    document_number: response.data.document_number || "",
+                    nombre_completo: response.data.nombre_completo || "",
+                    direccion: response.data.direccion || "",
+                    telefono: response.data.telefono || "",
+                    correo: response.data.correo || "",
+                });
+            }
             setLoading(false);
         } catch (err) {
             setError("Error al cargar el perfil: " + err.message);
@@ -62,19 +71,27 @@ const Profile = () => {
     useEffect(() => {
         fetchProfile();
 
-        // Configurar polling para actualizar los pedidos cada 5 segundos
-        const interval = setInterval(() => {
-            fetchProfile();
-        }, 5000);
+        const interval = setInterval(async () => {
+            try {
+                const response = await api.get("/profile/");
+                setUserData(prevData => {
+                    const newData = response.data;
+                    if (JSON.stringify(prevData) !== JSON.stringify(newData)) {
+                        return newData;
+                    }
+                    return prevData;
+                });
+            } catch (err) {
+                console.error('Error en polling:', err);
+            }
+        }, 30000); // 30 segundos
 
-        // Limpiar el intervalo al desmontar el componente
         return () => clearInterval(interval);
     }, []);
 
     const validateForm = () => {
         const errors = {};
-        if (!formData.nombre_completo)
-            errors.nombre_completo = "El nombre es obligatorio.";
+        if (!formData.nombre_completo) errors.nombre_completo = "El nombre es obligatorio.";
         if (!formData.telefono) errors.telefono = "El teléfono es obligatorio.";
         if (!formData.correo) {
             errors.correo = "El correo es obligatorio.";
@@ -106,19 +123,16 @@ const Profile = () => {
 
     const validatePasswordForm = () => {
         const errors = {};
-        if (!passwordData.current_password)
-            errors.current_password = "La contraseña actual es obligatoria.";
+        if (!passwordData.current_password) errors.current_password = "La contraseña actual es obligatoria.";
         if (!passwordData.new_password) {
             errors.new_password = "La nueva contraseña es obligatoria.";
         } else {
             if (passwordData.new_password.length < 8) {
                 errors.new_password = "La contraseña debe tener al menos 8 caracteres.";
             } else if (!/[A-Z]/.test(passwordData.new_password)) {
-                errors.new_password =
-                    "La contraseña debe contener al menos una letra mayúscula.";
+                errors.new_password = "La contraseña debe contener al menos una letra mayúscula.";
             } else if (!/[a-z]/.test(passwordData.new_password)) {
-                errors.new_password =
-                    "La contraseña debe contener al menos una letra minúscula.";
+                errors.new_password = "La contraseña debe contener al menos una letra minúscula.";
             } else if (!/\d/.test(passwordData.new_password)) {
                 errors.new_password = "La contraseña debe contener al menos un número.";
             }
@@ -212,7 +226,6 @@ const Profile = () => {
         <div className="profile-page">
             <div className={`profile-container ${isClient ? 'client-view' : 'non-client-view'}`}>
                 <h2>{isClient ? 'Tu Información' : `Información del ${userData.rol === 'admin' ? 'Administrador' : 'Vendedor'}`}</h2>
-                {/* Campos de información personal */}
                 <div className="profile-details">
                     <div className="form-group">
                         <label>N° de Documento:</label>
@@ -275,7 +288,6 @@ const Profile = () => {
                     {formErrors.general && <div className="error general-error">{formErrors.general}</div>}
                 </div>
 
-                {/* Botones para edición y volver */}
                 <div className="profile-actions">
                     {isEditing ? (
                         <>
@@ -316,7 +328,6 @@ const Profile = () => {
                     )}
                 </div>
 
-                {/* Botón y formulario para cambio de contraseña */}
                 {!isEditing && (
                     <div className="profile-actions">
                         <button
@@ -408,43 +419,45 @@ const Profile = () => {
                 )}
             </div>
 
-            {/* Sección de pedidos (solo para clientes) */}
             {isClient && userData.orders && userData.orders.length > 0 && (
                 <div className="orders-section">
                     <h3>Tus Pedidos</h3>
                     <div className="orders-list">
-                        {userData.orders.map(order => (
-                            <div key={order.id} className="order-item">
-                                <span className="order-date">
-                                    {new Date(order.order_date).toLocaleDateString('es-CO')}
-                                </span>
-                                <span className="order-name">
-                                    {order.items.map(item => item.articulo.nombre).join(', ')}
-                                </span>
-                                <span className="order-total">
-                                    ${parseFloat(order.total_amount).toLocaleString('es-CO', {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}
-                                </span>
-                                <span className={`order-status ${order.status}`}>
-                                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                                </span>
-                                <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-sm btn-info">
-                                    Ver Detalles
-                                </Link>
-                            </div>
-                        ))}
+                        {userData.orders.map(order => {
+                            console.log('Estado del pedido:', order.status);
+                            return (
+                                <div key={order.id} className="order-item">
+                                    <span className="order-date">
+                                        {new Date(order.order_date).toLocaleDateString('es-CO')}
+                                    </span>
+                                    <span className="order-name">
+                                        {order.items.map(item => item.producto.nombre).join(', ')}
+                                    </span>
+                                    <span className="order-total">
+                                        ${parseFloat(order.total_amount).toLocaleString('es-CO', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        })}
+                                    </span>
+                                    <span className={`order-status ${order.status}`}>
+                                        {formatStatus(order.status)}
+                                    </span>
+                                    <div className="order-actions">
+                                        <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-details">
+                                            Ver Detalles
+                                        </Link>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             )}
-
-            {/* Modal de éxito */}
             {showSuccessModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h3>¡Éxito!</h3>
-                        <p>{modalMessage}</p>
+                        <p>Perfil actualizado correctamente.</p>
                         <button className="modal-close-btn" onClick={closeModal}>
                             Cerrar
                         </button>

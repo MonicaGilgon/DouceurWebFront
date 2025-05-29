@@ -1,0 +1,190 @@
+.client-order-detail-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+
+    .d-flex {
+        margin-bottom: 20px;
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+
+        button {
+            background-color: #fbd5e5;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #f0b7cd;
+            }
+
+            .me-2 {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    .row {
+        display: flex;
+        gap: 20px;
+
+        .col-md-8,
+        .col-md-4 {
+            flex: 1;
+        }
+    }
+
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+
+            h4 {
+                font-size: 20px;
+                color: #333;
+                margin: 0;
+            }
+        }
+
+        .card-body {
+            padding: 15px;
+
+            .table {
+                margin-bottom: 0;
+
+                thead {
+                    background-color: #f5f5f5;
+
+                    th {
+                        font-size: 16px;
+                        color: #333;
+                        padding: 10px;
+                        text-align: center;
+                        border-bottom: 2px solid #e0e0e0;
+                    }
+                }
+
+                tbody {
+                    tr {
+                        &:hover {
+                            background-color: #f9f9f9;
+                        }
+
+                        td {
+                            padding: 10px;
+                            vertical-align: middle;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #666;
+
+                            .product-info {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+
+                                img.product-thumbnail {
+                                    width: 50px;
+                                    height: 50px;
+                                    object-fit: cover;
+                                    border-radius: 5px;
+                                }
+
+                                .product-name {
+                                    font-weight: bold;
+                                }
+
+                                .product-id {
+                                    font-size: 12px;
+                                    color: #888;
+                                }
+                            }
+                        }
+                    }
+
+                    .fw-bold {
+                        font-weight: bold;
+                        color: #333;
+                    }
+                }
+
+                tfoot {
+                    tr {
+                        background-color: #f5f5f5;
+
+                        td {
+                            padding: 10px;
+                            font-size: 16px;
+                            color: #333;
+                            border-top: 2px solid #e0e0e0;
+                        }
+                    }
+                }
+            }
+
+            .info-group {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+
+                .info-label {
+                    font-size: 14px;
+                    color: #555;
+                    font-weight: bold;
+                }
+
+                .info-value {
+                    font-size: 14px;
+                    color: #666;
+
+                    .badge {
+                        padding: 5px 10px;
+                        font-size: 12px;
+                        border-radius: 5px;
+                    }
+
+                    .badge-warning {
+                        background-color: #f39c12;
+                    }
+
+                    .badge-info {
+                        background-color: #3498db;
+                    }
+
+                    .badge-secondary {
+                        background-color: #f1c40f;
+                    }
+
+                    .badge-primary {
+                        background-color: #3498db;
+                    }
+
+                    .badge-success {
+                        background-color: #2ecc71;
+                    }
+
+                    .badge-danger {
+                        background-color: #e74c3c;
+                    }
+                }
+            }
+        }
+    }
+}
