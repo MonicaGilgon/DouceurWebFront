@@ -36,7 +36,7 @@ import AccessDenied from "./api/pages/AccessDenied";
 import ClienteListVendedor from "./api/pages/vendedor/ClienteList";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./api/components/Cart";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import CheckoutPage from "./api/pages/checkout/CheckoutPage";
 import OrderList from "./api/pages/admin/OrderList";
 import OrderDetail from "./api/pages/admin/OrderDetail";
@@ -45,7 +45,8 @@ import ShippedOrders from "./api/pages/admin/ShippedOrders";
 import DeliveredOrders from "./api/pages/admin/DeliveredOrders";
 import SalesReport from "./api/pages/admin/SalesReport";
 import ClientOrderDetail from "./api/pages/ClientOrderDetail";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import ProductoDetalle from "./api/pages/DescripcionProducto";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="catalogo" element={<Catalogo />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="producto/:productoId" element={<ProductoDetalle />} />
         </Route>
 
         {/* Rutas autenticadas (para todos los roles autenticados, incluyendo clientes) */}

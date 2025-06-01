@@ -1,11 +1,5 @@
 // src/context/CartContext.js
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  use,
-} from "react";
+import React, { createContext, useState, useContext, useEffect, use } from "react";
 
 const CartContext = createContext();
 
@@ -31,40 +25,37 @@ export const CartProvider = ({ children }) => {
   }, [userId]);
 
   // Función para agregar un producto al carrito
-  const addToCart = (producto) => {
-    setCartItems((prevItems) => {
-      const foundItem = prevItems.find((item) => item.id === producto.id);
+  const addToCart = producto => {
+    setCartItems(prevItems => {
+      const foundItem = prevItems.find(item => item.id === producto.id);
       if (foundItem) {
-        // Si el producto ya está en el carrito, actualiza la cantidad
-        return prevItems.map((item) =>
-          item.id === producto.id
-            ? { ...item, cantidad: item.cantidad + 1 }
-            : item
-        );
+        // Suma la cantidad seleccionada, no solo 1
+        return prevItems.map(item => (item.id === producto.id ? { ...item, cantidad: item.cantidad + producto.cantidad } : item));
       }
-      return [...prevItems, { ...producto, cantidad: 1 }];
+      // Usa la cantidad seleccionada al agregar por primera vez
+      return [...prevItems, { ...producto, cantidad: producto.cantidad }];
     });
   };
 
   // Función para eliminar un producto del carrito
-  const removeFromCart = (itemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  const removeFromCart = itemId => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 
-  const removeOneFromCart = (itemId) => {
-    setCartItems((prev) =>
+  const removeOneFromCart = itemId => {
+    setCartItems(prev =>
       prev
-        .map((prevItems) =>
-          prevItems.id === itemId
-            ? { ...prevItems, cantidad: prevItems.cantidad - 1 }
-            : prevItems
-        )
-        .filter((item) => item.cantidad > 0)
+        .map(prevItems => (prevItems.id === itemId ? { ...prevItems, cantidad: prevItems.cantidad - 1 } : prevItems))
+        .filter(item => item.cantidad > 0)
     );
   };
   // Función para limpiar todo el carrito
   const clearCart = () => {
     setCartItems([]);
+  };
+
+  const addOneToCart = itemId => {
+    setCartItems(prev => prev.map(prevItem => (prevItem.id === itemId ? { ...prevItem, cantidad: prevItem.cantidad + 1 } : prevItem)));
   };
 
   return (
@@ -74,7 +65,8 @@ export const CartProvider = ({ children }) => {
         addToCart,
         removeFromCart,
         removeOneFromCart,
-        clearCart,
+        addOneToCart,
+        clearCart
       }}
     >
       {children}

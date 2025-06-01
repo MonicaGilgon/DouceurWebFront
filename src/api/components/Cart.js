@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../pages/scss/Cart.scss";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, clearCart, removeOneFromCart, addToCart } =
-    useCart();
+  const { cartItems, removeFromCart, clearCart, removeOneFromCart, addOneToCart, addToCart } = useCart();
   const navigate = useNavigate();
 
   if (cartItems.length === 0) {
@@ -18,13 +17,14 @@ const Cart = () => {
       <h2>🛒 Tú Carrito</h2>
       <div className="cart-content">
         <div className="cart-items">
-          {cartItems.map((item) => (
+          {cartItems.map(item => (
             <CartItem
               key={item.id}
               item={item}
               removeFromCart={removeFromCart}
               addToCart={addToCart}
               removeOneFromCart={removeOneFromCart}
+              addOneToCart={addOneToCart}
             />
           ))}
         </div>
@@ -33,7 +33,7 @@ const Cart = () => {
           <h3>Resumen</h3>
 
           <div style={{ marginBottom: "1rem" }}>
-            {cartItems.map((item) => (
+            {cartItems.map(item => (
               <div
                 key={item.id}
                 style={{
@@ -41,7 +41,7 @@ const Cart = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   fontSize: "0.98em",
-                  marginBottom: "0.5rem",
+                  marginBottom: "0.5rem"
                 }}
               >
                 <span style={{ fontWeight: 500 }}>{item.nombre}</span>
@@ -49,7 +49,7 @@ const Cart = () => {
                   x {item.cantidad} &nbsp;|&nbsp; $
                   {parseFloat(item.precio).toLocaleString("es-CO", {
                     minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
+                    maximumFractionDigits: 2
                   })}
                 </span>
               </div>
@@ -57,13 +57,11 @@ const Cart = () => {
           </div>
 
           <div className="summary-row">
-            <span
-              style={{ display: "flex", flexDirection: "column", minWidth: 0 }}
-            >
+            <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
               <span
                 style={{
                   fontSize: "0.98em",
-                  whiteSpace: "nowrap",
+                  whiteSpace: "nowrap"
                 }}
               >
                 Subtotal
@@ -72,34 +70,24 @@ const Cart = () => {
                 style={{
                   fontSize: "0.98em",
                   color: "#888",
-                  whiteSpace: "nowrap",
+                  whiteSpace: "nowrap"
                 }}
               >
-                ({cartItems.reduce((acc, item) => acc + item.cantidad, 0)}{" "}
-                producto
-                {cartItems.reduce((acc, item) => acc + item.cantidad, 0) !== 1
-                  ? "s"
-                  : ""}
-                )
+                ({cartItems.reduce((acc, item) => acc + item.cantidad, 0)} producto
+                {cartItems.reduce((acc, item) => acc + item.cantidad, 0) !== 1 ? "s" : ""})
               </span>
             </span>
             <strong>
               $
               {cartItems
-                .reduce(
-                  (sum, item) => sum + parseFloat(item.precio) * item.cantidad,
-                  0
-                )
+                .reduce((sum, item) => sum + parseFloat(item.precio) * item.cantidad, 0)
                 .toLocaleString("es-CO", {
                   minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
+                  maximumFractionDigits: 2
                 })}
             </strong>
           </div>
-          <button
-            className="btn-checkout"
-            onClick={() => navigate("/checkout")}
-          >
+          <button className="btn-checkout" onClick={() => navigate("/checkout")}>
             Proceder al pago
           </button>
           <button className="btn-clear" onClick={clearCart}>
@@ -112,35 +100,28 @@ const Cart = () => {
 };
 
 // Componente individual del producto en el carrito
-const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart }) => {
+const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart, addOneToCart }) => {
   return (
     <div className="cart-item">
-      <img
-        src={item.imagen}
-        alt={item.nombre}
-        className="item-image"
-      />
+      <img src={item.imagen} alt={item.nombre} className="item-image" />
       <div className="item-details">
         <h4>{item.nombre}</h4>
         <p>
           $
           {parseFloat(item.precio).toLocaleString("es-CO", {
             minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+            maximumFractionDigits: 2
           })}
         </p>
         <div className="cantidad-row">
           <span>Cantidad</span>
           <div className="cantidad-controls">
             <span>{item.cantidad}</span>
-            <button
-              onClick={() => removeOneFromCart(item.id)}
-              className="btn-cantidad"
-            >
+            <button onClick={() => removeOneFromCart(item.id)} className="btn-cantidad">
               -
             </button>
 
-            <button onClick={() => addToCart(item)} className="btn-cantidad">
+            <button onClick={() => addOneToCart(item.id)} className="btn-cantidad">
               +
             </button>
           </div>
@@ -155,14 +136,8 @@ const EmptyCartView = () => {
   return (
     <div className="empty-cart">
       <h2>🛒 Tú carrito está vacío</h2>
-      <p>
-        Aún no has agregado ningún producto. ¡Explora nuestro catálogo y empieza
-        a comprar!
-      </p>
-      <button
-        className="btn-explore"
-        onClick={() => (window.location.href = "/catalogo")}
-      >
+      <p>Aún no has agregado ningún producto. ¡Explora nuestro catálogo y empieza a comprar!</p>
+      <button className="btn-explore" onClick={() => (window.location.href = "/catalogo")}>
         Ver Catálogo
       </button>
     </div>

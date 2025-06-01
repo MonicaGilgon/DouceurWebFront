@@ -1,7 +1,12 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
-import './scss/Catalogo.scss'; // Asegúrate de tener estilos
+import "./scss/Catalogo.scss";
+import { Link } from "react-router-dom";
+import { cilCart, cilGridSlash, cilMagnifyingGlass } from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
+import { useCart } from "../../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import "./scss/Home.scss";
 
 const Catalogo = () => {
   const [categorias, setCategorias] = useState([]);
@@ -9,6 +14,8 @@ const Catalogo = () => {
   const [productos, setProductos] = useState([]);
   const [loadingCategorias, setLoadingCategorias] = useState(true);
   const [loadingProductos, setLoadingProductos] = useState(false);
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   // Cargar categorías activas al iniciar
   useEffect(() => {
@@ -31,19 +38,28 @@ const Catalogo = () => {
   }, []);
 
   // Cargar productos por categoría seleccionada
-  const handleSeleccionarCategoria = async (categoria) => {
+  const handleSeleccionarCategoria = async categoria => {
     setCategoriaSeleccionada(categoria);
     setLoadingProductos(true);
     try {
       const response = await api.get(`productos-por-categoria/${categoria.id}/`);
-      const productosActivos = response.data.filter(
-        p => p.estado && p.categoriaProductoBase.estado
-      );
+      const productosActivos = response.data.filter(p => p.estado && p.categoriaProductoBase.estado);
       setProductos(productosActivos);
     } catch (error) {
       console.error("Error al cargar productos", error);
     } finally {
       setLoadingProductos(false);
+    }
+  };
+
+  const { addOneToCart, cartItems } = useCart();
+
+  const handleAddToCart = producto => {
+    const existe = cartItems.some(item => item.id === producto.id);
+    if (existe) {
+      addOneToCart(producto.id);
+    } else {
+      addToCart({ ...producto, cantidad: 1 });
     }
   };
 
@@ -57,11 +73,7 @@ const Catalogo = () => {
             <li>Cargando...</li>
           ) : (
             categorias.map(cat => (
-              <li
-                key={cat.id}
-                className={categoriaSeleccionada?.id === cat.id ? 'activa' : ''}
-                onClick={() => handleSeleccionarCategoria(cat)}
-              >
+              <li key={cat.id} className={categoriaSeleccionada?.id === cat.id ? "activa" : ""} onClick={() => handleSeleccionarCategoria(cat)}>
                 {cat.nombre.toUpperCase()}
               </li>
             ))
@@ -73,7 +85,7 @@ const Catalogo = () => {
       <main className="catalogo-productos">
         {categoriaSeleccionada && (
           <div className="catalogo-header">
-            <h2>{categoriaSeleccionada.nombre.toUpperCase()}</h2>            
+            <h2>{categoriaSeleccionada.nombre.toUpperCase()}</h2>
           </div>
         )}
 
@@ -85,13 +97,27 @@ const Catalogo = () => {
           <div className="productos-grid">
             {productos.map(producto => (
               <div key={producto.id} className="producto-card">
-                <img
-                  src={producto.imagen || '/placeholder.jpg'} // usa una imagen por defecto si no hay
-                  alt={producto.nombre}
-                />
+                <Link to={`/producto/${producto.id}`} title={producto.nombre}>
+                  <img
+                    src={producto.imagen || "/placeholder.jpg"} // usa una imagen por defecto si no hay
+                    alt={producto.nombre}
+                  />
+                </Link>
                 <h3>{producto.nombre.toUpperCase()}</h3>
                 <p>{producto.descripcion}</p>
                 <p className="precio">${producto.precio.toLocaleString()}</p>
+                <div className="button-area p-0">
+                  <div className="">
+                    <div className="d-flex justify-content-center mt-2 gap-3">
+                      <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart " onClick={() => navigate(`/producto/${producto.id}`)}>
+                        <CIcon icon={cilMagnifyingGlass} /> Ver
+                      </button>
+                      <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart" onClick={() => handleAddToCart(producto)}>
+                        <CIcon icon={cilCart} /> Añadir al carrito
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
