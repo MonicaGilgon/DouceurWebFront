@@ -50,31 +50,44 @@ const ProductoDetalle = () => {
         setSeleccionesCategoria(initialState);
 
         // Cargar artículos por cada categoría
-        categoriasIds.forEach(id => fetchArticulosPorCategoria(id));
+        categoriasIds.forEach(async (id) => {
+          await fetchArticulosPorCategoria(id);
+        });
       }
     }
   });
 }, [productoId]);
 
-    const fetchArticulosPorCategoria = async (categoriaId) => {
-    try {
-      const res = await api.get(`articulos-por-categoria/${categoriaId}/`);
-      setArticulosPorCategoria((prev) => ({
-        ...prev,
-        [categoriaId]: res.data.filter(a => a.estado),
-      }));
-    } catch (error) {
-      console.error(`Error al traer artículos para la categoría ${categoriaId}`, error);
-      setArticulosPorCategoria((prev) => ({
-        ...prev,
-        [categoriaId]: []
-      }));
-    }
-  };
+      const fetchArticulosPorCategoria = async (categoriaId) => {
+        try {
+          const res = await api.get(`articulos-por-categoria/${categoriaId}/`);
+          const articulosActivos = res.data.filter(a => a.estado);
+
+          setArticulosPorCategoria((prev) => ({
+            ...prev,
+            [categoriaId]: articulosActivos
+          }));
+
+          // Selecciona automáticamente el primer artículo si existe
+          if (articulosActivos.length > 0) {
+            const primerArticuloId = articulosActivos[0].id.toString();
+
+            setSeleccionesCategoria(prev => ({
+              ...prev,
+              [categoriaId]: primerArticuloId
+            }));
+          }
+
+        } catch (error) {
+          console.error(`Error al traer artículos para la categoría ${categoriaId}`, error);
+          setArticulosPorCategoria((prev) => ({
+            ...prev,
+            [categoriaId]: []
+          }));
+        }
+      };
 
   if (!producto) return <div className="producto-detalle-loading">Cargando...</div>;
-
-
 
   const handleSeleccionCategoria = (categoriaId, articuloId) => {
     setSeleccionesCategoria(prev => ({
@@ -82,8 +95,6 @@ const ProductoDetalle = () => {
       [categoriaId]: articuloId
     }));
   };
-
-
 
   const handleAddToCart = () => {
     // Buscar la imagen principal o la primera
@@ -173,6 +184,7 @@ const ProductoDetalle = () => {
                   <label htmlFor={`categoria-${categoria.id}`}>
                     {categoria.nombre}:
                   </label>
+
                   <select
                     id={`categoria-${categoria.id}`}
                     value={seleccionesCategoria[categoria.id] || ""}
@@ -181,7 +193,6 @@ const ProductoDetalle = () => {
                     }
                     className="categoria-articulo-select"
                   >
-                    <option value="">Seleccione una opción</option>
                     {articulosActivos.map(articulo => (
                       <option key={articulo.id} value={articulo.id}>
                         {articulo.nombre}
@@ -194,33 +205,12 @@ const ProductoDetalle = () => {
           </div>
         )}
 
-
       <div className="producto-detalle-info">
         <div className="producto-detalle-nombre">{producto.nombre}</div>
         <div className="producto-detalle-tags">
           {producto.categoriaProductoBase && <span className="producto-detalle-tag">{producto.categoriaProductoBase.nombre}</span>}
         </div>
         <div className="producto-detalle-precio">${Number(producto.precio).toLocaleString("es-CO")}</div>
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div className="producto-detalle-cantidad-row">
           <span>Cantidad</span>
           <div className="producto-detalle-cantidad-controls">
