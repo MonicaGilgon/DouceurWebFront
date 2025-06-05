@@ -11,6 +11,7 @@ const ProductoDetalle = () => {
   const [cantidad, setCantidad] = useState(1);
   const [imgSeleccionada, setImgSeleccionada] = useState(0);
   const [seleccionesCategoria, setSeleccionesCategoria] = useState({});
+  const [articulosPorCategoria, setArticulosPorCategoria] = useState({});
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -38,15 +39,38 @@ const ProductoDetalle = () => {
         });
         // Inicializa selección vacía para cada categoría, PONER LUEGO A QUE SE SELECCIONE EL PRIMERO
         if (res.data.categorias_articulo && res.data.categorias_articulo.length > 0) {
-          const initialState = {};
-          res.data.categorias_articulo.forEach(cat => {
-            initialState[cat.id] = "";
-          });
-          setSeleccionesCategoria(initialState);
-        }
+        const initialState = {};
+        const categoriasIds = [];
+
+        res.data.categorias_articulo.forEach(cat => {
+          initialState[cat.id] = "";
+          categoriasIds.push(cat.id);
+        });
+
+        setSeleccionesCategoria(initialState);
+
+        // Cargar artículos por cada categoría
+        categoriasIds.forEach(id => fetchArticulosPorCategoria(id));
       }
-    });
-  }, [productoId]);
+    }
+  });
+}, [productoId]);
+
+    const fetchArticulosPorCategoria = async (categoriaId) => {
+    try {
+      const res = await api.get(`articulos-por-categoria/${categoriaId}/`);
+      setArticulosPorCategoria((prev) => ({
+        ...prev,
+        [categoriaId]: res.data.filter(a => a.estado),
+      }));
+    } catch (error) {
+      console.error(`Error al traer artículos para la categoría ${categoriaId}`, error);
+      setArticulosPorCategoria((prev) => ({
+        ...prev,
+        [categoriaId]: []
+      }));
+    }
+  };
 
   if (!producto) return <div className="producto-detalle-loading">Cargando...</div>;
 
@@ -138,43 +162,37 @@ const ProductoDetalle = () => {
 
 
 
-        {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
-              <div className="producto-detalle-categorias-articulo">
-                <h4>Personalización del producto:</h4>
-                {producto.categorias_articulo.map(categoria => {
-                // Filtramos los artículos que pertenecen a esta categoría
-                const articulosDeCategoria = producto.articulos.filter(
-                  articulo => articulo.categoriaArticulo?.id === categoria.id
-                );
+                {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
+          <div className="producto-detalle-categorias-articulo">
+            <h4>Personalización del producto:</h4>
+            {producto.categorias_articulo.map(categoria => {
+              const articulosActivos = articulosPorCategoria[categoria.id] || [];
 
-                // Filtramos solo los activos
-                const articulosActivos = articulosDeCategoria.filter(a => a.estado);
-
-                return (
-                  <div key={categoria.id} className="categoria-articulo-group">
-                    <label htmlFor={`categoria-${categoria.id}`}>
-                      {categoria.nombre}:
-                    </label>
-                    <select
-                      id={`categoria-${categoria.id}`}
-                      value={seleccionesCategoria[categoria.id] || ""}
-                      onChange={(e) =>
-                        handleSeleccionCategoria(categoria.id, e.target.value)
-                      }
-                      className="categoria-articulo-select"
-                    >
-                      <option value="">Seleccione una opción</option>
-                      {articulosActivos.map(articulo => (
-                        <option key={articulo.id} value={articulo.id}>
-                          {articulo.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+              return (
+                <div key={categoria.id} className="categoria-articulo-group">
+                  <label htmlFor={`categoria-${categoria.id}`}>
+                    {categoria.nombre}:
+                  </label>
+                  <select
+                    id={`categoria-${categoria.id}`}
+                    value={seleccionesCategoria[categoria.id] || ""}
+                    onChange={(e) =>
+                      handleSeleccionCategoria(categoria.id, e.target.value)
+                    }
+                    className="categoria-articulo-select"
+                  >
+                    <option value="">Seleccione una opción</option>
+                    {articulosActivos.map(articulo => (
+                      <option key={articulo.id} value={articulo.id}>
+                        {articulo.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
 
       <div className="producto-detalle-info">
