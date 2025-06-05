@@ -10,6 +10,7 @@ const ProductoDetalle = () => {
   const [producto, setProducto] = useState(null);
   const [cantidad, setCantidad] = useState(1);
   const [imgSeleccionada, setImgSeleccionada] = useState(0);
+  const [seleccionesCategoria, setSeleccionesCategoria] = useState({});
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -35,11 +36,30 @@ const ProductoDetalle = () => {
           ...res.data,
           imagenes
         });
+        // Inicializa selección vacía para cada categoría, PONER LUEGO A QUE SE SELECCIONE EL PRIMERO
+        if (res.data.categorias_articulo && res.data.categorias_articulo.length > 0) {
+          const initialState = {};
+          res.data.categorias_articulo.forEach(cat => {
+            initialState[cat.id] = "";
+          });
+          setSeleccionesCategoria(initialState);
+        }
       }
     });
   }, [productoId]);
 
   if (!producto) return <div className="producto-detalle-loading">Cargando...</div>;
+
+
+
+  const handleSeleccionCategoria = (categoriaId, articuloId) => {
+    setSeleccionesCategoria(prev => ({
+      ...prev,
+      [categoriaId]: articuloId
+    }));
+  };
+
+
 
   const handleAddToCart = () => {
     // Buscar la imagen principal o la primera
@@ -48,10 +68,23 @@ const ProductoDetalle = () => {
       imagen = producto.imagenes[imgSeleccionada]?.url_imagen || producto.imagenes[0].url_imagen;
     }
 
+    const articulosSeleccionados = Object.entries(seleccionesCategoria).map(([categoriaId, articuloId]) => {
+    const categoria = producto.categorias_articulo.find(c => c.id === parseInt(categoriaId));
+    const articulo = categoria?.articulos.find(a => a.id === parseInt(articuloId));
+
+
+      return {
+        categoriaNombre: categoria?.nombre || "Sin categoría",
+        articuloNombre: articulo?.nombre || "",
+        articuloId: articulo?.id || null
+      };
+    });
+
     const productoParaCarrito = {
       ...producto,
       imagen,
-      cantidad: parseInt(cantidad)
+      cantidad: parseInt(cantidad),
+      personalizaciones: articulosSeleccionados,
     };
 
     addToCart(productoParaCarrito);
@@ -83,14 +116,92 @@ const ProductoDetalle = () => {
             <div className="producto-detalle-desc-title">Descripción</div>
             <div>{producto.descripcion}</div>
           </div>
+
+
+
+            <div className="producto-detalle-articulos">
+            <h4>Artículos que componen este producto:</h4>
+            {producto.articulos && producto.articulos.length > 0 ? (
+              <ul>
+                {producto.articulos.map((articulo) => (
+                  <li key={articulo.id}>
+                    {articulo.nombre} {articulo.estado ? "" : "(deshabilitado)"}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay artículos asociados.</p>
+            )}
+          </div>
         </div>
       </div>
+
+
+
+        {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
+              <div className="producto-detalle-categorias-articulo">
+                <h4>Personalización del producto:</h4>
+                {producto.categorias_articulo.map(categoria => {
+                // Filtramos los artículos que pertenecen a esta categoría
+                const articulosDeCategoria = producto.articulos.filter(
+                  articulo => articulo.categoriaArticulo?.id === categoria.id
+                );
+
+                // Filtramos solo los activos
+                const articulosActivos = articulosDeCategoria.filter(a => a.estado);
+
+                return (
+                  <div key={categoria.id} className="categoria-articulo-group">
+                    <label htmlFor={`categoria-${categoria.id}`}>
+                      {categoria.nombre}:
+                    </label>
+                    <select
+                      id={`categoria-${categoria.id}`}
+                      value={seleccionesCategoria[categoria.id] || ""}
+                      onChange={(e) =>
+                        handleSeleccionCategoria(categoria.id, e.target.value)
+                      }
+                      className="categoria-articulo-select"
+                    >
+                      <option value="">Seleccione una opción</option>
+                      {articulosActivos.map(articulo => (
+                        <option key={articulo.id} value={articulo.id}>
+                          {articulo.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+
       <div className="producto-detalle-info">
         <div className="producto-detalle-nombre">{producto.nombre}</div>
         <div className="producto-detalle-tags">
           {producto.categoriaProductoBase && <span className="producto-detalle-tag">{producto.categoriaProductoBase.nombre}</span>}
         </div>
         <div className="producto-detalle-precio">${Number(producto.precio).toLocaleString("es-CO")}</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div className="producto-detalle-cantidad-row">
           <span>Cantidad</span>

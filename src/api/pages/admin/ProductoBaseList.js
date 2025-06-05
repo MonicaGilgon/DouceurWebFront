@@ -164,7 +164,36 @@ const ProductosBaseList = () => {
           ))}
         </span>
       ),
-    },
+    },{
+  title: "Categorías de Artículo",
+  key: "categorias_articulo",
+  render: (_, record) => (
+    <span style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+      {record.categorias_articulo && record.categorias_articulo.length > 0 ? (
+        record.categorias_articulo.map((cat) => (
+          <span
+            key={cat.id}
+            style={{
+              color: cat.estado ? "#000" : "#999",
+              fontStyle: cat.estado ? "normal" : "italic",
+              backgroundColor: "#f5f5f5",
+              padding: "2px 8px",
+              borderRadius: "5px",
+              fontSize: "0.85em",
+              border: "1px solid #ddd",
+            }}
+          >
+            {cat.nombre}
+            {!cat.estado && " (deshabilitado)"}
+          </span>
+        ))
+      ) : (
+        <span style={{ color: "#999", fontStyle: "italic" }}>Sin categorías</span>
+      )}
+    </span>
+  ),
+},
+      
     {
       title: "Imagen",
       key: "imagen",
