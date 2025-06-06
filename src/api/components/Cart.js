@@ -14,7 +14,7 @@ const Cart = () => {
 
   return (
     <div className="cart-container">
-      <h2>🛒 Tú Carrito</h2>
+      <h2>🛒 Tu Carrito</h2>
       <div className="cart-content">
         <div className="cart-items">
           {cartItems.map(item => (
@@ -154,7 +154,7 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart, addOneTo
 const EmptyCartView = () => {
   return (
     <div className="empty-cart">
-      <h2>🛒 Tú carrito está vacío</h2>
+      <h2>🛒 Tu carrito está vacío</h2>
       <p>Aún no has agregado ningún producto. ¡Explora nuestro catálogo y empieza a comprar!</p>
       <button className="btn-explore" onClick={() => (window.location.href = "/catalogo")}>
         Ver Catálogo
