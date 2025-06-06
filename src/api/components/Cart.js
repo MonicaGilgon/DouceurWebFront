@@ -104,26 +104,45 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart, addOneTo
   return (
     <div className="cart-item">
       <img src={item.imagen} alt={item.nombre} className="item-image" />
+
       <div className="item-details">
         <h4>{item.nombre}</h4>
-        <p>
-          $
-          {parseFloat(item.precio).toLocaleString("es-CO", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          })}
-        </p>
+        <p><strong>Precio:</strong> ${parseFloat(item.precio).toLocaleString("es-CO")}</p>
+
+        {/* Artículos fijos */}
+        {item.articulosFijos && item.articulosFijos.length > 0 && (
+          <div style={{ fontSize: "0.9em", color: "#666" }}>
+            <strong>Artículos incluidos:</strong>
+            <ul style={{ paddingLeft: "15px" }}>
+              {item.articulosFijos.map(articulo => (
+                <li key={articulo.id}>{articulo.nombre}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Personalizaciones */}
+        {item.personalizaciones && item.personalizaciones.length > 0 && (
+          <div style={{ fontSize: "0.9em", color: "#666", marginTop: "8px" }}>
+            <strong>Personalización:</strong>
+            <ul style={{ paddingLeft: "15px" }}>
+              {item.personalizaciones.map((p, i) =>
+                p.articuloNombre !== "No seleccionado" ? (
+                  <li key={i}>
+                    {p.categoriaNombre}: {p.articuloNombre}
+                  </li>
+                ) : null
+              )}
+            </ul>
+          </div>
+        )}
+
         <div className="cantidad-row">
           <span>Cantidad</span>
           <div className="cantidad-controls">
             <span>{item.cantidad}</span>
-            <button onClick={() => removeOneFromCart(item.id)} className="btn-cantidad">
-              -
-            </button>
-
-            <button onClick={() => addOneToCart(item.id)} className="btn-cantidad">
-              +
-            </button>
+            <button onClick={() => removeOneFromCart(item.id)} className="btn-cantidad">-</button>
+            <button onClick={() => addOneToCart(item.id)} className="btn-cantidad">+</button>
           </div>
         </div>
       </div>

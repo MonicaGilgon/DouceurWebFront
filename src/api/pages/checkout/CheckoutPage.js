@@ -98,7 +98,28 @@ const CheckoutPage = () => {
       productosTexto += `${index + 1}. ${item.nombre} - ${
         item.cantidad
       } x $${Number.parseFloat(item.precio).toFixed(2)} = $${subtotal}\n`;
-    });
+
+
+    // Agrega artículos fijos si existen
+    if (item.articulosFijos?.length > 0) {
+      productosTexto += "_Artículos incluidos:_\n";
+      item.articulosFijos.forEach(articulo => {
+        productosTexto += `• ${articulo.nombre}\n`;
+      });
+    }
+
+    // Agrega personalizaciones si existen
+    if (item.personalizaciones?.length > 0) {
+      productosTexto += "_Personalización:_\n";
+      item.personalizaciones.forEach(p => {
+        if (p.articuloNombre !== "No seleccionado") {
+          productosTexto += `• ${p.categoriaNombre}: ${p.articuloNombre}\n`;
+        }
+      });
+    }
+
+    productosTexto += `\n`;
+  });
 
     // Calcular el subtotal
     const total = calculateTotal();
@@ -243,33 +264,41 @@ const CheckoutPage = () => {
           <div className="checkout-summary">
             <h3>Resumen de tu pedido</h3>
             <div className="checkout-items">
-              {cartItems.map((item) => (
-                <div key={item.id} className="checkout-item">
-                  <img
-                    src={item.imagen}
-                    alt={item.nombre}
-                    className="item-thumbnail"
-                  />
-                  <div className="item-info">
-                    <h4>{item.nombre}</h4>
-                    <p className="item-price">
-                      $
-                      {parseFloat(item.precio).toLocaleString("es-CO", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </p>
-                    <p className="item-quantity">Cantidad: {item.cantidad}</p>
-                    <p className="item-subtotal">
-                      Subtotal: $
-                      {parseFloat(item.precio).toLocaleString("es-CO", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {cartItems.map(item => (
+              <div key={item.id} className="checkout-item">
+                <h3>{item.nombre}</h3>
+                <p><strong>Precio unitario:</strong> ${Number(item.precio).toLocaleString("es-CO")}</p>
+                <p><strong>Cantidad:</strong> {item.cantidad}</p>
+                
+                {/* Artículos fijos */}
+                {item.articulosFijos?.length > 0 && (
+                  <>
+                    <p><strong>Artículos incluidos:</strong></p>
+                    <ul>
+                      {item.articulosFijos.map(articulo => (
+                        <li key={`fijo-${articulo.id}`}>{articulo.nombre}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {/* Personalizaciones */}
+                {item.personalizaciones?.length > 0 && (
+                  <>
+                    <p><strong>Personalización:</strong></p>
+                    <ul>
+                      {item.personalizaciones.map((p, index) =>
+                        p.articuloNombre !== "No seleccionado" ? (
+                          <li key={`personalizacion-${index}`}>
+                            {p.categoriaNombre}: {p.articuloNombre}
+                          </li>
+                        ) : null
+                      )}
+                    </ul>
+                  </>
+                )}
+              </div>
+            ))}
             </div>
             <div className="checkout-total">
               <span>Total:</span>

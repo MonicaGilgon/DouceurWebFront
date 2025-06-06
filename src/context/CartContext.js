@@ -25,15 +25,33 @@ export const CartProvider = ({ children }) => {
   }, [userId]);
 
   // Función para agregar un producto al carrito
-  const addToCart = producto => {
-    setCartItems(prevItems => {
-      const foundItem = prevItems.find(item => item.id === producto.id);
+  const addToCart = (producto) => {
+    setCartItems((prevItems) => {
+      // Busca si ya existe el producto en el carrito
+      const foundItem = prevItems.find((item) => item.id === producto.id);
+
       if (foundItem) {
-        // Suma la cantidad seleccionada, no solo 1
-        return prevItems.map(item => (item.id === producto.id ? { ...item, cantidad: item.cantidad + producto.cantidad } : item));
+        // Si ya está, solo aumenta la cantidad
+        return prevItems.map((item) =>
+          item.id === producto.id
+            ? {
+                ...item,
+                cantidad: item.cantidad + producto.cantidad,
+              }
+            : item
+        );
       }
-      // Usa la cantidad seleccionada al agregar por primera vez
-      return [...prevItems, { ...producto, cantidad: producto.cantidad }];
+
+      // Si no está, agrégalo con sus artículos fijos y personalizaciones
+      return [
+        ...prevItems,
+        {
+          ...producto,
+          cantidad: producto.cantidad || 1,
+          articulosFijos: producto.articulos || [],
+          personalizaciones: producto.personalizaciones || []
+        },
+      ];
     });
   };
 
