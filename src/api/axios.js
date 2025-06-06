@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "../utils/auth";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // URL del backend
+  baseURL: "https://douceurwebback.onrender.com/", // URL del backend
   headers: {
     "Content-Type": "application/json",
   },
