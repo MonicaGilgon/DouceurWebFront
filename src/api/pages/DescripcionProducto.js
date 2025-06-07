@@ -181,7 +181,18 @@ const ProductoDetalle = () => {
         </div>
       </div>
 
-          {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
+          
+
+      <div className="producto-detalle-info">
+        <div className="producto-detalle-nombre">{producto.nombre}</div>
+        <div className="producto-detalle-tags">
+          {producto.categoriaProductoBase && <span className="producto-detalle-tag">{producto.categoriaProductoBase.nombre}</span>}
+        </div>
+        <div className="producto-detalle-precio">${Number(producto.precio).toLocaleString("es-CO")}</div>
+
+
+            {/*PERSONALIZACION DEL PRODUCTO*/} 
+            {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
           <div className="producto-detalle-categorias-articulo">
             <h4>Personalización del producto:</h4>
             {producto.categorias_articulo.map(categoria => {
@@ -213,12 +224,7 @@ const ProductoDetalle = () => {
           </div>
         )}
 
-      <div className="producto-detalle-info">
-        <div className="producto-detalle-nombre">{producto.nombre}</div>
-        <div className="producto-detalle-tags">
-          {producto.categoriaProductoBase && <span className="producto-detalle-tag">{producto.categoriaProductoBase.nombre}</span>}
-        </div>
-        <div className="producto-detalle-precio">${Number(producto.precio).toLocaleString("es-CO")}</div>
+
         <div className="producto-detalle-cantidad-row">
           <span>Cantidad</span>
           <div className="producto-detalle-cantidad-controls">

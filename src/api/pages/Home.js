@@ -143,7 +143,7 @@ const Home = () => {
                         })}
                       </span>
                     </div>
-                    <div className="button-area p-0 pt-3">
+                    {/*<div className="button-area p-0 pt-3">
                       <div className="">
                         <div className="d-flex justify-content-center mt-2 gap-3">
                           <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart " onClick={() => navigate(`/producto/${p.id}`)}>
@@ -154,7 +154,7 @@ const Home = () => {
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </div>*/}
                   </div>
                 </div>
               </div>

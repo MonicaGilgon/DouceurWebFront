@@ -106,7 +106,7 @@ const Catalogo = () => {
                 <h3>{producto.nombre.toUpperCase()}</h3>
                 <p>{producto.descripcion}</p>
                 <p className="precio">${producto.precio.toLocaleString()}</p>
-                <div className="button-area p-0">
+                {/*<div className="button-area p-0">
                   <div className="">
                     <div className="d-flex justify-content-center mt-2 gap-3">
                       <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart " onClick={() => navigate(`/producto/${producto.id}`)}>
@@ -117,7 +117,7 @@ const Catalogo = () => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </div>*/}
               </div>
             ))}
           </div>
