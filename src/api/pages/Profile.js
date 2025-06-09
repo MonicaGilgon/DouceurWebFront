@@ -423,33 +423,35 @@ const Profile = () => {
                 <div className="orders-section">
                     <h3>Tus Pedidos</h3>
                     <div className="orders-list">
-                        {userData.orders.map(order => {
-                            console.log('Estado del pedido:', order.status);
-                            return (
-                                <div key={order.id} className="order-item">
-                                    <span className="order-date">
-                                        {new Date(order.order_date).toLocaleDateString('es-CO')}
-                                    </span>
-                                    <span className="order-name">
-                                        {order.items.map(item => item.producto.nombre).join(', ')}
-                                    </span>
-                                    <span className="order-total">
-                                        ${parseFloat(order.total_amount).toLocaleString('es-CO', {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
-                                        })}
-                                    </span>
-                                    <span className={`order-status ${order.status}`}>
-                                        {formatStatus(order.status)}
-                                    </span>
-                                    <div className="order-actions">
-                                        <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-details">
-                                            Ver Detalles
-                                        </Link>
+                        {userData.orders
+                            .filter(order => !['pendiente', 'rechazado'].includes(order.status))
+                            .map(order => {
+                                console.log('Estado del pedido:', order.status);
+                                return (
+                                    <div key={order.id} className="order-item">
+                                        <span className="order-date">
+                                            {new Date(order.order_date).toLocaleDateString('es-CO')}
+                                        </span>
+                                        <span className="order-name">
+                                            {order.items.map(item => item.producto.nombre).join(', ')}
+                                        </span>
+                                        <span className="order-total">
+                                            ${parseFloat(order.total_amount).toLocaleString('es-CO', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            })}
+                                        </span>
+                                        <span className={`order-status ${order.status}`}>
+                                            {formatStatus(order.status)}
+                                        </span>
+                                        <div className="order-actions">
+                                            <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-details">
+                                                Ver Detalles
+                                            </Link>
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
                     </div>
                 </div>
             )}
