@@ -3,6 +3,7 @@ import { refreshToken } from "../utils/auth";
 
 const api = axios.create({
   baseURL: "https://douceurwebback.onrender.com/api", // URL del backend
+  //baseURL: "http://localhost:8000/api", // URL del backend en desarrollo
   headers: {
     "Content-Type": "application/json",
   },

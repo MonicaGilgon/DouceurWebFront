@@ -249,3 +249,19 @@
   border-radius: 0 8px 8px 0;
   margin-left: 2px;
 }
+
+
+@media (max-width: 600px) {
+  .producto-detalle-mainimg img {
+    width: 100%;
+    height: 150px;
+  }
+  .producto-detalle-info {
+    padding: 0 8px;
+  }
+  .producto-detalle-cantidad-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

@@ -100,3 +100,38 @@
     }
   }
 }
+
+@media (max-width: 900px) {
+  .catalogo-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .catalogo-categorias {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 1rem;
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      li {
+        border-left: none;
+        border-bottom: 2px solid #d26b8d;
+        width: auto;
+        padding: 8px 12px;
+      }
+    }
+  }
+  .catalogo-productos {
+    min-width: 0;
+  }
+  .productos-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .productos-grid {
+    grid-template-columns: 1fr;
+  }
+}

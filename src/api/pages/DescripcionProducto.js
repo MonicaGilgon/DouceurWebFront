@@ -22,7 +22,7 @@ const ProductoDetalle = () => {
           res.data.fotos && res.data.fotos.length > 0
             ? res.data.fotos.map((url, idx) => ({
                 id: idx,
-                url_imagen: url,
+                url_imagen: url.foto || url.imagen || url.imagen_url,
                 es_imagen_principal: idx === 0
               }))
             : [
