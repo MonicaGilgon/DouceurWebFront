@@ -18,7 +18,7 @@ const SellerEdit = () => {
     direccion: "",
     estado: "",
   });
-  const [sellersExistentes, setSellersExistentes] = useState([]);
+  const [ setSellersExistentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

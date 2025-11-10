@@ -196,11 +196,11 @@ const ProductoBaseEdit = () => {
     }
   };
 
-  const handleCancel = () => {
+  {/*const handleCancel = () => {
     navigate("/admin/listar-producto-base"); // Redirigir a la lista de productos base si se cancela
-  };
+  };*/}
 
-  const handleEliminarArticulo = (articuloId) => {
+  {/*const handleEliminarArticulo = (articuloId) => {
     setProducto((prevState) => ({
       ...prevState,
       articulos: prevState.articulos.filter(
@@ -208,7 +208,7 @@ const ProductoBaseEdit = () => {
           (typeof articulo === "object" ? articulo.id : articulo) !== articuloId
       ),
     }));
-  };
+  };*/}
 
   if (loading) {
     return <CircularProgress />;

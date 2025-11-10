@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../scss/SwitchConf.scss";
 import api from "../../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { Link} from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
@@ -21,7 +20,7 @@ const { Title } = Typography;
 const ArticuloList = () => {
   const [articulos, setArticulos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
   const { Content, Header } = Layout;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);

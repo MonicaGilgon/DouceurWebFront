@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from '../components/Header'; // Header para clientes
 import AdminHeader from '../components/AdminHeader'; // Header para admins
 import AdminSidebar from '../components/AdminSidebar'; // Sidebar para admins
 import VendedorHeader from '../components/VendedorHeader'; // Header para vendedores

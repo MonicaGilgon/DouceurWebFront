@@ -19,7 +19,7 @@ const CreateArticulo = () => {
   const [categorias, setCategorias] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); 
+  const [ setLoading] = useState(false); 
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -57,9 +57,9 @@ const CreateArticulo = () => {
         }
   };
 
-  const handleCancel = () => {
+  {/*const handleCancel = () => {
     navigate("/admin/listar-articulos");
-  };
+  };*/}
 
   return (
     <div className="edit-container">

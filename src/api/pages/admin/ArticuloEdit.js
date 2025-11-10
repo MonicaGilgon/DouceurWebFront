@@ -99,9 +99,9 @@ const ArticuloEdit = () => {
     }
   };
 
-  const handleCancel = () => {
+  {/*const handleCancel = () => {
     navigate("/admin/listar-articulos");
-  };
+  };*/}
 
   if (loading) {
     return <CircularProgress />;

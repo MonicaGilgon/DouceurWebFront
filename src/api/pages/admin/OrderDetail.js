@@ -14,7 +14,7 @@ const OrderDetail = () => {
   const [paymentProof, setPaymentProof] = useState(null);
   const [message, setMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [newStatus, setNewStatus] = useState(null);
+  const [ setNewStatus] = useState(null);
 
   useEffect(() => {
     fetchOrderDetails();

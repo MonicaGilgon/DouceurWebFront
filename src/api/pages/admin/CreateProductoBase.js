@@ -92,12 +92,12 @@ const CreateProductoBase = () => {
     setFormData({ ...formData, imagen: file });
   };
 
-  const handleSeleccionCategoriasArticulo = (e) => {
+  {/*const handleSeleccionCategoriasArticulo = (e) => {
     const seleccionadas = Array.from(e.target.selectedOptions).map((opt) =>
       parseInt(opt.value)
     );
     setCategoriasSeleccionadas(seleccionadas);
-  };
+  };*/}
 
   const handleAddArticulo = () => {
     if (selectedArticulo && !formData.articulos.includes(selectedArticulo)) {
@@ -112,9 +112,6 @@ const CreateProductoBase = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/admin/listar-producto-base");
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

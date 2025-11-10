@@ -7,7 +7,6 @@ const AdminSidebarNav = () => {
   const renderNavItems = (items) => {
     return items.map((item, index) => {
       const {
-        component: Component,
         icon,
         name,
         to,

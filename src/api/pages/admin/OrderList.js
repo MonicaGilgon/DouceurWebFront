@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const OrderList = ({ statusFilter = null, role = "admin" }) => {
     const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [ setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);

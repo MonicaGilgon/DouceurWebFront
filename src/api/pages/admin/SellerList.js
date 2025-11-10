@@ -15,7 +15,6 @@ import {
   Space,
   ConfigProvider,
 } from "antd";
-import { render } from "@testing-library/react";
 
 const SellerList = () => {
   const { Content, Header } = Layout;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
@@ -13,7 +13,6 @@ import {
   Switch,
   ConfigProvider,
 } from "antd";
-import { render } from "@testing-library/react";
 
 const CategoriaArticuloList = () => {
   const { Content, Header } = Layout;
@@ -22,7 +21,7 @@ const CategoriaArticuloList = () => {
   const [loading, setLoading] = useState(true);
   const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
   const [articulosAsociados, setArticulosAsociados] = useState({});
-  const navigate = useNavigate();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 

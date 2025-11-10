@@ -34,7 +34,7 @@ const Profile = () => {
     const [isSubmittingData, setIsSubmittingData] = useState(false);
     const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
+    const [setModalMessage] = useState('');
     const [passwordVisibility, setPasswordVisibility] = useState({
         current_password: false,
         new_password: false,
@@ -87,7 +87,7 @@ const Profile = () => {
         }, 30000); // 30 segundos
 
         return () => clearInterval(interval);
-    }, []);
+    }, [userData]);
 
     const validateForm = () => {
         const errors = {};

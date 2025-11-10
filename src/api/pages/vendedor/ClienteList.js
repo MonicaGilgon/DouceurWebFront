@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
@@ -9,13 +8,7 @@ import {
   Layout,
   Table,
   Typography,
-  Button,
-  Switch,
-  Modal,
-  message,
-  Space,
   ConfigProvider,
-  Divider,
 } from "antd";
 
 const ClienteList = () => {

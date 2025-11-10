@@ -14,7 +14,6 @@ import {
 import { Link } from "react-router-dom";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import { render } from "@testing-library/react";
 
 const { Content, Header } = Layout;
 const { Title } = Typography;
@@ -42,10 +41,10 @@ const ProductosBaseList = () => {
     fetchProductos();
   }, []);
 
-  const handleImageClick = (imagen) => {
+  {/*const handleImageClick = (imagen) => {
     setSelectedImage(`http://localhost:8000${imagen}`);
     setModalVisible(true);
-  };
+  };*/}
 
   const handleDelete = async (id) => {
     Modal.confirm({

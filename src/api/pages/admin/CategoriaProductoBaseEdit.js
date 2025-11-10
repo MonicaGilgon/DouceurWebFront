@@ -76,9 +76,9 @@ const CategoriaProductoBaseEdit = () => {
     }
   };
 
-  const handleCancel = () => {
+  {/*const handleCancel = () => {
     navigate("/admin/listar-categoria-producto-base");
-  };
+  };*/}
 
   if (loading) {
     return <CircularProgress />;

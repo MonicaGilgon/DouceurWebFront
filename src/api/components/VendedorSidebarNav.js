@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { CNavGroup, CNavItem } from "@coreui/react";
+import { CNavGroup } from "@coreui/react";
 import _navVendedor from "../../_navVendedor";
 
 const VendedorSidebarNav = () => {

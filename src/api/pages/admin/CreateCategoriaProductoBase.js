@@ -51,9 +51,6 @@ const CreateCategoriaProductoBase = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/admin/listar-categoria-producto-base");
-  };
 
   return (
     <div className="edit-container">

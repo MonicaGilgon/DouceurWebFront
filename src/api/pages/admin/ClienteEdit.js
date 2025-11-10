@@ -14,9 +14,8 @@ const ClienteEdit = () => {
     correo: "",
     telefono: "",
   });
-  const [clientesExistentes, setClientesExistentes] = useState([]);
+  const [setClientesExistentes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchClientes = async () => {

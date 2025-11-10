@@ -5,8 +5,6 @@ import logo from "../images/logo.png";
 import banner from "../images/banner-desayuno.png";
 import "./scss/Home.scss";
 import { useCart } from "../../context/CartContext";
-import { cilCart, cilGridSlash, cilMagnifyingGlass } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
 import ProductGridSkeleton from "../components/Skeleton/ProductGridSkeleton";
 
 const Home = () => {
@@ -15,7 +13,6 @@ const Home = () => {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
   const { addToCart, addOneToCart, cartItems } = useCart();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -48,14 +45,14 @@ const Home = () => {
 
   const categoriasHabilitadas = categorias.filter(c => c.estado === true).slice(0, 5);
 
-  const handleAddToCart = producto => {
+  {/*const handleAddToCart = producto => {
     const existe = cartItems.some(item => item.id === producto.id);
     if (existe) {
       addOneToCart(producto.id);
     } else {
       addToCart({ ...producto, cantidad: 1 });
     }
-  };
+  };*/}
 
   return (
     <div className="home-container">
