@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../../../api/axios";
-import { toast } from "react-toastify"; // Asegúrate de instalar react-toastify
+import { toast } from "react-toastify";
 import { FaEye, FaTruck, FaCheck, FaTimes, FaBoxOpen, FaFileUpload } from "react-icons/fa";
 import { Badge, Card, Table, Form, InputGroup, Dropdown, Modal, Button } from "react-bootstrap";
 import { createPortal } from "react-dom";
@@ -13,6 +13,8 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalOrders, setTotalOrders] = useState(0);
     const [ordersPerPage] = useState(10);
     const toggleRefs = useRef({});
     const [menuState, setMenuState] = useState({ visible: false, orderId: null, top: 0, left: 0 });
@@ -24,23 +26,31 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
     const fetchOrders = useCallback(async () => {
         try {
             setLoading(true);
-            let endpoint = "/listar-pedidos/";
+            let endpoint = `/listar-pedidos/?page=${currentPage}`;
             if (statusFilter) {
-                endpoint = `/listar-pedidos/?status=${statusFilter}`;
+                endpoint += `&status=${statusFilter}`;
+            }
+            if (searchTerm) {
+                endpoint += `&search=${encodeURIComponent(searchTerm)}`;
             }
             const response = await api.get(endpoint);
-            setOrders(response.data || []);
-            console.log(response.data)
+            // Espera un objeto paginado: { results, total, pages, current_page }
+            setOrders(response.data.results || []);
+            setTotalPages(response.data.pages || 1);
+            setTotalOrders(response.data.total || 0);
         } catch (error) {
             console.error("Error al cargar los pedidos:", error);
             setOrders([]);
+            setTotalPages(1);
+            setTotalOrders(0);
         } finally {
             setLoading(false);
         }
-    }, [statusFilter]);
+    }, [statusFilter, currentPage, searchTerm]);
 
     useEffect(() => {
         fetchOrders();
+        // eslint-disable-next-line
     }, [fetchOrders]);
 
     const validateStatusChange = (orderId, newStatus) => {
@@ -118,29 +128,24 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
         }
     };
 
-    const filteredOrders = orders.filter(
-        (order) =>
-            order.id.toString().includes(searchTerm) ||
-            order.user.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (order.shipping_info?.nombre_receptor?.toLowerCase().includes(searchTerm.toLowerCase()) || "")
-    );
-
-    const indexOfLastOrder = currentPage * ordersPerPage;
-    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
-    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-    
+    // No se filtra en frontend, ya que la API ya lo hace
+    const currentOrders = orders;
 
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
         return new Date(dateString).toLocaleDateString("es-ES", options);
     };
 
+    const getRowNumber = (index) => {
+        return (currentPage - 1) * ordersPerPage + index + 1;
+    };
+
+
     const handleToggle = (orderId, isOpen) => {
         if (isOpen) {
-            const toggleButton = toggleRefs.current[orderId];
-            if (toggleButton) {
-                const rect = toggleButton.getBoundingClientRect();
+            const toggleElement = toggleRefs.current[orderId];
+            if (toggleElement) {
+                const rect = toggleElement.getBoundingClientRect();
                 setMenuState({
                     visible: true,
                     orderId: orderId,
@@ -149,16 +154,11 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                 });
             }
         } else {
-            setMenuState({ ...menuState, visible: false });
+            setMenuState({ visible: false, orderId: null, top: 0, left: 0 });
         }
     };
 
-    if (loading) {
-        return <div className="text-center py-5">Cargando pedidos...</div>;
-    }
-
     return (
-
         <div className="order-list-container p-4">
             <Card style={{ minHeight: "600px" }}>
                 <Card.Header>
@@ -170,15 +170,18 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                         </h3>
                         <InputGroup className="search-container">
                             <Form.Control
-                                placeholder="Buscar por ID, cliente o receptor..."
+                                placeholder="Buscar por ID, cliente, correo o dirección..."
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
                             />
                         </InputGroup>
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    {filteredOrders.length === 0 ? (
+                    {currentOrders.length === 0 ? (
                         <div className="text-center py-4">No se encontraron pedidos</div>
                     ) : (
                         <>
@@ -188,20 +191,22 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                         <th>ID</th>
                                         <th>Fecha</th>
                                         <th>Cliente</th>
-                                        <th>Receptor</th>
+                                        <th>Correo</th>
+                                        <th>Dirección</th>
                                         <th>Total</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {currentOrders.map((order) => (
+                                    {currentOrders.map((order, index) => (
                                         <tr key={order.id}>
-                                            <td>#{order.id}</td>
+                                            <td>{getRowNumber(index)}</td>
                                             <td>{formatDate(order.order_date)}</td>
-                                            <td>{order.user.nombre_completo}</td>
-                                            <td>{order.shipping_info?.nombre_receptor || "Sin información"}</td>
-                                            <td>${parseFloat(order.total_amount).toFixed(2)}</td>
+                                            <td>{order.usuario_nombre}</td>
+                                            <td>{order.usuario_correo}</td>
+                                            <td>{order.direccion_entrega}</td>
+                                            <td>${parseFloat(order.total_amount).toLocaleString("es-CO", { minimumFractionDigits: 2 })}</td>
                                             <td>{getStatusBadge(order.status)}</td>
                                             <td>
                                                 <div className="action-buttons">
@@ -213,8 +218,8 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                                     </Link>
                                                     <Dropdown drop="down" onToggle={(isOpen) => handleToggle(order.id, isOpen)}>
                                                         <Dropdown.Toggle
-                                                            variant="outline-secondary" // Usar un variant válido de Bootstrap
-                                                            className="btn-outline-pink" // Aplicar estilo personalizado
+                                                            variant="outline-secondary"
+                                                            className="btn-outline-pink"
                                                             size="sm"
                                                             id={`dropdown-${order.id}`}
                                                             ref={(el) => (toggleRefs.current[order.id] = el)}
@@ -231,22 +236,22 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                                                     zIndex: 2000,
                                                                 }}
                                                             >
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "pendiente")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "pendiente")}>\
                                                                     <FaBoxOpen className="me-2" /> Pendiente
                                                                 </div>
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "pago_confirmado")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "pago_confirmado")}>\
                                                                     <FaFileUpload className="me-2" /> Pago Confirmado
                                                                 </div>
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "en_preparacion")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "en_preparacion")}>\
                                                                     <FaBoxOpen className="me-2" /> En Preparación
                                                                 </div>
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "enviado")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "enviado")}>\
                                                                     <FaTruck className="me-2" /> Enviado
                                                                 </div>
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "entregado")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "entregado")}>\
                                                                     <FaCheck className="me-2" /> Entregado
                                                                 </div>
-                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "cancelado")}>
+                                                                <div className="dropdown-item" onClick={() => handleStatusChange(order.id, "cancelado")}>\
                                                                     <FaTimes className="me-2" /> Cancelado
                                                                 </div>
                                                             </div>,
@@ -264,7 +269,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                 <div className="pagination-container d-flex justify-content-center mt-4">
                                     <ul className="pagination">
                                         <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                                 Anterior
                                             </button>
                                         </li>
@@ -276,11 +281,12 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
                                             </li>
                                         ))}
                                         <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+                                            <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
                                                 Siguiente
                                             </button>
                                         </li>
                                     </ul>
+                                    <span className="ms-3 align-self-center">Total: {totalOrders}</span>
                                 </div>
                             )}
                         </>
