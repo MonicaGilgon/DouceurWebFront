@@ -133,7 +133,7 @@ const CheckoutPage = () => {
 
     // Mensaje final
     const mensajeFinal =
-      "Hola, acabo de realizar un pedido en Douceur. " + "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!";
+      "Hola, acabo de realizar un pedido en Douceur. Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!";
 
     // Mensaje completo
     return productosTexto + datosCliente + mensajeFinal;
