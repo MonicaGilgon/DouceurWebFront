@@ -7,7 +7,7 @@ import { FaArrowLeft, FaTruck, FaCheck, FaTimes, FaBoxOpen, FaWhatsapp, FaFileUp
 import "../scss/OrderDetail.scss";
 
 const OrderDetail = () => {
-  const { orderId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/detalle-pedido/${orderId}/`);
+        const response = await api.get(`/detalle-pedido/${id}/`);
         setOrder(response.data);
       } catch (error) {
         console.error("Error al cargar los detalles del pedido:", error);
@@ -30,7 +30,7 @@ const OrderDetail = () => {
       }
     };
     fetchOrderDetails();
-  }, [orderId]);
+  }, [id]);
 
   const validateStatusChange = newStatus => {
     if (!order) return false;
@@ -85,7 +85,7 @@ const OrderDetail = () => {
 
   const updateStatus = async newStatus => {
     try {
-      await api.patch(`/actualizar-estado-pedido/${orderId}/`, { status: newStatus });
+      await api.patch(`/actualizar-estado-pedido/${id}/`, { status: newStatus });
       toast.success("Estado actualizado correctamente.");
       order();
     } catch (error) {
@@ -105,7 +105,7 @@ const OrderDetail = () => {
     }
 
     try {
-      const response = await api.post(`/verificar-pago/${orderId}/`, formData, {
+      const response = await api.post(`/verificar-pago/${id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       setMessage(response.data.message);
