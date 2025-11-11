@@ -16,7 +16,8 @@ const SalesReport = () => {
         endDate: new Date().toISOString().split("T")[0], // Hoy
     });
 
-    const fetchReportData = async () => {
+    useEffect(() => {
+        const fetchReportData = async () => {
         try {
             setLoading(true);
             const response = await api.get(
@@ -30,9 +31,8 @@ const SalesReport = () => {
         }
     };
 
-    useEffect(() => {
-        fetchReportData();
-    }, []);
+    fetchReportData();  
+    }, [dateRange.startDate, dateRange.endDate]);
 
     const handleDateChange = (e) => {
         const { name, value } = e.target;
@@ -44,7 +44,7 @@ const SalesReport = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchReportData();
+        reportData();
     };
 
     // Preparar datos para los gráficos

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
 import "./scss/Catalogo.scss";
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
-import { useNavigate } from "react-router-dom";
 import "./scss/Home.scss";
 
 const Catalogo = () => {
@@ -12,7 +10,6 @@ const Catalogo = () => {
   const [productos, setProductos] = useState([]);
   const [loadingCategorias, setLoadingCategorias] = useState(true);
   const [loadingProductos, setLoadingProductos] = useState(false);
-  const { addToCart } = useCart();
 
   // Cargar categorías activas al iniciar
   useEffect(() => {
@@ -48,17 +45,6 @@ const Catalogo = () => {
       setLoadingProductos(false);
     }
   };
-
-  const { addOneToCart, cartItems } = useCart();
-
-  {/*const handleAddToCart = producto => {
-    const existe = cartItems.some(item => item.id === producto.id);
-    if (existe) {
-      addOneToCart(producto.id);
-    } else {
-      addToCart({ ...producto, cantidad: 1 });
-    }
-  };*/}
 
   return (
     <div className="catalogo-container">

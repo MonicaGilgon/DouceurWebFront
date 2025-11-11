@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import banner from "../images/banner-desayuno.png";
 import "./scss/Home.scss";
-import { useCart } from "../../context/CartContext";
 import ProductGridSkeleton from "../components/Skeleton/ProductGridSkeleton";
 
 const Home = () => {
@@ -12,7 +11,6 @@ const Home = () => {
   const [loadingProductos, setLoadingProductos] = useState(true);
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
-  const { addToCart, addOneToCart, cartItems } = useCart();
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -45,14 +43,6 @@ const Home = () => {
 
   const categoriasHabilitadas = categorias.filter(c => c.estado === true).slice(0, 5);
 
-  {/*const handleAddToCart = producto => {
-    const existe = cartItems.some(item => item.id === producto.id);
-    if (existe) {
-      addOneToCart(producto.id);
-    } else {
-      addToCart({ ...producto, cantidad: 1 });
-    }
-  };*/}
 
   return (
     <div className="home-container">
@@ -114,23 +104,6 @@ const Home = () => {
                   </figure>
                   <div className="d-flex flex-column">
                     <h4 className="fs-6 fw-semibold">{p.nombre}</h4>
-                    {/*<div>
-                    <span className="rating">
-                      {[1, 2, 3, 4].map((i) => (
-                        <svg
-                          key={i}
-                          width="18"
-                          height="18"
-                          className="text-warning"
-                        >
-                          <use xlinkHref="#star-full"></use>
-                        </svg>
-                      ))}
-                      <svg width="18" height="18" className="text-warning">
-                        <use xlinkHref="#star-half"></use>
-                      </svg>
-                    </span>
-                  </div>*/}
                     <div className="d-flex  gap-2">
                       <span className="text-dark fw-semibold">
                         $
@@ -140,18 +113,6 @@ const Home = () => {
                         })}
                       </span>
                     </div>
-                    {/*<div className="button-area p-0 pt-3">
-                      <div className="">
-                        <div className="d-flex justify-content-center mt-2 gap-3">
-                          <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart " onClick={() => navigate(`/producto/${p.id}`)}>
-                            <CIcon icon={cilMagnifyingGlass} /> Ver
-                          </button>
-                          <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart" onClick={() => handleAddToCart(p)}>
-                            <CIcon icon={cilCart} /> Añadir al carrito
-                          </button>
-                        </div>
-                      </div>
-                    </div>*/}
                   </div>
                 </div>
               </div>

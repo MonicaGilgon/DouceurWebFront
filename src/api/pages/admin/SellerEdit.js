@@ -18,30 +18,23 @@ const SellerEdit = () => {
     direccion: "",
     estado: "",
   });
-  const [ setSellersExistentes] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSellers = async () => {
+    const fetchSeller = async () => {
       try {
-        const [sellerResponse, sellersResponse] = await Promise.all([
-          api.get(`/editar-vendedor/${sellerId}/`),
-          api.get("/listar-vendedores/"),
-        ]);
+        const sellerResponse = await api.get(`/editar-vendedor/${sellerId}/`);
         setSeller(sellerResponse.data);
-        setSellersExistentes(sellersResponse.data);
       } catch (error) {
-        console.error(
-          "Error al cargar el seller o los sellers existentes",
-          error
-        );
+        console.error("Error al cargar vendedor", error);
         toast.error("Error al cargar los datos.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSellers();
+    fetchSeller();
   }, [sellerId]);
 
   const handleChange = (e) => {

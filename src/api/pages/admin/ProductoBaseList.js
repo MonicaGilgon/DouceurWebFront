@@ -41,10 +41,6 @@ const ProductosBaseList = () => {
     fetchProductos();
   }, []);
 
-  {/*const handleImageClick = (imagen) => {
-    setSelectedImage(`http://localhost:8000${imagen}`);
-    setModalVisible(true);
-  };*/}
 
   const handleDelete = async (id) => {
     Modal.confirm({

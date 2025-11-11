@@ -14,31 +14,23 @@ const ClienteEdit = () => {
     correo: "",
     telefono: "",
   });
-  const [setClientesExistentes] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchClientes = async () => {
+    const fetchCliente = async () => {
       try {
-        const [clienteResponse, clientesResponse] = await Promise.all([
-          api.get(`/editar-cliente/${clienteId}/`),
-          api.get("/listar-clientes/"),
-        ]);
-
+        const clienteResponse = await api.get(`/editar-cliente/${clienteId}/`);
         setCliente(clienteResponse.data);
-        setClientesExistentes(clientesResponse.data);
       } catch (error) {
-        console.error(
-          "Error al cargar el cliente o los clientes existentes",
-          error
-        );
+        console.error("Error al cargar el cliente", error);
         toast.error("Error al cargar los datos.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchClientes();
+    fetchCliente();
   }, [clienteId]);
 
   const handleChange = (e) => {

@@ -13,7 +13,9 @@ const ClientOrderDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchOrderDetails = async () => {
+
+    useEffect(() => {
+        const fetchOrderDetails = async () => {
         try {
             const response = await api.get(`/cliente/pedidos/${orderId}/`);
             setOrder(response.data);
@@ -23,18 +25,8 @@ const ClientOrderDetail = () => {
             setLoading(false);
         }
     };
-
-    //useEffect(() => {
-        //fetchOrderDetails();
-
-        // Configurar polling para actualizar los detalles cada 5 segundos
-        //const interval = setInterval(() => {
-            //fetchOrderDetails();
-        //}, 5000);
-
-        // Limpiar el intervalo al desmontar el componente
-        //return () => clearInterval(interval);
-    //}, [orderId]);
+        fetchOrderDetails();
+    }, [orderId]);
 
     const getStatusBadge = (status) => {
         switch (status) {

@@ -38,6 +38,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
             setOrders(response.data.results || []);
             setTotalPages(response.data.pages || 1);
             setTotalOrders(response.data.total || 0);
+            setLoading(false);
         } catch (error) {
             console.error("Error al cargar los pedidos:", error);
             setOrders([]);
@@ -46,7 +47,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
         } finally {
             setLoading(false);
         }
-    }, [statusFilter, currentPage, searchTerm]);
+    }, [statusFilter, currentPage, searchTerm, setLoading]);
 
     useEffect(() => {
         fetchOrders();

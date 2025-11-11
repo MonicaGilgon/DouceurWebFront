@@ -196,19 +196,6 @@ const ProductoBaseEdit = () => {
     }
   };
 
-  {/*const handleCancel = () => {
-    navigate("/admin/listar-producto-base"); // Redirigir a la lista de productos base si se cancela
-  };*/}
-
-  {/*const handleEliminarArticulo = (articuloId) => {
-    setProducto((prevState) => ({
-      ...prevState,
-      articulos: prevState.articulos.filter(
-        (articulo) =>
-          (typeof articulo === "object" ? articulo.id : articulo) !== articuloId
-      ),
-    }));
-  };*/}
 
   if (loading) {
     return <CircularProgress />;

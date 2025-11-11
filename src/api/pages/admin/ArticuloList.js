@@ -33,17 +33,13 @@ const ArticuloList = () => {
       } catch (err) {
         console.error("Error al cargar los artículos:", err);
         setError("Error al cargar los artículos.");
-        notification.error({
-          message: "Error",
-          description: "Error al cargar los artículos.",
-        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchArticulos();
-  }, []);
+  }, [setError]);
 
   const toggleActivo = async (articuloId, estado) => {
     try {

@@ -78,10 +78,6 @@ const CategoriaArticuloEdit = () => {
     }
   };
 
-  {/*const handleCancel = () => {
-    navigate("/admin/listar-categoria-articulo");
-  };*/}
-
   if (loading) {
     return <CircularProgress />;
   }

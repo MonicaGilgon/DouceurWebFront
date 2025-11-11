@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef} from 'react';
 import api from '../../api/axios';
 import './scss/Profile.scss';
 import { useNavigate, Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ const formatStatus = (status) => {
 };
 
 const Profile = () => {
+    const initialLoadRef = useRef(false);
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -41,18 +42,11 @@ const Profile = () => {
         confirm_password: false
     });
 
-    const togglePasswordVisibility = (field) => {
-        setPasswordVisibility({
-            ...passwordVisibility,
-            [field]: !passwordVisibility[field]
-        });
-    };
-
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         try {
             const response = await api.get("/profile/");
             setUserData(response.data);
-            if (!formData.document_number) { // Solo inicializa formData en la primera carga
+            if (!initialLoadRef.current) { // Solo inicializa formData en la primera carga
                 setFormData({
                     document_number: response.data.document_number || "",
                     nombre_completo: response.data.nombre_completo || "",
@@ -60,34 +54,32 @@ const Profile = () => {
                     telefono: response.data.telefono || "",
                     correo: response.data.correo || "",
                 });
+                initialLoadRef.current = true; // Marca que la carga inicial ha ocurrido
             }
             setLoading(false);
         } catch (err) {
             setError("Error al cargar el perfil: " + err.message);
             setLoading(false);
         }
+    }, []);
+
+    const togglePasswordVisibility = (field) => {
+        setPasswordVisibility({
+            ...passwordVisibility,
+            [field]: !passwordVisibility[field]
+        });
     };
 
     useEffect(() => {
         fetchProfile();
+    }, [fetchProfile]);
 
-        const interval = setInterval(async () => {
-            try {
-                const response = await api.get("/profile/");
-                setUserData(prevData => {
-                    const newData = response.data;
-                    if (JSON.stringify(prevData) !== JSON.stringify(newData)) {
-                        return newData;
-                    }
-                    return prevData;
-                });
-            } catch (err) {
-                console.error('Error en polling:', err);
-            }
-        }, 30000); // 30 segundos
+    
 
+    useEffect(() => {
+        const interval = setInterval(fetchProfile, 30000); // 30 segundos
         return () => clearInterval(interval);
-    }, [userData]);
+    }, [fetchProfile]);
 
     const validateForm = () => {
         const errors = {};
@@ -197,7 +189,7 @@ const Profile = () => {
 
         setIsSubmittingPassword(true);
         try {
-            const response = await api.post('/profile/', passwordData);
+            await api.post('/profile/', passwordData);
             setIsChangingPassword(false);
             setPasswordData({ current_password: '', new_password: '', confirm_password: '' });
             setPasswordErrors({});

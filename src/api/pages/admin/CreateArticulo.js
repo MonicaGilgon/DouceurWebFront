@@ -57,9 +57,6 @@ const CreateArticulo = () => {
         }
   };
 
-  {/*const handleCancel = () => {
-    navigate("/admin/listar-articulos");
-  };*/}
 
   return (
     <div className="edit-container">
@@ -109,7 +106,7 @@ const CreateArticulo = () => {
           </Button>
         </div>
       </form>
-      <ToastContainer /> {/* Agregar el contenedor de toast */}
+      <ToastContainer />
     </div>
   );
 };

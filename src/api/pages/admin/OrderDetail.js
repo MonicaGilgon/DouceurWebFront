@@ -7,7 +7,7 @@ import { FaArrowLeft, FaTruck, FaCheck, FaTimes, FaBoxOpen, FaWhatsapp, FaFileUp
 import "../scss/OrderDetail.scss";
 
 const OrderDetail = () => {
-  const { id } = useParams();
+  const { orderId } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,22 +17,22 @@ const OrderDetail = () => {
   const [ setNewStatus] = useState(null);
 
   useEffect(() => {
+    const fetchOrderDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/detalle-pedido/${orderId}/`);
+        setOrder(response.data);
+      } catch (error) {
+        console.error("Error al cargar los detalles del pedido:", error);
+        setOrder(null);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchOrderDetails();
-  }, [id]);
+  }, [orderId]);
 
-  const fetchOrderDetails = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/detalle-pedido/${id}/`);
-      setOrder(response.data);
-    } catch (error) {
-      console.error("Error al cargar los detalles del pedido:", error);
-      setOrder(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   const validateStatusChange = (newStatus) => {
     if (!order) return false;
 
@@ -86,9 +86,9 @@ const OrderDetail = () => {
 
   const updateStatus = async (newStatus) => {
     try {
-      await api.patch(`/actualizar-estado-pedido/${id}/`, { status: newStatus });
+      await api.patch(`/actualizar-estado-pedido/${orderId}/`, { status: newStatus });
       toast.success("Estado actualizado correctamente.");
-      fetchOrderDetails();
+      order();
     } catch (error) {
       toast.error("Error al actualizar el estado.");
       console.error("Error al actualizar el estado:", error);
@@ -106,11 +106,11 @@ const OrderDetail = () => {
     }
 
     try {
-      const response = await api.post(`/verificar-pago/${id}/`, formData, {
+      const response = await api.post(`/verificar-pago/${orderId}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage(response.data.message);
-      fetchOrderDetails();
+      order();
       setShowModal(false);
     } catch (error) {
       setMessage(error.response?.data?.error || "Error al verificar el pago");

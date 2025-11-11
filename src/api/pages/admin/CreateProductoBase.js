@@ -92,13 +92,6 @@ const CreateProductoBase = () => {
     setFormData({ ...formData, imagen: file });
   };
 
-  {/*const handleSeleccionCategoriasArticulo = (e) => {
-    const seleccionadas = Array.from(e.target.selectedOptions).map((opt) =>
-      parseInt(opt.value)
-    );
-    setCategoriasSeleccionadas(seleccionadas);
-  };*/}
-
   const handleAddArticulo = () => {
     if (selectedArticulo && !formData.articulos.includes(selectedArticulo)) {
       setFormData({
