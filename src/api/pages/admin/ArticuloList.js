@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../scss/SwitchConf.scss";
 import api from "../../../api/axios";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import {
-  Layout,
-  Table,
-  Typography,
-  Button,
-  Switch,
-  ConfigProvider,
-  notification,
-} from "antd";
+import { Layout, Table, Typography, Button, Switch, ConfigProvider, notification } from "antd";
 
 const { Title } = Typography;
 
@@ -43,31 +35,19 @@ const ArticuloList = () => {
 
   const toggleActivo = async (articuloId, estado) => {
     try {
-      await api.patch(
-        `cambiar_estado_articulo/${articuloId}/`,
-        { estado: !estado },
-        { headers: { "Content-Type": "application/json" } }
-      );
+      await api.patch(`cambiar_estado_articulo/${articuloId}/`, { estado: !estado }, { headers: { "Content-Type": "application/json" } });
 
-      setArticulos((prevArticulos) =>
-        prevArticulos.map((articulo) =>
-          articulo.id === articuloId
-            ? { ...articulo, estado: !estado }
-            : articulo
-        )
-      );
+      setArticulos(prevArticulos => prevArticulos.map(articulo => (articulo.id === articuloId ? { ...articulo, estado: !estado } : articulo)));
 
       notification.success({
         message: "Estado actualizado",
-        description: `Artículo ${
-          !estado ? "activado" : "desactivado"
-        } correctamente.`,
+        description: `Artículo ${!estado ? "activado" : "desactivado"} correctamente.`
       });
     } catch (error) {
       console.error("Error al cambiar el estado del artículo:", error);
       notification.error({
         message: "Error",
-        description: "No se pudo actualizar el estado del artículo.",
+        description: "No se pudo actualizar el estado del artículo."
       });
     }
   };
@@ -76,44 +56,36 @@ const ArticuloList = () => {
     {
       title: "#",
       key: "id",
-      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1
     },
     { title: "Nombre", dataIndex: "nombre", key: "nombre" },
     {
       title: "Estado",
       key: "estado",
-      render: (_, record) => (
-        <Switch
-          checked={record.estado}
-          onChange={() => toggleActivo(record.id, record.estado)}
-        />
-      ),
+      render: (_, record) => <Switch checked={record.estado} onChange={() => toggleActivo(record.id, record.estado)} />
     },
     {
       title: "Categoría",
       dataIndex: ["categoriaArticulo", "nombre"],
-      key: "categoriaArticulo",
+      key: "categoriaArticulo"
     },
     {
       title: "Acciones",
       key: "acciones",
       render: (_, record) => (
         <Link to={`/admin/editar-articulo/${record.id}`}>
-          <Button
-            type="primary"
-            style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
+          <Button type="primary" style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
             Editar
           </Button>
         </Link>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
+        <Header style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <Title level={3} style={{ color: "#001529", textAlign: "center" }}>
             Lista de Articulos
           </Title>
@@ -123,14 +95,13 @@ const ArticuloList = () => {
             background: "#fff",
             margin: "20px",
             borderRadius: "10px",
-            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
-          }}>
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
+          }}
+        >
           <div className="articulos-list">
             <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
-                <Button
-                  type="default"
-                  style={{ marginBottom: "20px", marginTop: "20px" }}>
+                <Button type="default" style={{ marginBottom: "20px", marginTop: "20px" }}>
                   Regresar
                 </Button>
               </Link>
@@ -141,8 +112,9 @@ const ArticuloList = () => {
                     marginBottom: "20px",
                     marginTop: "20px",
                     backgroundColor: "#FBD5E5",
-                    color: "#000",
-                  }}>
+                    color: "#000"
+                  }}
+                >
                   Crear Artículo
                 </Button>
               </Link>
@@ -163,7 +135,7 @@ const ArticuloList = () => {
                   setCurrentPage(page);
                   setPageSize(size);
                 },
-                showTotal: (total) => `Total: ${total} artículos`,
+                showTotal: total => `Total: ${total} artículos`
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }}

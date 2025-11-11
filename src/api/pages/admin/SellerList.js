@@ -6,15 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import {
-  Layout,
-  Table,
-  Typography,
-  Button,
-  Switch,
-  Space,
-  ConfigProvider,
-} from "antd";
+import { Layout, Table, Typography, Button, Switch, Space, ConfigProvider } from "antd";
 
 const SellerList = () => {
   const { Content, Header } = Layout;
@@ -42,32 +34,32 @@ const SellerList = () => {
     {
       title: "#",
       key: "id",
-      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1
     },
     {
       title: "Cedula",
       dataIndex: "document_number",
-      key: "cedula",
+      key: "cedula"
     },
     {
       title: "Nombre",
       dataIndex: "nombre_completo",
-      key: "nombre_completo",
+      key: "nombre_completo"
     },
     {
       title: "Correo Electronico",
       dataIndex: "correo",
-      key: "correo_electronico",
+      key: "correo_electronico"
     },
     {
       title: "Teléfono",
       dataIndex: "telefono",
-      key: "telefono",
+      key: "telefono"
     },
     {
       title: "Dirección",
       dataIndex: "direccion",
-      key: "direccion",
+      key: "direccion"
     },
     {
       title: "Activo",
@@ -76,17 +68,13 @@ const SellerList = () => {
       render: (_, record) => (
         <Switch
           checked={record.estado}
-          onChange={async (checked) => {
+          onChange={async checked => {
             try {
               await api.patch(`/cambiar-estado-vendedor/${record.id}/`, {
-                estado: checked,
+                estado: checked
               });
-              setVendedores((prevVendedores) =>
-                prevVendedores.map((vendedor) =>
-                  vendedor.id === record.id
-                    ? { ...vendedor, estado: checked }
-                    : vendedor
-                )
+              setVendedores(prevVendedores =>
+                prevVendedores.map(vendedor => (vendedor.id === record.id ? { ...vendedor, estado: checked } : vendedor))
               );
               toast.success("Estado actualizado correctamente");
             } catch (error) {
@@ -95,7 +83,7 @@ const SellerList = () => {
             }
           }}
         />
-      ),
+      )
     },
     {
       title: "Acciones",
@@ -103,24 +91,19 @@ const SellerList = () => {
       render: (_, record) => (
         <Space size="middle">
           <Link to={`/admin/editar-vendedor/${record.id}`}>
-            <Button
-              type="primary"
-              style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-            >
+            <Button type="primary" style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
               Editar
             </Button>
           </Link>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
-        >
+        <Header style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <div>
             <Title level={3} style={{ textAlign: "center" }}>
               Lista de Vendedores
@@ -133,7 +116,7 @@ const SellerList = () => {
             background: "#fff",
             margin: "20px",
             borderRadius: "10px",
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;"
           }}
         >
           <div className="clientes-list">
@@ -153,7 +136,7 @@ const SellerList = () => {
                   setCurrentPage(page);
                   setPageSize(pageSize);
                 },
-                showTotal: (total) => `Total: ${total} vendedores`,
+                showTotal: total => `Total: ${total} vendedores`
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

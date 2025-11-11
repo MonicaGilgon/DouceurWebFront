@@ -4,15 +4,9 @@ import { CNavGroup, CNavItem } from "@coreui/react";
 import _navAdmin from "../../_navAdmin";
 
 const AdminSidebarNav = () => {
-  const renderNavItems = (items) => {
+  const renderNavItems = items => {
     return items.map((item, index) => {
-      const {
-        icon,
-        name,
-        to,
-        className,
-        items: subItems,
-      } = item;
+      const { icon, name, to, className, items: subItems } = item;
 
       if (subItems) {
         return (

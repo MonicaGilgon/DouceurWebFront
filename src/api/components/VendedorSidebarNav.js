@@ -11,18 +11,18 @@ const VendedorSidebarNav = () => {
     "/vendedor/pedidos",
     "/vendedor/pedidos/pendientes",
     "/vendedor/pedidos/enviados",
-    "/vendedor/pedidos/entregados",
+    "/vendedor/pedidos/entregados"
   ];
 
   // Función para verificar si una ruta está permitida
-  const isRouteAllowed = (route) => {
+  const isRouteAllowed = route => {
     return allowedRoutes.includes(route);
   };
 
   // Función recursiva para renderizar los elementos del menú
-  const renderNavItems = (items) => {
+  const renderNavItems = items => {
     return items
-      .filter((item) => {
+      .filter(item => {
         // Si el elemento tiene subelementos, filtramos recursivamente
         if (item.items) {
           item.items = renderNavItems(item.items);
@@ -35,14 +35,7 @@ const VendedorSidebarNav = () => {
         return isRouteAllowed(item.to);
       })
       .map((item, index) => {
-        const {
-          component: Component,
-          icon,
-          name,
-          to,
-          className,
-          items: subItems,
-        } = item;
+        const { component: Component, icon, name, to, className, items: subItems } = item;
 
         if (subItems) {
           return (

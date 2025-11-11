@@ -2,17 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Typography,
-  CircularProgress,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  Alert,
-} from "@mui/material";
+import { TextField, Button, Typography, CircularProgress, MenuItem, Select, InputLabel, FormControl, Alert } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -21,7 +11,7 @@ const ArticuloEdit = () => {
   const navigate = useNavigate();
   const [articulo, setArticulo] = useState({
     nombre: "",
-    categoriaArticulo: "",
+    categoriaArticulo: ""
   });
   const [categorias, setCategoriasArticuloActivas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,9 +35,7 @@ const ArticuloEdit = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get("listar-categoria-articulo/");
-        const categoriasActivas = response.data.filter(
-          (c) => c.estado === true
-        );
+        const categoriasActivas = response.data.filter(c => c.estado === true);
         setCategoriasArticuloActivas(categoriasActivas);
       } catch (err) {
         console.error("Error al cargar las categorías:", err);
@@ -60,15 +48,15 @@ const ArticuloEdit = () => {
     fetchCategorias();
   }, [articuloId]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setArticulo((prevState) => ({
+    setArticulo(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     // Validación del formulario
@@ -79,7 +67,7 @@ const ArticuloEdit = () => {
 
     const formData = {
       nombre: articulo.nombre,
-      categoriaArticulo: articulo.categoriaArticulo,
+      categoriaArticulo: articulo.categoriaArticulo
     };
 
     console.log("Datos a enviar:", formData);
@@ -89,8 +77,8 @@ const ArticuloEdit = () => {
       await api.put(`editar-articulo/${articuloId}/`, formData, {
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": articulo.csrf_token,
-        },
+          "X-CSRFToken": articulo.csrf_token
+        }
       });
       navigate("/admin/listar-articulos");
     } catch (error) {
@@ -98,7 +86,6 @@ const ArticuloEdit = () => {
       toast.error("Error al editar el artículo.");
     }
   };
-
 
   if (loading) {
     return <CircularProgress />;
@@ -111,24 +98,11 @@ const ArticuloEdit = () => {
           Editar Artículo
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}
-        <TextField
-          label="Nombre"
-          name="nombre"
-          value={articulo.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <TextField label="Nombre" name="nombre" value={articulo.nombre} onChange={handleChange} fullWidth margin="normal" required />
         <FormControl fullWidth margin="normal" required>
           <InputLabel>Categoría</InputLabel>
-          <Select
-            name="categoriaArticulo"
-            value={articulo.categoriaArticulo}
-            onChange={handleChange}
-            label="Categoría"
-          >
-            {categorias.map((categoria) => (
+          <Select name="categoriaArticulo" value={articulo.categoriaArticulo} onChange={handleChange} label="Categoría">
+            {categorias.map(categoria => (
               <MenuItem key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
               </MenuItem>
@@ -137,19 +111,10 @@ const ArticuloEdit = () => {
         </FormControl>
 
         <div className="form-buttons">
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+          <Button type="default" onClick={() => navigate(-1)} className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="save-button"
-          >
+          <Button type="submit" variant="contained" color="primary" className="save-button">
             Guardar Cambios
           </Button>
         </div>

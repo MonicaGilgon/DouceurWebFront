@@ -3,15 +3,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo2 from "../images/logo2.png";
-import {
-  FaShoppingBag,
-  FaUser,
-  FaSearch,
-  FaBars,
-  FaTimes,
-  FaUserCog,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaShoppingBag, FaUser, FaSearch, FaBars, FaTimes, FaUserCog, FaSignOutAlt } from "react-icons/fa";
 import { useCart } from "../../context/CartContext";
 import "../pages/scss/PublicHeader.scss";
 
@@ -111,11 +103,7 @@ const PublicHeader = () => {
     <header className="public-header">
       <div className="header-left">
         <a href="/">
-          <img
-            src={logo2 || "/placeholder.svg"}
-            alt="Douceur Logo"
-            className="header-logo"
-          />
+          <img src={logo2 || "/placeholder.svg"} alt="Douceur Logo" className="header-logo" />
         </a>
         <nav className={`header-nav ${mobileMenuOpen ? "open" : ""}`}>
           <a href="/catalogo">Catálogo</a>
@@ -123,11 +111,7 @@ const PublicHeader = () => {
           <a href="/dudas">Dudas</a>
           <a href="/mas">Más</a>
         </nav>
-        <button
-          className="menu-toggle"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
-          aria-label="Abrir menú"
-        >
+        <button className="menu-toggle" onClick={() => setMobileMenuOpen(prev => !prev)} aria-label="Abrir menú">
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -135,44 +119,27 @@ const PublicHeader = () => {
       {/* Desktop: barra de búsqueda y botones separados */}
       <div className="header-center">
         <form className="search-bar">
-          <input
-            type="text"
-            placeholder="Buscar"
-          />
+          <input type="text" placeholder="Buscar" />
           <button type="submit">
             <FaSearch />
           </button>
         </form>
       </div>
       <div className="header-right">
-        <button
-          className="cart-btn"
-          onClick={handleCartClick}
-        >
+        <button className="cart-btn" onClick={handleCartClick}>
           <FaShoppingBag />
-          {cartItems.length > 0 && (
-            <span className="cart-count">
-              {cartItems.length}
-            </span>
-          )}
+          {cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
         </button>
         {isAuthenticated ? (
           <div className="user-dropdown-container">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="user-btn"
-            >
+            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="user-btn">
               <FaUser style={{ marginRight: "0.5rem" }} />
               <span>Mi cuenta</span>
             </button>
             {isDropdownOpen && (
               <div className="user-dropdown">
                 <div className="user-dropdown-header">
-                  {userRole && (
-                    <div className="user-role">
-                      {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                    </div>
-                  )}
+                  {userRole && <div className="user-role">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</div>}
                   {userName}
                 </div>
                 <div className="user-dropdown-item" onClick={handleProfileClick}>
@@ -187,10 +154,7 @@ const PublicHeader = () => {
             )}
           </div>
         ) : (
-          <button
-            className="login-btn"
-            onClick={handleLoginClick}
-          >
+          <button className="login-btn" onClick={handleLoginClick}>
             <FaUser style={{ marginRight: "0.5rem" }} />
             Iniciar sesión
           </button>
@@ -200,43 +164,26 @@ const PublicHeader = () => {
       {/* Mobile: barra de búsqueda y botones juntos */}
       <div className="header-actions">
         <form className="search-bar">
-          <input
-            type="text"
-            placeholder="Buscar"
-          />
+          <input type="text" placeholder="Buscar" />
           <button type="submit">
             <FaSearch />
           </button>
         </form>
         <div className="header-right">
-          <button
-            className="cart-btn"
-            onClick={handleCartClick}
-          >
+          <button className="cart-btn" onClick={handleCartClick}>
             <FaShoppingBag />
-            {cartItems.length > 0 && (
-              <span className="cart-count">
-                {cartItems.length}
-              </span>
-            )}
+            {cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
           </button>
           {isAuthenticated ? (
             <div className="user-dropdown-container">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="user-btn"
-              >
+              <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="user-btn">
                 <FaUser style={{ marginRight: "0.5rem" }} />
                 <span>Mi cuenta</span>
               </button>
               {isDropdownOpen && (
                 <div className="user-dropdown">
                   <div className="user-dropdown-header">
-                    {userRole && (
-                      <div className="user-role">
-                        {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                      </div>
-                    )}
+                    {userRole && <div className="user-role">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</div>}
                     {userName}
                   </div>
                   <div className="user-dropdown-item" onClick={handleProfileClick}>
@@ -251,10 +198,7 @@ const PublicHeader = () => {
               )}
             </div>
           ) : (
-            <button
-              className="login-btn"
-              onClick={handleLoginClick}
-            >
+            <button className="login-btn" onClick={handleLoginClick}>
               <FaUser style={{ marginRight: "0.5rem" }} />
               Iniciar sesión
             </button>

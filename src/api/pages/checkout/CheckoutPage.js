@@ -15,7 +15,7 @@ const CheckoutPage = () => {
     correo: "",
     telefono: "",
     direccion: "",
-    horarioEntrega: "",
+    horarioEntrega: ""
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const CheckoutPage = () => {
           correo: user.correo || "",
           telefono: user.telefono || "",
           direccion: user.direccion || "",
-          horarioEntrega: "",
+          horarioEntrega: ""
         });
       }
     } catch (error) {
@@ -62,16 +62,16 @@ const CheckoutPage = () => {
   };
 
   // Manejar cambios en el formulario
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setUserData({
       ...userData,
-      [name]: value,
+      [name]: value
     });
   };
 
   // Calcular el subtotal para un item específico
-  const calculateItemSubtotal = (item) => {
+  const calculateItemSubtotal = item => {
     return Number.parseFloat(item.precio) * item.cantidad;
   };
 
@@ -81,7 +81,7 @@ const CheckoutPage = () => {
       .reduce((sum, item) => sum + calculateItemSubtotal(item), 0)
       .toLocaleString("es-CO", {
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        maximumFractionDigits: 2
       });
   };
   // Función para volver atrás
@@ -95,31 +95,28 @@ const CheckoutPage = () => {
     let productosTexto = "*Detalles del pedido:*\n";
     cartItems.forEach((item, index) => {
       const subtotal = calculateItemSubtotal(item).toFixed(2);
-      productosTexto += `${index + 1}. ${item.nombre} - ${
-        item.cantidad
-      } x $${Number.parseFloat(item.precio).toFixed(2)} = $${subtotal}\n`;
+      productosTexto += `${index + 1}. ${item.nombre} - ${item.cantidad} x $${Number.parseFloat(item.precio).toFixed(2)} = $${subtotal}\n`;
 
+      // Agrega artículos fijos si existen
+      if (item.articulosFijos?.length > 0) {
+        productosTexto += "_Artículos incluidos:_\n";
+        item.articulosFijos.forEach(articulo => {
+          productosTexto += `• ${articulo.nombre}\n`;
+        });
+      }
 
-    // Agrega artículos fijos si existen
-    if (item.articulosFijos?.length > 0) {
-      productosTexto += "_Artículos incluidos:_\n";
-      item.articulosFijos.forEach(articulo => {
-        productosTexto += `• ${articulo.nombre}\n`;
-      });
-    }
+      // Agrega personalizaciones si existen
+      if (item.personalizaciones?.length > 0) {
+        productosTexto += "_Personalización:_\n";
+        item.personalizaciones.forEach(p => {
+          if (p.articuloNombre !== "No seleccionado") {
+            productosTexto += `• ${p.categoriaNombre}: ${p.articuloNombre}\n`;
+          }
+        });
+      }
 
-    // Agrega personalizaciones si existen
-    if (item.personalizaciones?.length > 0) {
-      productosTexto += "_Personalización:_\n";
-      item.personalizaciones.forEach(p => {
-        if (p.articuloNombre !== "No seleccionado") {
-          productosTexto += `• ${p.categoriaNombre}: ${p.articuloNombre}\n`;
-        }
-      });
-    }
-
-    productosTexto += `\n`;
-  });
+      productosTexto += `\n`;
+    });
 
     // Calcular el subtotal
     const total = calculateTotal();
@@ -136,26 +133,19 @@ const CheckoutPage = () => {
 
     // Mensaje final
     const mensajeFinal =
-      "Hola, acabo de realizar un pedido en Douceur. " +
-      "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!";
+      "Hola, acabo de realizar un pedido en Douceur. " + "Quisiera información sobre el costo del envío y los medios de pago disponibles. ¡Gracias!";
 
     // Mensaje completo
     return productosTexto + datosCliente + mensajeFinal;
   };
 
   // Manejar envío del formulario
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     // Validar que todos los campos estén completos
-    const requiredFields = [
-      "nombre",
-      "correo",
-      "telefono",
-      "direccion",
-      "horarioEntrega",
-    ];
-    const missingFields = requiredFields.filter((field) => !userData[field]);
+    const requiredFields = ["nombre", "correo", "telefono", "direccion", "horarioEntrega"];
+    const missingFields = requiredFields.filter(field => !userData[field]);
 
     if (missingFields.length > 0) {
       alert("Por favor completa todos los campos requeridos");
@@ -165,16 +155,16 @@ const CheckoutPage = () => {
     try {
       // Preparar los datos del pedido
       const orderData = {
-        items: cartItems.map((item) => ({
+        items: cartItems.map(item => ({
           producto_id: item.id,
           cantidad: item.cantidad,
-          precio_unitario: parseFloat(item.precio),
+          precio_unitario: parseFloat(item.precio)
         })),
         nombre_receptor: userData.nombre,
         direccion_entrega: userData.direccion,
         telefono_contacto: userData.telefono,
         correo_electronico: userData.correo,
-        horario_entrega: userData.horarioEntrega,
+        horario_entrega: userData.horarioEntrega
       };
 
       // Enviar los datos al backend
@@ -202,9 +192,7 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error al procesar el pedido:", error);
-      alert(
-        "Hubo un error al procesar tu pedido. Por favor intenta nuevamente."
-      );
+      alert("Hubo un error al procesar tu pedido. Por favor intenta nuevamente.");
     }
   };
 
@@ -244,10 +232,7 @@ const CheckoutPage = () => {
         <div className="auth-required">
           <div className="auth-message">
             <h3>¡Hola! Para proceder con la compra, ingresa a tu cuenta</h3>
-            <p>
-              Necesitas iniciar sesión para completar tu compra. Si aún no
-              tienes una cuenta, puedes crear una rápidamente.
-            </p>
+            <p>Necesitas iniciar sesión para completar tu compra. Si aún no tienes una cuenta, puedes crear una rápidamente.</p>
           </div>
           <div className="auth-buttons">
             <Link to="/sign-in" className="btn-login">
@@ -265,40 +250,48 @@ const CheckoutPage = () => {
             <h3>Resumen de tu pedido</h3>
             <div className="checkout-items">
               {cartItems.map(item => (
-              <div key={item.id} className="checkout-item">
-                <h3>{item.nombre}</h3>
-                <p><strong>Precio unitario:</strong> ${Number(item.precio).toLocaleString("es-CO")}</p>
-                <p><strong>Cantidad:</strong> {item.cantidad}</p>
-                
-                {/* Artículos fijos */}
-                {item.articulosFijos?.length > 0 && (
-                  <>
-                    <p><strong>Artículos incluidos:</strong></p>
-                    <ul>
-                      {item.articulosFijos.map(articulo => (
-                        <li key={`fijo-${articulo.id}`}>{articulo.nombre}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                <div key={item.id} className="checkout-item">
+                  <h3>{item.nombre}</h3>
+                  <p>
+                    <strong>Precio unitario:</strong> ${Number(item.precio).toLocaleString("es-CO")}
+                  </p>
+                  <p>
+                    <strong>Cantidad:</strong> {item.cantidad}
+                  </p>
 
-                {/* Personalizaciones */}
-                {item.personalizaciones?.length > 0 && (
-                  <>
-                    <p><strong>Personalización:</strong></p>
-                    <ul>
-                      {item.personalizaciones.map((p, index) =>
-                        p.articuloNombre !== "No seleccionado" ? (
-                          <li key={`personalizacion-${index}`}>
-                            {p.categoriaNombre}: {p.articuloNombre}
-                          </li>
-                        ) : null
-                      )}
-                    </ul>
-                  </>
-                )}
-              </div>
-            ))}
+                  {/* Artículos fijos */}
+                  {item.articulosFijos?.length > 0 && (
+                    <>
+                      <p>
+                        <strong>Artículos incluidos:</strong>
+                      </p>
+                      <ul>
+                        {item.articulosFijos.map(articulo => (
+                          <li key={`fijo-${articulo.id}`}>{articulo.nombre}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {/* Personalizaciones */}
+                  {item.personalizaciones?.length > 0 && (
+                    <>
+                      <p>
+                        <strong>Personalización:</strong>
+                      </p>
+                      <ul>
+                        {item.personalizaciones.map((p, index) =>
+                          p.articuloNombre !== "No seleccionado" ? (
+                            <li key={`personalizacion-${index}`}>
+                              {p.categoriaNombre}: {p.articuloNombre}
+                            </li>
+                          ) : null
+                        )}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
             <div className="checkout-total">
               <span>Total:</span>
@@ -310,27 +303,11 @@ const CheckoutPage = () => {
             <h3>Datos de envío</h3>
             <div className="form-group">
               <label htmlFor="nombre">Nombre de quien recibe*</label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                value={userData.nombre}
-                onChange={handleChange}
-                required
-                placeholder="Nombre completo"
-              />
+              <input type="text" id="nombre" name="nombre" value={userData.nombre} onChange={handleChange} required placeholder="Nombre completo" />
             </div>
             <div className="form-group">
               <label htmlFor="correo">Correo electrónico*</label>
-              <input
-                type="email"
-                id="correo"
-                name="correo"
-                value={userData.correo}
-                onChange={handleChange}
-                required
-                placeholder="tu@correo.com"
-              />
+              <input type="email" id="correo" name="correo" value={userData.correo} onChange={handleChange} required placeholder="tu@correo.com" />
             </div>
             <div className="form-group">
               <label htmlFor="telefono">Teléfono de contacto*</label>
@@ -357,31 +334,16 @@ const CheckoutPage = () => {
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="horarioEntrega">
-                Horario de entrega preferido*
-              </label>
-              <select
-                id="horarioEntrega"
-                name="horarioEntrega"
-                value={userData.horarioEntrega}
-                onChange={handleChange}
-                required
-              >
+              <label htmlFor="horarioEntrega">Horario de entrega preferido*</label>
+              <select id="horarioEntrega" name="horarioEntrega" value={userData.horarioEntrega} onChange={handleChange} required>
                 <option value="">Selecciona un horario</option>
-                <option value="Mañana (8:00 AM - 12:00 PM)">
-                  Mañana (8:00 AM - 12:00 PM)
-                </option>
-                <option value="Tarde (12:00 PM - 5:00 PM)">
-                  Tarde (12:00 PM - 5:00 PM)
-                </option>
-                <option value="Noche (5:00 PM - 8:00 PM)">
-                  Noche (5:00 PM - 8:00 PM)
-                </option>
+                <option value="Mañana (8:00 AM - 12:00 PM)">Mañana (8:00 AM - 12:00 PM)</option>
+                <option value="Tarde (12:00 PM - 5:00 PM)">Tarde (12:00 PM - 5:00 PM)</option>
+                <option value="Noche (5:00 PM - 8:00 PM)">Noche (5:00 PM - 8:00 PM)</option>
               </select>
             </div>
             <button type="submit" className="btn-complete-order">
-              <FaWhatsapp style={{ marginRight: "8px" }} /> Completar Pedido por
-              WhatsApp
+              <FaWhatsapp style={{ marginRight: "8px" }} /> Completar Pedido por WhatsApp
             </button>
           </form>
         </div>

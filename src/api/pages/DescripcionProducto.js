@@ -39,53 +39,52 @@ const ProductoDetalle = () => {
         });
         // Inicializa selección vacía para cada categoría, PONER LUEGO A QUE SE SELECCIONE EL PRIMERO
         if (res.data.categorias_articulo && res.data.categorias_articulo.length > 0) {
-        const initialState = {};
-        const categoriasIds = [];
+          const initialState = {};
+          const categoriasIds = [];
 
-        res.data.categorias_articulo.forEach(cat => {
-          initialState[cat.id] = "";
-          categoriasIds.push(cat.id);
-        });
+          res.data.categorias_articulo.forEach(cat => {
+            initialState[cat.id] = "";
+            categoriasIds.push(cat.id);
+          });
 
-        setSeleccionesCategoria(initialState);
+          setSeleccionesCategoria(initialState);
 
-        // Cargar artículos por cada categoría
-        categoriasIds.forEach(async (id) => {
-          await fetchArticulosPorCategoria(id);
-        });
-      }
-    }
-  });
-}, [productoId]);
-
-      const fetchArticulosPorCategoria = async (categoriaId) => {
-        try {
-          const res = await api.get(`articulos-por-categoria/${categoriaId}/`);
-          const articulosActivos = res.data.filter(a => a.estado);
-
-          setArticulosPorCategoria((prev) => ({
-            ...prev,
-            [categoriaId]: articulosActivos
-          }));
-
-          // Selecciona automáticamente el primer artículo si existe
-          if (articulosActivos.length > 0) {
-            const primerArticuloId = articulosActivos[0].id.toString();
-
-            setSeleccionesCategoria(prev => ({
-              ...prev,
-              [categoriaId]: primerArticuloId
-            }));
-          }
-
-        } catch (error) {
-          console.error(`Error al traer artículos para la categoría ${categoriaId}`, error);
-          setArticulosPorCategoria((prev) => ({
-            ...prev,
-            [categoriaId]: []
-          }));
+          // Cargar artículos por cada categoría
+          categoriasIds.forEach(async id => {
+            await fetchArticulosPorCategoria(id);
+          });
         }
-      };
+      }
+    });
+  }, [productoId]);
+
+  const fetchArticulosPorCategoria = async categoriaId => {
+    try {
+      const res = await api.get(`articulos-por-categoria/${categoriaId}/`);
+      const articulosActivos = res.data.filter(a => a.estado);
+
+      setArticulosPorCategoria(prev => ({
+        ...prev,
+        [categoriaId]: articulosActivos
+      }));
+
+      // Selecciona automáticamente el primer artículo si existe
+      if (articulosActivos.length > 0) {
+        const primerArticuloId = articulosActivos[0].id.toString();
+
+        setSeleccionesCategoria(prev => ({
+          ...prev,
+          [categoriaId]: primerArticuloId
+        }));
+      }
+    } catch (error) {
+      console.error(`Error al traer artículos para la categoría ${categoriaId}`, error);
+      setArticulosPorCategoria(prev => ({
+        ...prev,
+        [categoriaId]: []
+      }));
+    }
+  };
 
   if (!producto) return <div className="producto-detalle-loading">Cargando...</div>;
 
@@ -96,7 +95,7 @@ const ProductoDetalle = () => {
     }));
   };
 
-  const handleAddToCart = () => {    
+  const handleAddToCart = () => {
     // Buscar la imagen principal o la primera
     let imagen = "/placeholder.svg";
     if (producto.imagenes && producto.imagenes.length > 0) {
@@ -116,7 +115,6 @@ const ProductoDetalle = () => {
         articuloId: articulo?.id || null
       };
     });
-    
 
     const productoParaCarrito = {
       id: producto.id,
@@ -133,9 +131,7 @@ const ProductoDetalle = () => {
     toast.success(`${producto.nombre} añadido al carrito`);
   };
   // Verifica si todas las categorías tienen un artículo seleccionado
-  const isAllSelected = producto.categorias_articulo?.every(
-    cat => seleccionesCategoria[cat.id]
-  );
+  const isAllSelected = producto.categorias_articulo?.every(cat => seleccionesCategoria[cat.id]);
   return (
     <div className="producto-detalle-container">
       <div className="producto-detalle-galeria">
@@ -162,13 +158,11 @@ const ProductoDetalle = () => {
             <div>{producto.descripcion}</div>
           </div>
 
-
-
-            <div className="producto-detalle-articulos">
+          <div className="producto-detalle-articulos">
             <h4>Artículos que componen este producto:</h4>
             {producto.articulos && producto.articulos.length > 0 ? (
               <ul>
-                {producto.articulos.map((articulo) => (
+                {producto.articulos.map(articulo => (
                   <li key={articulo.id}>
                     {articulo.nombre} {articulo.estado ? "" : "(deshabilitado)"}
                   </li>
@@ -181,8 +175,6 @@ const ProductoDetalle = () => {
         </div>
       </div>
 
-          
-
       <div className="producto-detalle-info">
         <div className="producto-detalle-nombre">{producto.nombre}</div>
         <div className="producto-detalle-tags">
@@ -190,9 +182,8 @@ const ProductoDetalle = () => {
         </div>
         <div className="producto-detalle-precio">${Number(producto.precio).toLocaleString("es-CO")}</div>
 
-
-            {/*PERSONALIZACION DEL PRODUCTO*/} 
-            {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
+        {/*PERSONALIZACION DEL PRODUCTO*/}
+        {producto.categorias_articulo && producto.categorias_articulo.length > 0 && (
           <div className="producto-detalle-categorias-articulo">
             <h4>Personalización del producto:</h4>
             {producto.categorias_articulo.map(categoria => {
@@ -200,16 +191,12 @@ const ProductoDetalle = () => {
 
               return (
                 <div key={categoria.id} className="categoria-articulo-group">
-                  <label htmlFor={`categoria-${categoria.id}`}>
-                    {categoria.nombre}:
-                  </label>
+                  <label htmlFor={`categoria-${categoria.id}`}>{categoria.nombre}:</label>
 
                   <select
                     id={`categoria-${categoria.id}`}
                     value={seleccionesCategoria[categoria.id] || ""}
-                    onChange={(e) =>
-                      handleSeleccionCategoria(categoria.id, e.target.value)
-                    }
+                    onChange={e => handleSeleccionCategoria(categoria.id, e.target.value)}
                     className="categoria-articulo-select"
                   >
                     {articulosActivos.map(articulo => (
@@ -224,7 +211,6 @@ const ProductoDetalle = () => {
           </div>
         )}
 
-
         <div className="producto-detalle-cantidad-row">
           <span>Cantidad</span>
           <div className="producto-detalle-cantidad-controls">
@@ -234,17 +220,12 @@ const ProductoDetalle = () => {
           </div>
 
           {/* Botón condicionalmente deshabilitado */}
-          <button 
-            className="producto-detalle-addcart"
-            onClick={handleAddToCart}
-            disabled={!isAllSelected}
-          >
+          <button className="producto-detalle-addcart" onClick={handleAddToCart} disabled={!isAllSelected}>
             {isAllSelected ? "Añadir al Carrito" : "Completa las opciones"}
           </button>
         </div>
       </div>
     </div>
-    
   );
 };
 

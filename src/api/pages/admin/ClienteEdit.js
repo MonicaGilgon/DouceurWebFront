@@ -12,9 +12,9 @@ const ClienteEdit = () => {
   const [cliente, setCliente] = useState({
     nombre: "",
     correo: "",
-    telefono: "",
+    telefono: ""
   });
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,15 +33,15 @@ const ClienteEdit = () => {
     fetchCliente();
   }, [clienteId]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setCliente((prevState) => ({
+    setCliente(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     if (!cliente.nombre.trim()) {
@@ -63,7 +63,7 @@ const ClienteEdit = () => {
         nombre: cliente.nombre,
         correo: cliente.correo,
         telefono: cliente.telefono,
-        direccion: cliente.direccion,
+        direccion: cliente.direccion
       });
       toast.success("Cliente actualizado con éxito.");
       navigate("../listar-clientes");
@@ -73,7 +73,7 @@ const ClienteEdit = () => {
     }
   };
 
-  const handleCancel = (event) => {
+  const handleCancel = event => {
     navigate("../listar-clientes");
   };
 
@@ -87,59 +87,15 @@ const ClienteEdit = () => {
         <Typography variant="h4" gutterBottom>
           Editar Cliente
         </Typography>
-        <TextField
-          name="nombre"
-          label="Nombre"
-          value={cliente.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="correo"
-          label="Correo"
-          value={cliente.correo}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="email"
-          required
-        />
-        <TextField
-          name="telefono"
-          label="Teléfono"
-          value={cliente.telefono}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          type="tel"
-          required
-        />
-        <TextField
-          name="direccion"
-          label="Dirección"
-          value={cliente.direccion}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <TextField name="nombre" label="Nombre" value={cliente.nombre} onChange={handleChange} fullWidth margin="normal" required />
+        <TextField name="correo" label="Correo" value={cliente.correo} onChange={handleChange} fullWidth margin="normal" type="email" required />
+        <TextField name="telefono" label="Teléfono" value={cliente.telefono} onChange={handleChange} fullWidth margin="normal" type="tel" required />
+        <TextField name="direccion" label="Dirección" value={cliente.direccion} onChange={handleChange} fullWidth margin="normal" required />
         <div className="form-buttons">
-          <Button
-            type="button"
-            onClick={handleCancel}
-            variant="outlined"
-            className="cancel-button"
-          >
+          <Button type="button" onClick={handleCancel} variant="outlined" className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            className="save-button"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" variant="contained" className="save-button" onClick={handleSubmit}>
             Guardar Cambios
           </Button>
         </div>

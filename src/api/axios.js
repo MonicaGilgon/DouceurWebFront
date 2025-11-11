@@ -5,25 +5,25 @@ const api = axios.create({
   baseURL: "https://douceurwebback.onrender.com/api", // URL del backend
   //baseURL: "http://localhost:8000/api", // URL del backend en desarrollo
   headers: {
-    "Content-Type": "application/json",
-  },
+    "Content-Type": "application/json"
+  }
 });
 // Interceptor para añadir el token a las solicitudes
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 // Interceptor para manejar errores 401 (token expirado)
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

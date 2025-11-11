@@ -5,14 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import {
-  Layout,
-  Table,
-  Typography,
-  Button,
-  Space,
-  ConfigProvider,
-} from "antd";
+import { Layout, Table, Typography, Button, Space, ConfigProvider } from "antd";
 
 const ClienteList = () => {
   const { Content, Header } = Layout;
@@ -40,27 +33,27 @@ const ClienteList = () => {
     {
       title: "#",
       key: "id",
-      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1
     },
     {
       title: "Nombre",
       dataIndex: "nombre_completo",
-      key: "nombre_completo",
+      key: "nombre_completo"
     },
     {
       title: "Correo Electronico",
       dataIndex: "correo",
-      key: "correo_electronico",
+      key: "correo_electronico"
     },
     {
       title: "Teléfono",
       dataIndex: "telefono",
-      key: "telefono",
+      key: "telefono"
     },
     {
       title: "Dirección",
       dataIndex: "direccion",
-      key: "direccion",
+      key: "direccion"
     },
     {
       title: "Acciones",
@@ -68,24 +61,19 @@ const ClienteList = () => {
       render: (_, record) => (
         <Space size="middle">
           <Link to={`/admin/editar-cliente/${record.id}`}>
-            <Button
-              type="primary"
-              style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-            >
+            <Button type="primary" style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
               Editar
             </Button>
           </Link>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
-        >
+        <Header style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <div>
             <Title level={3} style={{ color: "#001529", textAlign: "center" }}>
               Lista de Clientes
@@ -98,7 +86,7 @@ const ClienteList = () => {
             background: "#fff",
             margin: "20px",
             borderRadius: "10px",
-            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
           }}
         >
           <div className="clientes-list">
@@ -118,7 +106,7 @@ const ClienteList = () => {
                   setCurrentPage(page);
                   setPageSize(pageSize);
                 },
-                showTotal: (total) => `Total: ${total} Clientes`,
+                showTotal: total => `Total: ${total} Clientes`
               }}
               locale={{ emptyText: "No hay datos" }}
               scroll={{ x: "max-content" }} // Desplazamiento horizontal

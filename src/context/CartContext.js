@@ -5,7 +5,6 @@ const CART_KEY = "cart";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-
   const [cart, setCart] = useState([]);
   useEffect(() => {
     const savedCart = localStorage.getItem(CART_KEY);
@@ -18,7 +17,6 @@ export const CartProvider = ({ children }) => {
       }
     }
   }, []);
-  
 
   useEffect(() => {
     // Guarda los elementos del carrito en el localStorage cada vez que cambian
@@ -31,18 +29,18 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   // Función para agregar un producto al carrito
-  const addToCart = (producto) => {
-    setCart((prevItems) => {
+  const addToCart = producto => {
+    setCart(prevItems => {
       // Busca si ya existe el producto en el carrito
-      const foundItem = prevItems.find((item) => item.id === producto.id);
+      const foundItem = prevItems.find(item => item.id === producto.id);
 
       if (foundItem) {
         // Si ya está, solo aumenta la cantidad
-        return prevItems.map((item) =>
+        return prevItems.map(item =>
           item.id === producto.id
             ? {
                 ...item,
-                cantidad: item.cantidad + producto.cantidad,
+                cantidad: item.cantidad + producto.cantidad
               }
             : item
         );
@@ -56,7 +54,7 @@ export const CartProvider = ({ children }) => {
           cantidad: producto.cantidad || 1,
           articulosFijos: producto.articulos || [],
           personalizaciones: producto.personalizaciones || []
-        },
+        }
       ];
     });
   };

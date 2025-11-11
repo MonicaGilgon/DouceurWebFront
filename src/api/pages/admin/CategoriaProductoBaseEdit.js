@@ -16,9 +16,7 @@ const CategoriaProductoBaseEdit = () => {
   useEffect(() => {
     const fetchCategoria = async () => {
       try {
-        const response = await api.get(
-          `editar-categoria-producto-base/${categoriaId}/`
-        );
+        const response = await api.get(`editar-categoria-producto-base/${categoriaId}/`);
         setCategoria(response.data);
       } catch (error) {
         console.error("Error al cargar la categoría", error);
@@ -42,21 +40,19 @@ const CategoriaProductoBaseEdit = () => {
     fetchCategorias();
   }, [categoriaId]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setCategoria((prevState) => ({
+    setCategoria(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     const nombreExiste = categoriasExistentes.some(
-      (cat) =>
-        cat.nombre.toLowerCase() === categoria.nombre.trim().toLowerCase() &&
-        cat.id !== Number(categoriaId)
+      cat => cat.nombre.toLowerCase() === categoria.nombre.trim().toLowerCase() && cat.id !== Number(categoriaId)
     );
 
     if (nombreExiste) {
@@ -67,7 +63,7 @@ const CategoriaProductoBaseEdit = () => {
     try {
       toast.success("Categoría editada correctamente");
       await api.put(`editar-categoria-producto-base/${categoriaId}/`, {
-        nombre: categoria.nombre.trim(),
+        nombre: categoria.nombre.trim()
       });
       navigate("/admin/listar-categoria-producto-base");
     } catch (error) {
@@ -75,7 +71,6 @@ const CategoriaProductoBaseEdit = () => {
       toast.error("Error al editar la categoría.");
     }
   };
-
 
   if (loading) {
     return <CircularProgress />;
@@ -87,30 +82,13 @@ const CategoriaProductoBaseEdit = () => {
         <Typography variant="h4" gutterBottom>
           Editar Categoría de Producto Base
         </Typography>
-        <TextField
-          label="Nombre"
-          name="nombre"
-          value={categoria.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <TextField label="Nombre" name="nombre" value={categoria.nombre} onChange={handleChange} fullWidth margin="normal" required />
 
         <div className="form-buttons">
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+          <Button type="default" onClick={() => navigate(-1)} className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="save-button"
-          >
+          <Button type="submit" variant="contained" color="primary" className="save-button">
             Guardar Cambios
           </Button>
         </div>

@@ -19,16 +19,13 @@ const CategoriaArticuloEdit = () => {
       try {
         const [categoriaResponse, categoriasResponse] = await Promise.all([
           api.get(`/editar-categoria-articulo/${categoriaId}/`),
-          api.get("/listar-categoria-articulo/"),
+          api.get("/listar-categoria-articulo/")
         ]);
 
         setCategoria(categoriaResponse.data);
         setCategoriasExistentes(categoriasResponse.data);
       } catch (error) {
-        console.error(
-          "Error al cargar la categoría o las categorías existentes",
-          error
-        );
+        console.error("Error al cargar la categoría o las categorías existentes", error);
         toast.error("Error al cargar los datos.");
       } finally {
         setLoading(false);
@@ -39,14 +36,14 @@ const CategoriaArticuloEdit = () => {
   }, [categoriaId]);
 
   // Manejo del cambio en el formulario
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setCategoria((prevState) => ({
+    setCategoria(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     if (!categoria.nombre.trim()) {
@@ -56,9 +53,7 @@ const CategoriaArticuloEdit = () => {
 
     // Verificar si el nombre ya existe (ignorando mayúsculas/minúsculas)
     const nombreExiste = categoriasExistentes.some(
-      (cat) =>
-        cat.nombre.toLowerCase() === categoria.nombre.trim().toLowerCase() &&
-        cat.id !== Number(categoriaId)
+      cat => cat.nombre.toLowerCase() === categoria.nombre.trim().toLowerCase() && cat.id !== Number(categoriaId)
     );
 
     if (nombreExiste) {
@@ -69,7 +64,7 @@ const CategoriaArticuloEdit = () => {
     try {
       toast.success("Categoría editada correctamente.");
       await api.put(`/editar-categoria-articulo/${categoriaId}/`, {
-        nombre: categoria.nombre.trim(),
+        nombre: categoria.nombre.trim()
       });
       navigate("/admin/listar-categoria-articulo");
     } catch (error) {
@@ -88,29 +83,12 @@ const CategoriaArticuloEdit = () => {
         <Typography variant="h4" gutterBottom>
           Editar Categoría de Artículo
         </Typography>
-        <TextField
-          label="Nombre"
-          name="nombre"
-          value={categoria.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <TextField label="Nombre" name="nombre" value={categoria.nombre} onChange={handleChange} fullWidth margin="normal" required />
         <div className="form-buttons">
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+          <Button type="default" onClick={() => navigate(-1)} className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="save-button"
-          >
+          <Button type="submit" variant="contained" color="primary" className="save-button">
             Guardar Cambios
           </Button>
 

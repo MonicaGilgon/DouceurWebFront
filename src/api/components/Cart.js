@@ -107,7 +107,9 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart, addOneTo
 
       <div className="item-details">
         <h4>{item.nombre}</h4>
-        <p><strong>Precio:</strong> ${parseFloat(item.precio).toLocaleString("es-CO")}</p>
+        <p>
+          <strong>Precio:</strong> ${parseFloat(item.precio).toLocaleString("es-CO")}
+        </p>
 
         {/* Artículos fijos */}
         {item.articulosFijos && item.articulosFijos.length > 0 && (
@@ -141,8 +143,12 @@ const CartItem = ({ item, removeFromCart, addToCart, removeOneFromCart, addOneTo
           <span>Cantidad</span>
           <div className="cantidad-controls">
             <span>{item.cantidad}</span>
-            <button onClick={() => removeOneFromCart(item.id)} className="btn-cantidad">-</button>
-            <button onClick={() => addOneToCart(item.id)} className="btn-cantidad">+</button>
+            <button onClick={() => removeOneFromCart(item.id)} className="btn-cantidad">
+              -
+            </button>
+            <button onClick={() => addOneToCart(item.id)} className="btn-cantidad">
+              +
+            </button>
           </div>
         </div>
       </div>

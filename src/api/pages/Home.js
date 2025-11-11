@@ -43,7 +43,6 @@ const Home = () => {
 
   const categoriasHabilitadas = categorias.filter(c => c.estado === true).slice(0, 5);
 
-
   return (
     <div className="home-container">
       {/* Banner principal */}

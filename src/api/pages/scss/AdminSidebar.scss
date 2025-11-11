@@ -144,8 +144,8 @@
 }
 
 /* Eliminar espacio en blanco entre sidebar y contenido */
-.app-sidebar+.app-content,
-.c-sidebar+.c-wrapper {
+.app-sidebar + .app-content,
+.c-sidebar + .c-wrapper {
   margin-left: 0px !important;
   padding-left: 20px;
   transition: margin-left 0.3s ease;

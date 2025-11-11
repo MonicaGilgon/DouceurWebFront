@@ -2,17 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../scss/EditView.scss";
 import api from "../../../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Typography,
-  CircularProgress,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  Alert,
-} from "@mui/material";
+import { TextField, Button, Typography, CircularProgress, MenuItem, Select, InputLabel, FormControl, Alert } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,11 +18,9 @@ const ProductoBaseEdit = () => {
     estado: true,
     categoriaProductoBase: "",
     articulos: [],
-    imagen: "",
+    imagen: ""
   });
-  const [categoriasProductoActivas, setCategoriasProductoActivas] = useState(
-    []
-  );
+  const [categoriasProductoActivas, setCategoriasProductoActivas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [categoriasArticulo, setCategoriasArticulo] = useState([]);
@@ -53,9 +41,7 @@ const ProductoBaseEdit = () => {
         setProducto(response.data);
         setFotosActuales(response.data.fotos || []);
 
-        setCategoriasSeleccionadas(
-          response.data.categorias_articulo.map((c) => c.id)
-        );
+        setCategoriasSeleccionadas(response.data.categorias_articulo.map(c => c.id));
       } catch (error) {
         console.error("Error al cargar el producto:", error);
         setError("Error al cargar el producto");
@@ -68,9 +54,7 @@ const ProductoBaseEdit = () => {
     const fetchCategorias = async () => {
       try {
         const response = await api.get("listar-categoria-producto-base/");
-        const categoriasActivas = response.data.filter(
-          (c) => c.estado === true
-        );
+        const categoriasActivas = response.data.filter(c => c.estado === true);
         setCategoriasProductoActivas(categoriasActivas);
       } catch (err) {
         console.error("Error al cargar las categorías:", err);
@@ -82,7 +66,7 @@ const ProductoBaseEdit = () => {
     const fetchCategoriasArticulo = async () => {
       try {
         const response = await api.get("listar-categoria-articulo/");
-        const activas = response.data.filter((cat) => cat.estado === true);
+        const activas = response.data.filter(cat => cat.estado === true);
         setCategoriasArticulo(activas);
       } catch (error) {
         console.error("Error al cargar categorías de artículo:", error);
@@ -93,7 +77,7 @@ const ProductoBaseEdit = () => {
     const fetchArticulos = async () => {
       try {
         const response = await api.get("listar-articulos/");
-        const activos = response.data.filter((a) => a.estado === true);
+        const activos = response.data.filter(a => a.estado === true);
         setArticulosDisponibles(activos);
       } catch (err) {
         console.error("Error al cargar artículos disponibles", err);
@@ -106,15 +90,15 @@ const ProductoBaseEdit = () => {
     fetchArticulos();
   }, [productoId]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setProducto((prevState) => ({
+    setProducto(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     if (!producto.nombre) {
@@ -126,10 +110,7 @@ const ProductoBaseEdit = () => {
       return;
     }
 
-    console.log(
-      "Tipo de categoriaProductoBase:",
-      producto.categoriaProductoBase
-    );
+    console.log("Tipo de categoriaProductoBase:", producto.categoriaProductoBase);
     console.log("typeof:", typeof producto.categoriaProductoBase);
 
     const formData = new FormData();
@@ -139,19 +120,17 @@ const ProductoBaseEdit = () => {
     formData.append("estado", producto.estado ? "true" : "false");
     formData.append("categoriaProductoBase_id", producto.categoriaProductoBase);
 
-    const articulosIds = producto.articulos.map((a) =>
-      typeof a === "object" ? a.id : a
-    );
+    const articulosIds = producto.articulos.map(a => (typeof a === "object" ? a.id : a));
 
     if (articulosIds.length === 1) {
       formData.append("articulos_ids", articulosIds[0]);
     } else {
-      articulosIds.forEach((id) => {
+      articulosIds.forEach(id => {
         formData.append("articulos_ids", id);
       });
     }
 
-    categoriasSeleccionadas.forEach((id) => {
+    categoriasSeleccionadas.forEach(id => {
       formData.append("categorias_articulo", id);
     });
 
@@ -166,12 +145,12 @@ const ProductoBaseEdit = () => {
       }
     }
 
-    nuevasFotos.forEach((foto) => {
+    nuevasFotos.forEach(foto => {
       formData.append("fotos", foto);
     });
 
     if (fotosAEliminar.length > 0) {
-      fotosAEliminar.forEach((id) => {
+      fotosAEliminar.forEach(id => {
         formData.append("fotos_a_eliminar", id);
       });
     }
@@ -183,8 +162,8 @@ const ProductoBaseEdit = () => {
     try {
       await api.put(`editar-producto-base/${productoId}/`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
+          "Content-Type": "multipart/form-data"
+        }
       });
 
       toast.success("Producto editado correctamente.");
@@ -195,7 +174,6 @@ const ProductoBaseEdit = () => {
       console.error("Error al editar el producto", error);
     }
   };
-
 
   if (loading) {
     return <CircularProgress />;
@@ -208,50 +186,23 @@ const ProductoBaseEdit = () => {
           Editar Producto Base
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}
-        <TextField
-          label="Nombre"
-          name="nombre"
-          value={producto.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          label="Descripción"
-          name="descripcion"
-          value={producto.descripcion}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Precio"
-          name="precio"
-          type="number"
-          value={producto.precio}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <TextField label="Nombre" name="nombre" value={producto.nombre} onChange={handleChange} fullWidth margin="normal" required />
+        <TextField label="Descripción" name="descripcion" value={producto.descripcion} onChange={handleChange} fullWidth margin="normal" />
+        <TextField label="Precio" name="precio" type="number" value={producto.precio} onChange={handleChange} fullWidth margin="normal" required />
         <FormControl fullWidth margin="normal" required>
           <InputLabel>Categoría</InputLabel>
           <Select
             name="categoriaProductoBase"
-            value={
-              producto.categoriaProductoBase?.id ||
-              producto.categoriaProductoBase ||
-              ""
-            }
-            onChange={(e) =>
-              setProducto((prev) => ({
+            value={producto.categoriaProductoBase?.id || producto.categoriaProductoBase || ""}
+            onChange={e =>
+              setProducto(prev => ({
                 ...prev,
-                categoriaProductoBase: parseInt(e.target.value),
+                categoriaProductoBase: parseInt(e.target.value)
               }))
             }
-            label="Categoría">
-            {categoriasProductoActivas.map((categoria) => (
+            label="Categoría"
+          >
+            {categoriasProductoActivas.map(categoria => (
               <MenuItem key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
               </MenuItem>
@@ -260,23 +211,15 @@ const ProductoBaseEdit = () => {
         </FormControl>
 
         <FormControl fullWidth required margin="normal">
-          <InputLabel id="categorias-personalizables-label">
-            Categorías personalizables
-          </InputLabel>
+          <InputLabel id="categorias-personalizables-label">Categorías personalizables</InputLabel>
           <Select
             labelId="categorias-personalizables-label"
             multiple
             value={categoriasSeleccionadas}
-            onChange={(e) => setCategoriasSeleccionadas(e.target.value)}
-            renderValue={(selected) =>
-              selected
-                .map(
-                  (id) =>
-                    categoriasArticulo.find((cat) => cat.id === id)?.nombre
-                )
-                .join(", ")
-            }>
-            {categoriasArticulo.map((categoria) => (
+            onChange={e => setCategoriasSeleccionadas(e.target.value)}
+            renderValue={selected => selected.map(id => categoriasArticulo.find(cat => cat.id === id)?.nombre).join(", ")}
+          >
+            {categoriasArticulo.map(categoria => (
               <MenuItem key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
               </MenuItem>
@@ -288,11 +231,9 @@ const ProductoBaseEdit = () => {
           type="file"
           multiple
           accept="image/*"
-          onChange={(e) => {
+          onChange={e => {
             const files = Array.from(e.target.files);
-            const validas = files.filter(
-              (f) => f.type.startsWith("image/") && f.size <= 5 * 1024 * 1024
-            );
+            const validas = files.filter(f => f.type.startsWith("image/") && f.size <= 5 * 1024 * 1024);
             if (validas.length + fotosActuales.length > 5) {
               toast.error("Máximo 5 imágenes (entre nuevas y actuales).");
               return;
@@ -300,65 +241,23 @@ const ProductoBaseEdit = () => {
             setNuevasFotos(validas);
           }}
         />
-        {producto.imagen &&
-          !(producto.imagen instanceof File) &&
-          !eliminarImagenPrincipal && (
-            <div style={{ marginTop: "10px", position: "relative" }}>
-              <Typography variant="subtitle2">Imagen actual:</Typography>
-              <img
-                src={producto.imagen}
-                alt="Imagen actual"
-                style={{
-                  width: "120px",
-                  borderRadius: "8px",
-                  marginTop: "5px",
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setEliminarImagenPrincipal(true);
-                  setProducto((prev) => ({ ...prev, imagen: "" }));
-                }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "20px",
-                  height: "20px",
-                  cursor: "pointer",
-                }}>
-                X
-              </button>
-            </div>
-          )}
-
-        {fotosActuales.map((foto) => (
-          <div
-            key={foto.id}
-            style={{
-              position: "relative",
-              display: "inline-block",
-              margin: "5px",
-              opacity: fotosAEliminar.includes(foto.id) ? 0.4 : 1,
-            }}>
+        {producto.imagen && !(producto.imagen instanceof File) && !eliminarImagenPrincipal && (
+          <div style={{ marginTop: "10px", position: "relative" }}>
+            <Typography variant="subtitle2">Imagen actual:</Typography>
             <img
-              src={foto.url}
-              alt={`Foto ${foto.id}`}
-              style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }}
+              src={producto.imagen}
+              alt="Imagen actual"
+              style={{
+                width: "120px",
+                borderRadius: "8px",
+                marginTop: "5px"
+              }}
             />
             <button
               type="button"
               onClick={() => {
-                setFotosAEliminar((prev) =>
-                  prev.includes(foto.id)
-                    ? prev.filter((id) => id !== foto.id)
-                    : [...prev, foto.id]
-                );
+                setEliminarImagenPrincipal(true);
+                setProducto(prev => ({ ...prev, imagen: "" }));
               }}
               style={{
                 position: "absolute",
@@ -370,8 +269,43 @@ const ProductoBaseEdit = () => {
                 borderRadius: "50%",
                 width: "20px",
                 height: "20px",
-                cursor: "pointer",
-              }}>
+                cursor: "pointer"
+              }}
+            >
+              X
+            </button>
+          </div>
+        )}
+
+        {fotosActuales.map(foto => (
+          <div
+            key={foto.id}
+            style={{
+              position: "relative",
+              display: "inline-block",
+              margin: "5px",
+              opacity: fotosAEliminar.includes(foto.id) ? 0.4 : 1
+            }}
+          >
+            <img src={foto.url} alt={`Foto ${foto.id}`} style={{ width: "120px", borderRadius: "8px", marginTop: "5px" }} />
+            <button
+              type="button"
+              onClick={() => {
+                setFotosAEliminar(prev => (prev.includes(foto.id) ? prev.filter(id => id !== foto.id) : [...prev, foto.id]));
+              }}
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: "20px",
+                height: "20px",
+                cursor: "pointer"
+              }}
+            >
               X
             </button>
           </div>
@@ -382,40 +316,36 @@ const ProductoBaseEdit = () => {
           <Select
             labelId="articulos-label"
             multiple
-            value={producto.articulos.map((a) =>
-              typeof a === "object" ? a.id : a
-            )}
-            onChange={(e) => {
+            value={producto.articulos.map(a => (typeof a === "object" ? a.id : a))}
+            onChange={e => {
               const nuevosIds = e.target.value;
-              const nuevosArticulos = nuevosIds.map((id) => {
-                const existente = producto.articulos.find((a) =>
-                  typeof a === "object" ? a.id === id : a === id
-                );
+              const nuevosArticulos = nuevosIds.map(id => {
+                const existente = producto.articulos.find(a => (typeof a === "object" ? a.id === id : a === id));
                 return existente || { id }; // si ya tienes el objeto, reutilízalo
               });
-              setProducto((prev) => ({ ...prev, articulos: nuevosArticulos }));
+              setProducto(prev => ({ ...prev, articulos: nuevosArticulos }));
             }}
-            renderValue={(selected) => (
+            renderValue={selected => (
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                {selected.map((id) => {
-                  const articulo = articulosDisponibles.find(
-                    (a) => a.id === id
-                  );
+                {selected.map(id => {
+                  const articulo = articulosDisponibles.find(a => a.id === id);
                   return (
                     <div
                       key={id}
                       style={{
                         background: "#e0e0e0",
                         padding: "4px 8px",
-                        borderRadius: "16px",
-                      }}>
+                        borderRadius: "16px"
+                      }}
+                    >
                       {articulo?.nombre || `ID: ${id}`}
                     </div>
                   );
                 })}
               </div>
-            )}>
-            {articulosDisponibles.map((articulo) => (
+            )}
+          >
+            {articulosDisponibles.map(articulo => (
               <MenuItem key={articulo.id} value={articulo.id}>
                 {articulo.nombre}
               </MenuItem>
@@ -424,17 +354,10 @@ const ProductoBaseEdit = () => {
         </FormControl>
 
         <div className="form-buttons">
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            className="cancel-button">
+          <Button type="default" onClick={() => navigate(-1)} className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="save-button">
+          <Button type="submit" variant="contained" color="primary" className="save-button">
             Guardar Cambios
           </Button>
         </div>

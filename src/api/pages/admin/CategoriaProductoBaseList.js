@@ -4,15 +4,7 @@ import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import {
-  Layout,
-  Table,
-  Typography,
-  Button,
-  Switch,
-  Space,
-  ConfigProvider,
-} from "antd";
+import { Layout, Table, Typography, Button, Switch, Space, ConfigProvider } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -48,14 +40,11 @@ const CategoriaProductoBaseList = () => {
     fetchCategorias();
   }, []);
 
-  const puedeDesactivarCategoria = async (categoriaId) => {
+  const puedeDesactivarCategoria = async categoriaId => {
     try {
-      const response = await api
-        .get(
-        `productos-por-categoria/${categoriaId}/`,
-        );
+      const response = await api.get(`productos-por-categoria/${categoriaId}/`);
       const productos = response.data;
-      return productos.every((producto) => !producto.estado);
+      return productos.every(producto => !producto.estado);
     } catch (error) {
       console.error("Error al verificar los productos asociados", error);
       return false;
@@ -67,26 +56,18 @@ const CategoriaProductoBaseList = () => {
       if (!estado) {
         const puedeDesactivar = await puedeDesactivarCategoria(categoriaId);
         if (!puedeDesactivar) {
-          toast.error(
-            "No se puede desactivar esta categoría porque tiene productos activos asociados."
-          );
+          toast.error("No se puede desactivar esta categoría porque tiene productos activos asociados.");
           return;
         }
       }
 
       // Actualizar el estado localmente
-      setCategorias((prevCategorias) =>
-        prevCategorias.map((categoria) =>
-          categoria.id === categoriaId
-            ? { ...categoria, estado: !estado }
-            : categoria
-        )
+      setCategorias(prevCategorias =>
+        prevCategorias.map(categoria => (categoria.id === categoriaId ? { ...categoria, estado: !estado } : categoria))
       );
 
       // Actualizar el estado en el servidor
-      toast.success(
-        `Categoría ${!estado ? "activada" : "desactivada"} correctamente`
-      );
+      toast.success(`Categoría ${!estado ? "activada" : "desactivada"} correctamente`);
       await api.patch(
         `cambiar-estado-categoria-producto-base/${categoriaId}/`,
         { estado: !estado },
@@ -101,12 +82,12 @@ const CategoriaProductoBaseList = () => {
     {
       title: "#",
       key: "id",
-      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1
     },
     {
       title: "Nombre",
       dataIndex: "nombre",
-      key: "nombre",
+      key: "nombre"
     },
     {
       title: "Estado",
@@ -118,7 +99,7 @@ const CategoriaProductoBaseList = () => {
           onChange={() => toggleEstado(categoria.id, categoria.estado)}
           disabled={estadoDeshabilitado[categoria.id]}
         />
-      ),
+      )
     },
     {
       title: "Acciones",
@@ -126,24 +107,19 @@ const CategoriaProductoBaseList = () => {
       render: (text, categoria) => (
         <Space>
           <Link to={`/admin/editar-categoria-producto-base/${categoria.id}`}>
-            <Button
-              type="primary"
-              style={{ backgroundColor: "#FBD5E5", color: "#000" }}
-            >
+            <Button type="primary" style={{ backgroundColor: "#FBD5E5", color: "#000" }}>
               Editar
             </Button>
           </Link>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <ConfigProvider locale={esES}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Header
-          style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}
-        >
+        <Header style={{ background: "#fff", padding: "10px 10px", color: "#fff" }}>
           <div>
             <Title level={3} style={{ textAlign: "center", color: "#001529" }}>
               Lista de Categorias de Productos Base
@@ -155,16 +131,13 @@ const CategoriaProductoBaseList = () => {
             background: "#fff",
             margin: "20px",
             borderRadius: "10px",
-            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
+            boxShadow: "box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"
           }}
         >
           <div className="categorias-list">
             <div style={{ display: "flex", gap: "50px" }}>
               <Link to="/admin">
-                <Button
-                  type="default"
-                  style={{ marginBottom: "20px", marginTop: "20px" }}
-                >
+                <Button type="default" style={{ marginBottom: "20px", marginTop: "20px" }}>
                   Regresar
                 </Button>
               </Link>
@@ -175,7 +148,7 @@ const CategoriaProductoBaseList = () => {
                     marginBottom: "20px",
                     marginTop: "20px",
                     backgroundColor: "#FBD5E5",
-                    color: "#000",
+                    color: "#000"
                   }}
                 >
                   Crear Categoría Producto Base
@@ -198,7 +171,7 @@ const CategoriaProductoBaseList = () => {
                   setCurrentPage(page);
                   setPageSize(size);
                 },
-                showTotal: (total) => `Total: ${total} categorías`,
+                showTotal: total => `Total: ${total} categorías`
               }}
               scroll={{ x: "max-content" }}
               locale={{ emptyText: "No hay categorías disponibles" }}

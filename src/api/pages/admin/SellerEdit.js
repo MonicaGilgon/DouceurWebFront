@@ -16,9 +16,9 @@ const SellerEdit = () => {
     correo: "",
     telefono: "",
     direccion: "",
-    estado: "",
+    estado: ""
   });
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,15 +37,15 @@ const SellerEdit = () => {
     fetchSeller();
   }, [sellerId]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setSeller((prevState) => ({
+    setSeller(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     if (!seller.document_number.trim()) {
@@ -77,7 +77,7 @@ const SellerEdit = () => {
         correo: seller.correo,
         telefono: seller.telefono,
         direccion: seller.direccion,
-        estado: seller.estado,
+        estado: seller.estado
       });
       toast.success("Vendedor editado con éxito.");
       navigate("../listar-vendedores");
@@ -110,56 +110,21 @@ const SellerEdit = () => {
           margin="normal"
           required
         />
-        <TextField
-          name="nombre"
-          label="Nombre"
-          value={seller.nombre}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="correo"
-          label="Correo"
-          value={seller.correo}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="telefono"
-          label="Teléfono"
-          value={seller.telefono}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="direccion"
-          label="Dirección"
-          value={seller.direccion}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <Typography
-          variant="body1"
-          style={{ marginTop: "1rem", fontWeight: "normal" }}
-        >
+        <TextField name="nombre" label="Nombre" value={seller.nombre} onChange={handleChange} fullWidth margin="normal" required />
+        <TextField name="correo" label="Correo" value={seller.correo} onChange={handleChange} fullWidth margin="normal" required />
+        <TextField name="telefono" label="Teléfono" value={seller.telefono} onChange={handleChange} fullWidth margin="normal" required />
+        <TextField name="direccion" label="Dirección" value={seller.direccion} onChange={handleChange} fullWidth margin="normal" required />
+        <Typography variant="body1" style={{ marginTop: "1rem", fontWeight: "normal" }}>
           Estado: *
         </Typography>
         <FormControlLabel
           control={
             <Switch
               checked={seller.estado} // El estado "Activo" se considera true
-              onChange={(e) =>
-                setSeller((prevState) => ({
+              onChange={e =>
+                setSeller(prevState => ({
                   ...prevState,
-                  estado: e.target.checked ? true : false, // Cambia entre "Activo" e "Inactivo"
+                  estado: e.target.checked ? true : false // Cambia entre "Activo" e "Inactivo"
                 }))
               }
               color="primary"
@@ -169,12 +134,7 @@ const SellerEdit = () => {
           style={{ marginTop: "1rem" }}
         />
         <div className="form-buttons">
-          <Button
-            type="button"
-            onClick={handleCancel}
-            variant="outlined"
-            className="cancel-button"
-          >
+          <Button type="button" onClick={handleCancel} variant="outlined" className="cancel-button">
             Cancelar
           </Button>
           <Button type="submit" variant="contained" className="save-button">

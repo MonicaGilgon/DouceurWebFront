@@ -25,12 +25,9 @@ const CreateCategoriaProductoBase = () => {
     fetchCategorias();
   }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    const nombreExiste = categoriasExistentes.some(
-      (categoria) =>
-        categoria.nombre.toLowerCase() === nombre.trim().toLowerCase()
-    );
+    const nombreExiste = categoriasExistentes.some(categoria => categoria.nombre.toLowerCase() === nombre.trim().toLowerCase());
     if (nombreExiste) {
       toast.error("Nombre de categoría existente");
       return;
@@ -42,7 +39,7 @@ const CreateCategoriaProductoBase = () => {
 
     try {
       await api.post("crear-categoria-producto-base/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" }
       });
       toast.success("Categoría creada correctamente.");
       navigate("/admin/listar-categoria-producto-base");
@@ -51,7 +48,6 @@ const CreateCategoriaProductoBase = () => {
     }
   };
 
-
   return (
     <div className="edit-container">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -59,37 +55,14 @@ const CreateCategoriaProductoBase = () => {
         <Typography variant="h4" gutterBottom>
           Crear Nueva Categoría de Producto Base
         </Typography>
-        <TextField
-          label="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <label style={{ color: "black", margin: "15px 10px 15px 0" }}>
-          Activo:
-        </label>
-        <input
-          type="checkbox"
-          checked={estado}
-          onChange={() => setEstado(!estado)}
-          style={{ marginBottom: "20px" }}
-        />
+        <TextField label="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} fullWidth margin="normal" required />
+        <label style={{ color: "black", margin: "15px 10px 15px 0" }}>Activo:</label>
+        <input type="checkbox" checked={estado} onChange={() => setEstado(!estado)} style={{ marginBottom: "20px" }} />
         <div className="form-buttons">
-          <Button
-            type="default"
-            onClick={() => navigate(-1)}
-            className="cancel-button"
-          >
+          <Button type="default" onClick={() => navigate(-1)} className="cancel-button">
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className="save-button"
-          >
+          <Button type="submit" variant="contained" color="primary" className="save-button">
             Crear Categoría
           </Button>
         </div>

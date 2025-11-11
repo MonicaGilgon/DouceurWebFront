@@ -14,7 +14,7 @@ const OrderDetail = () => {
   const [paymentProof, setPaymentProof] = useState(null);
   const [message, setMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [ setNewStatus] = useState(null);
+  const [setNewStatus] = useState(null);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -32,8 +32,7 @@ const OrderDetail = () => {
     fetchOrderDetails();
   }, [orderId]);
 
-  
-  const validateStatusChange = (newStatus) => {
+  const validateStatusChange = newStatus => {
     if (!order) return false;
 
     switch (newStatus) {
@@ -72,7 +71,7 @@ const OrderDetail = () => {
     }
   };
 
-  const handleStatusChange = (newStatus) => {
+  const handleStatusChange = newStatus => {
     if (!validateStatusChange(newStatus)) return;
 
     if (newStatus === "pago_confirmado" && order.status === "pendiente") {
@@ -84,7 +83,7 @@ const OrderDetail = () => {
     updateStatus(newStatus);
   };
 
-  const updateStatus = async (newStatus) => {
+  const updateStatus = async newStatus => {
     try {
       await api.patch(`/actualizar-estado-pedido/${orderId}/`, { status: newStatus });
       toast.success("Estado actualizado correctamente.");
@@ -95,7 +94,7 @@ const OrderDetail = () => {
     }
   };
 
-  const handleVerifyPayment = async (action) => {
+  const handleVerifyPayment = async action => {
     const formData = new FormData();
     formData.append("action", action);
     if (action === "accept" && paymentProof) {
@@ -107,7 +106,7 @@ const OrderDetail = () => {
 
     try {
       const response = await api.post(`/verificar-pago/${orderId}/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" }
       });
       setMessage(response.data.message);
       order();
@@ -117,19 +116,26 @@ const OrderDetail = () => {
     }
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = status => {
     switch (status) {
-      case "pendiente": return <Badge bg="warning">Pendiente</Badge>;
-      case "pago_confirmado": return <Badge bg="info">Pago Confirmado</Badge>;
-      case "en_preparacion": return <Badge bg="secondary">En Preparación</Badge>;
-      case "enviado": return <Badge bg="primary">Enviado</Badge>;
-      case "entregado": return <Badge bg="success">Entregado</Badge>;
-      case "cancelado": return <Badge bg="danger">Cancelado</Badge>;
-      default: return <Badge bg="secondary">{status}</Badge>;
+      case "pendiente":
+        return <Badge bg="warning">Pendiente</Badge>;
+      case "pago_confirmado":
+        return <Badge bg="info">Pago Confirmado</Badge>;
+      case "en_preparacion":
+        return <Badge bg="secondary">En Preparación</Badge>;
+      case "enviado":
+        return <Badge bg="primary">Enviado</Badge>;
+      case "entregado":
+        return <Badge bg="success">Entregado</Badge>;
+      case "cancelado":
+        return <Badge bg="danger">Cancelado</Badge>;
+      default:
+        return <Badge bg="secondary">{status}</Badge>;
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
     return new Date(dateString).toLocaleDateString("es-ES", options);
   };
@@ -161,61 +167,37 @@ const OrderDetail = () => {
         <h2>Detalles del Pedido #{order.id}</h2>
         <div className="status-actions">
           <div className="dropdown">
-            <Button
-              variant="outline-pink"
-              className="dropdown-toggle"
-              id="dropdownMenuButton"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <Button variant="outline-pink" className="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
               Cambiar Estado
             </Button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("pendiente")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("pendiente")}>
                   <FaBoxOpen className="me-2" /> Pendiente
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("pago_confirmado")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("pago_confirmado")}>
                   <FaFileUpload className="me-2" /> Pago Confirmado
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("en_preparacion")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("en_preparacion")}>
                   <FaBoxOpen className="me-2" /> En Preparación
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("enviado")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("enviado")}>
                   <FaTruck className="me-2" /> Enviado
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("entregado")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("entregado")}>
                   <FaCheck className="me-2" /> Entregado
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleStatusChange("cancelado")}
-                >
+                <button className="dropdown-item" onClick={() => handleStatusChange("cancelado")}>
                   <FaTimes className="me-2" /> Cancelado
                 </button>
               </li>
@@ -230,10 +212,7 @@ const OrderDetail = () => {
           <Card.Body>
             <Form.Group>
               <Form.Label>Subir Soporte de Pago</Form.Label>
-              <Form.Control
-                type="file"
-                onChange={(e) => setPaymentProof(e.target.files[0])}
-              />
+              <Form.Control type="file" onChange={e => setPaymentProof(e.target.files[0])} />
             </Form.Group>
             <Button variant="success" onClick={() => handleVerifyPayment("accept")} className="me-2 mt-2">
               Aceptar
@@ -241,7 +220,11 @@ const OrderDetail = () => {
             <Button variant="danger" onClick={() => handleVerifyPayment("reject")} className="mt-2">
               Rechazar
             </Button>
-            {message && <Alert variant={message.includes("Error") ? "danger" : "success"} className="mt-3">{message}</Alert>}
+            {message && (
+              <Alert variant={message.includes("Error") ? "danger" : "success"} className="mt-3">
+                {message}
+              </Alert>
+            )}
           </Card.Body>
         </Card>
       )}
@@ -263,22 +246,14 @@ const OrderDetail = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {order.items.map((item) => (
+                  {order.items.map(item => (
                     <tr key={item.id}>
                       <td>
                         <div className="product-info">
                           {item.producto && item.producto.imagen ? (
-                            <img
-                              src={item.producto.imagen}
-                              alt={item.producto.nombre || "Producto sin nombre"}
-                              className="product-thumbnail"
-                            />
+                            <img src={item.producto.imagen} alt={item.producto.nombre || "Producto sin nombre"} className="product-thumbnail" />
                           ) : (
-                            <img
-                              src="/placeholder.svg"
-                              alt="Producto sin imagen"
-                              className="product-thumbnail"
-                            />
+                            <img src="/placeholder.svg" alt="Producto sin imagen" className="product-thumbnail" />
                           )}
                           <div>
                             <div className="product-name">{item.producto?.nombre || "Producto no disponible"}</div>
@@ -370,10 +345,7 @@ const OrderDetail = () => {
         <Modal.Body>
           <Form.Group>
             <Form.Label>Subir Soporte de Pago</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={(e) => setPaymentProof(e.target.files[0])}
-            />
+            <Form.Control type="file" onChange={e => setPaymentProof(e.target.files[0])} />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
