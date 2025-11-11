@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const OrderList = ({ statusFilter = null, role = "admin" }) => {
   const [orders, setOrders] = useState([]);
-  const [setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -47,7 +47,7 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, currentPage, searchTerm, setLoading]);
+  }, [statusFilter, currentPage, searchTerm]);
 
   useEffect(() => {
     fetchOrders();
@@ -184,8 +184,8 @@ const OrderList = ({ statusFilter = null, role = "admin" }) => {
           </div>
         </Card.Header>
         <Card.Body>
-          {currentOrders.length === 0 ? (
-            <div className="text-center py-4">No se encontraron pedidos</div>
+          {loading ? (
+            <div className="text-center py-4">Cargando pedidos...</div>
           ) : (
             <>
               <Table responsive hover>
