@@ -21,17 +21,20 @@ const CategoriaArticuloList = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get("/listar-categoria-articulo/");
-        setCategorias(response.data);
+        const [categoriasRes, articulosRes] = await Promise.all([
+          api.get("/listar-categoria-articulo/"),
+          api.get("/listar-categorias-con-articulos/")
+        ]);
+
+        setCategorias(categoriasRes.data);
 
         const disabledStates = {};
-        const articulos = {};
-        for (const categoria of response.data) {
-          disabledStates[categoria.id] = !(await puedeDesactivarCategoria(categoria.id));
-          articulos[categoria.id] = await obtenerArticulosPorCategoria(categoria.id);
+        for (const categoria of categoriasRes.data) {
+          const articulos = articulosRes.data[categoria.id] || [];
+          disabledStates[categoria.id] = articulos.length > 0;
         }
         setEstadoDeshabilitado(disabledStates);
-        setArticulosAsociados(articulos);
+        setArticulosAsociados(articulosRes.data);
       } catch (error) {
         console.error("Error al cargar las categorías", error);
       } finally {
@@ -43,22 +46,11 @@ const CategoriaArticuloList = () => {
 
   const puedeDesactivarCategoria = async categoriaId => {
     try {
-      const response = await api.get(`/articulos-por-categoria/${categoriaId}/`);
-      const articulos = response.data;
-      return articulos.every(articulo => !articulo.estado);
+      const articulos = articulosAsociados[categoriaId] || [];
+      return articulos.length === 0;
     } catch (error) {
       console.error("Error al verificar los artículos asociados", error);
       return false;
-    }
-  };
-
-  const obtenerArticulosPorCategoria = async categoriaId => {
-    try {
-      const response = await api.get(`/articulos-por-categoria/${categoriaId}/`);
-      return response.data.map(articulo => articulo.nombre);
-    } catch (error) {
-      console.error("Error al obtener los artículos asociados", error);
-      return [];
     }
   };
 

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/reset.css";
 import esES from "antd/es/locale/es_ES";
-import { Layout, Table, Typography, Button, Switch, Space, ConfigProvider } from "antd";
+import { Layout, Table, Typography, Button, Switch, Space, ConfigProvider, Popover } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,20 +14,28 @@ const CategoriaProductoBaseList = () => {
   const { Title } = Typography;
   const [loading, setLoading] = useState(true);
   const [estadoDeshabilitado, setEstadoDeshabilitado] = useState({});
+  const [productosAsociados, setProductosAsociados] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await api.get("listar-categoria-producto-base/");
-        setCategorias(response.data);
+        const [categoriasRes, productosRes] = await Promise.all([
+          api.get("listar-categoria-producto-base/"),
+          api.get("productos-por-todas-las-categorias/")
+        ]);
 
-        // Precomputar estado deshabilitado
+        setCategorias(categoriasRes.data);
+        setProductosAsociados(productosRes.data || {});
+
+        // Precomputar estado deshabilitado (informativo, no bloquea el toggle)
         const disabledStates = {};
-        for (const categoria of response.data) {
-          const puedeDesactivar = await puedeDesactivarCategoria(categoria.id);
-          disabledStates[categoria.id] = categoria.estado && !puedeDesactivar;
+        for (const categoria of categoriasRes.data) {
+          const productos = productosRes.data[categoria.id] || [];
+          // marcamos true si la categoría tiene al menos un producto activo
+          const tieneProductosActivos = productos.some(p => p.estado);
+          disabledStates[categoria.id] = tieneProductosActivos;
         }
         setEstadoDeshabilitado(disabledStates);
       } catch (error) {
@@ -40,22 +48,14 @@ const CategoriaProductoBaseList = () => {
     fetchCategorias();
   }, []);
 
-  const puedeDesactivarCategoria = async categoriaId => {
-    try {
-      const response = await api.get(`productos-por-categoria/${categoriaId}/`);
-      const productos = response.data;
-      return productos.every(producto => !producto.estado);
-    } catch (error) {
-      console.error("Error al verificar los productos asociados", error);
-      return false;
-    }
-  };
-
   const toggleEstado = async (categoriaId, estado) => {
     try {
-      if (!estado) {
-        const puedeDesactivar = await puedeDesactivarCategoria(categoriaId);
-        if (!puedeDesactivar) {
+      // Si la categoría está activa (estado === true) y el usuario intenta desactivarla,
+      // comprobamos si tiene productos activos asociados y bloqueamos la acción mostrando un error.
+      if (estado) {
+        const productos = productosAsociados[categoriaId] || [];
+        const tieneActivos = productos.some(p => p.estado);
+        if (tieneActivos) {
           toast.error("No se puede desactivar esta categoría porque tiene productos activos asociados.");
           return;
         }
@@ -67,14 +67,11 @@ const CategoriaProductoBaseList = () => {
       );
 
       // Actualizar el estado en el servidor
+      await api.patch(`cambiar-estado-categoria-producto-base/${categoriaId}/`, { estado: !estado });
       toast.success(`Categoría ${!estado ? "activada" : "desactivada"} correctamente`);
-      await api.patch(
-        `cambiar-estado-categoria-producto-base/${categoriaId}/`,
-        { estado: !estado },
-        { headers: { "Content-Type": "application/json" } }
-      );
     } catch (error) {
       console.error("Error al cambiar el estado activo de la categoría", error);
+      toast.error("Error al cambiar el estado de la categoría");
     }
   };
 
@@ -93,13 +90,40 @@ const CategoriaProductoBaseList = () => {
       title: "Estado",
       dataIndex: "estado",
       key: "estado",
-      render: (text, categoria) => (
-        <Switch
-          checked={categoria.estado}
-          onChange={() => toggleEstado(categoria.id, categoria.estado)}
-          disabled={estadoDeshabilitado[categoria.id]}
-        />
-      )
+      render: (text, categoria) => {
+        const isDisabled = estadoDeshabilitado[categoria.id];
+        const productos = productosAsociados[categoria.id] || [];
+
+        const content = (
+          <div style={{ maxWidth: 300 }}>
+            <p style={{ marginBottom: 8 }}>No se puede desactivar esta categoría porque tiene productos asociados.</p>
+            {productos.length > 0 ? (
+              <div style={{ maxHeight: 160, overflowY: "auto" }}>
+                <ul style={{ paddingLeft: 16, margin: 0 }}>
+                  {productos.map((p, i) => {
+                    const label = typeof p === "string" ? p : p.nombre || p.title || `Producto ${i + 1}`;
+                    return (
+                      <li key={i} style={{ fontSize: 12 }}>
+                        {label}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        );
+
+        const switchEl = <Switch checked={categoria.estado} onChange={() => toggleEstado(categoria.id, categoria.estado)} disabled={isDisabled} />;
+
+        return isDisabled ? (
+          <Popover content={content} trigger="hover" placement="right">
+            <span>{switchEl}</span>
+          </Popover>
+        ) : (
+          switchEl
+        );
+      }
     },
     {
       title: "Acciones",

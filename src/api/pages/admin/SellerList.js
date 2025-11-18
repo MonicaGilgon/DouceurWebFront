@@ -76,7 +76,9 @@ const SellerList = () => {
               setVendedores(prevVendedores =>
                 prevVendedores.map(vendedor => (vendedor.id === record.id ? { ...vendedor, estado: checked } : vendedor))
               );
-              toast.success("Estado actualizado correctamente");
+              const nombre = record.nombre_completo || record.nombre || "Vendedor";
+              const accion = checked ? "activado" : "desactivado";
+              toast.success(`El vendedor ${nombre} se ha ${accion} correctamente`);
             } catch (error) {
               console.error("Error al actualizar el estado", error);
               toast.error("Error al actualizar el estado");
