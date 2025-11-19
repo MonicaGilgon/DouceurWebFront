@@ -38,7 +38,7 @@ const Catalogo = () => {
     };
 
     fetchCategorias();
-  }, []);
+  }, [location.search]);
 
   // Cuando hay un parámetro `search` en la URL, realizar búsqueda global.
   useEffect(() => {
@@ -65,7 +65,12 @@ const Catalogo = () => {
             setCategorias(cats);
           }
 
-          const requests = cats.map(cat => api.get(`productos-por-categoria/${cat.id}/`).then(r => r.data).catch(() => []));
+          const requests = cats.map(cat =>
+            api
+              .get(`productos-por-categoria/${cat.id}/`)
+              .then(r => r.data)
+              .catch(() => [])
+          );
           const results = await Promise.all(requests);
           const all = results.flat().filter(p => p.categoria_estado);
           const term = s.toLowerCase();
@@ -190,22 +195,14 @@ const Catalogo = () => {
         <div className="catalogo-filtros" style={{ marginTop: 16 }}>
           <h4>Ordenar por precio</h4>
           <div>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input
-                type="checkbox"
-                checked={sortOrder === 'asc'}
-                onChange={() => handleSortToggle('asc')}
-              />
+            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="checkbox" checked={sortOrder === "asc"} onChange={() => handleSortToggle("asc")} />
               Menor a mayor
             </label>
           </div>
           <div>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input
-                type="checkbox"
-                checked={sortOrder === 'desc'}
-                onChange={() => handleSortToggle('desc')}
-              />
+            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="checkbox" checked={sortOrder === "desc"} onChange={() => handleSortToggle("desc")} />
               Mayor a menor
             </label>
           </div>
@@ -246,19 +243,7 @@ const Catalogo = () => {
                 </Link>
                 <h3>{producto.nombre.toUpperCase()}</h3>
                 <p>{producto.descripcion}</p>
-                <p className="precio">${Number(producto.precio).toLocaleString()}</p>
-                {/*<div className="button-area p-0">
-                  <div className="">
-                    <div className="d-flex justify-content-center mt-2 gap-3">
-                      <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart " onClick={() => navigate(`/producto/${producto.id}`)}>
-                        <CIcon icon={cilMagnifyingGlass} /> Ver
-                      </button>
-                      <button className="btn btn-rosado rounded-1 p-2 fs-7 btn-cart" onClick={() => handleAddToCart(producto)}>
-                        <CIcon icon={cilCart} /> Añadir al carrito
-                      </button>
-                    </div>
-                  </div>
-                </div>*/}
+                <p className="precio">${producto.precio.toLocaleString()}</p>
               </div>
             ))}
           </div>

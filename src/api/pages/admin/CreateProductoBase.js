@@ -17,7 +17,8 @@ const CreateProductoBase = () => {
     articulos: [] // Lista de artículos seleccionados
   });
 
-  const [fotos, setFotos] = useState([]);
+  const [fotos, setFotos] = useState([]); // each item: { file, preview }
+  const [mainImagePreview, setMainImagePreview] = useState(null);
   const navigate = useNavigate();
   const [CategoriasProductoActivas, setCategoriasProductoActivas] = useState([]);
   const [articulos, setArticulos] = useState([]); // Artículos disponibles
@@ -77,6 +78,13 @@ const CreateProductoBase = () => {
       /*toast.error('Por favor selecciona un archivo de imagen válido');*/
       return;
     }
+    // revoke previous preview if any
+    if (mainImagePreview) {
+      URL.revokeObjectURL(mainImagePreview);
+    }
+
+    const previewUrl = file ? URL.createObjectURL(file) : null;
+    setMainImagePreview(previewUrl);
     setFormData({ ...formData, imagen: file });
   };
 
@@ -122,8 +130,8 @@ const CreateProductoBase = () => {
       return;
     }
 
-    fotos.forEach(foto => {
-      formDataToSend.append("fotos", foto);
+    fotos.forEach(fObj => {
+      formDataToSend.append("fotos", fObj.file);
     });
 
     try {
@@ -146,6 +154,18 @@ const CreateProductoBase = () => {
       if (imageInputRef.current) {
         imageInputRef.current.value = null;
       }
+      // revoke additional previews
+      fotos.forEach(f => {
+        try {
+          URL.revokeObjectURL(f.preview);
+        } catch (err) {}
+      });
+      setFotos([]);
+
+      if (mainImagePreview) {
+        URL.revokeObjectURL(mainImagePreview);
+        setMainImagePreview(null);
+      }
 
       navigate("/admin/listar-producto-base");
     } catch (err) {
@@ -156,6 +176,29 @@ const CreateProductoBase = () => {
       setLoading(false);
     }
   };
+
+  // cleanup preview URL on unmount
+  const fotosRef = useRef(fotos);
+  useEffect(() => {
+    fotosRef.current = fotos;
+  }, [fotos]);
+
+  // cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (mainImagePreview) {
+        try {
+          URL.revokeObjectURL(mainImagePreview);
+        } catch (err) {}
+      }
+      // revoke any additional image previews
+      (fotosRef.current || []).forEach(f => {
+        try {
+          URL.revokeObjectURL(f.preview);
+        } catch (err) {}
+      });
+    };
+  }, [mainImagePreview]);
 
   return (
     <div className="edit-container">
@@ -201,49 +244,87 @@ const CreateProductoBase = () => {
           </Select>
         </FormControl>
 
-        <TextField type="file" name="imagen" inputRef={imageInputRef} onChange={handleImageChange} fullWidth required margin="normal" />
+        <h5>Imagen Principal</h5>
+        <input type="file" accept="image/*" name="imagen" ref={imageInputRef} onChange={handleImageChange} required style={{ width: "100%" }} />
 
+        {mainImagePreview && (
+          <div style={{ marginTop: 10 }}>
+            <Typography variant="subtitle2">Vista previa:</Typography>
+            <img src={mainImagePreview} alt="Vista previa" style={{ width: "150px", borderRadius: "8px", marginTop: 8 }} />
+          </div>
+        )}
+
+        <h5>Imágenes adicionales (máximo 5)</h5>
         <input
           type="file"
           accept="image/*"
           multiple
           onChange={e => {
-            const files = Array.from(e.target.files);
+            const files = Array.from(e.target.files || []);
 
-            if (files.length > 5) {
+            // respect global max of 5 additional images
+            if (fotos.length + files.length > 5) {
               toast.error("Máximo 5 imágenes permitidas.");
               return;
             }
 
-            const archivosValidos = files.filter(file => {
+            const archivosValidos = [];
+            for (const file of files) {
               if (!file.type.startsWith("image/")) {
                 toast.error(`Archivo no válido: ${file.name}`);
-                return false;
+                continue;
               }
               if (file.size > 5 * 1024 * 1024) {
                 toast.error(`'${file.name}' excede los 5MB`);
-                return false;
+                continue;
               }
-              return true;
-            });
+              archivosValidos.push(file);
+            }
 
-            if (archivosValidos.length > 5) {
+            if (fotos.length + archivosValidos.length > 5) {
               toast.error("Solo puedes subir hasta 5 imágenes válidas.");
               return;
             }
 
-            setFotos(archivosValidos);
+            const nuevos = archivosValidos.map(file => ({ file, preview: URL.createObjectURL(file) }));
+            setFotos(prev => [...prev, ...nuevos]);
           }}
-          fullWidth
-          margin="normal"
+          style={{ width: "100%" }}
         />
 
         {fotos.length > 0 && (
           <div style={{ marginTop: "10px" }}>
             <Typography variant="subtitle2">Imágenes adicionales seleccionadas:</Typography>
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              {fotos.map((foto, index) => (
-                <img key={index} src={URL.createObjectURL(foto)} alt={`Foto ${index + 1}`} style={{ width: "100px", borderRadius: "8px" }} />
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: 8 }}>
+              {fotos.map((f, index) => (
+                <div key={index} style={{ position: "relative" }}>
+                  <img src={f.preview} alt={`Foto ${index + 1}`} style={{ width: "100px", borderRadius: "8px" }} />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // revoke preview and remove from array
+                      try {
+                        URL.revokeObjectURL(f.preview);
+                      } catch (err) {}
+                      setFotos(prev => prev.filter((_, i) => i !== index));
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: -6,
+                      right: -6,
+                      background: "#e74c3c",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: 22,
+                      height: 22,
+                      cursor: "pointer"
+                    }}
+                    aria-label="Eliminar imagen adicional"
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
             </div>
           </div>
