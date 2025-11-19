@@ -49,26 +49,29 @@ const CategoriaProductoBaseList = () => {
   }, []);
 
   const toggleEstado = async (categoriaId, estado) => {
+    const nuevoEstado = !estado;
     try {
-      // Si la categoría está activa (estado === true) y el usuario intenta desactivarla,
-      // comprobamos si tiene productos activos asociados y bloqueamos la acción mostrando un error.
-      if (estado) {
-        const productos = productosAsociados[categoriaId] || [];
-        const tieneActivos = productos.some(p => p.estado);
-        if (tieneActivos) {
-          toast.error("No se puede desactivar esta categoría porque tiene productos activos asociados.");
-          return;
-        }
-      }
+      // Llamada a la API para activar/desactivar los productos en cascada.
+      // El backend recibirá el nuevo estado y actualizará los productos.
+      await api.patch(`actualizar-estado-productos-por-categoria/${categoriaId}/`, { estado: nuevoEstado });
+
+      // Actualizar el estado local de los productos para reflejar el cambio en la UI
+      setProductosAsociados(prev => ({
+        ...prev,
+        [categoriaId]: (prev[categoriaId] || []).map(p => ({ ...p, estado: nuevoEstado }))
+      }));
+
+      // También actualizamos el estado deshabilitado para el popover.
+      // Si el nuevo estado es 'false' (desactivado), el popover ya no debe aparecer.
+      setEstadoDeshabilitado(prev => ({ ...prev, [categoriaId]: nuevoEstado }));
 
       // Actualizar el estado localmente
       setCategorias(prevCategorias =>
-        prevCategorias.map(categoria => (categoria.id === categoriaId ? { ...categoria, estado: !estado } : categoria))
+        prevCategorias.map(categoria => (categoria.id === categoriaId ? { ...categoria, estado: nuevoEstado } : categoria))
       );
-
-      // Actualizar el estado en el servidor
-      await api.patch(`cambiar-estado-categoria-producto-base/${categoriaId}/`, { estado: !estado });
-      toast.success(`Categoría ${!estado ? "activada" : "desactivada"} correctamente`);
+      // Actualizar el estado de la categoría en el servidor
+      await api.patch(`cambiar-estado-categoria-producto-base/${categoriaId}/`, { estado: nuevoEstado });
+      toast.success(`Categoría y sus productos ${nuevoEstado ? "activados" : "desactivados"} correctamente`);
     } catch (error) {
       console.error("Error al cambiar el estado activo de la categoría", error);
       toast.error("Error al cambiar el estado de la categoría");
@@ -96,7 +99,7 @@ const CategoriaProductoBaseList = () => {
 
         const content = (
           <div style={{ maxWidth: 300 }}>
-            <p style={{ marginBottom: 8 }}>No se puede desactivar esta categoría porque tiene productos asociados.</p>
+            <p style={{ marginBottom: 8 }}>Al desactivar esta categoría, se desactivarán los siguientes productos asociados:</p>
             {productos.length > 0 ? (
               <div style={{ maxHeight: 160, overflowY: "auto" }}>
                 <ul style={{ paddingLeft: 16, margin: 0 }}>
@@ -114,11 +117,11 @@ const CategoriaProductoBaseList = () => {
           </div>
         );
 
-        const switchEl = <Switch checked={categoria.estado} onChange={() => toggleEstado(categoria.id, categoria.estado)} disabled={isDisabled} />;
+        const switchEl = <Switch checked={categoria.estado} onChange={() => toggleEstado(categoria.id, categoria.estado)} />;
 
-        return isDisabled ? (
+        return categoria.estado && isDisabled ? (
           <Popover content={content} trigger="hover" placement="right">
-            <span>{switchEl}</span>
+            {switchEl}
           </Popover>
         ) : (
           switchEl

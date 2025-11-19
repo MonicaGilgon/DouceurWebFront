@@ -41,10 +41,11 @@ const Profile = () => {
     new_password: false,
     confirm_password: false
   });
+  const [ordersData, setOrdersData] = useState([]);
 
   const fetchProfile = useCallback(async () => {
     try {
-      const response = await api.get("/profile/");
+      const response = await api.get("/usuario-info/");
       setUserData(response.data);
       if (!initialLoadRef.current) {
         // Solo inicializa formData en la primera carga
@@ -56,6 +57,18 @@ const Profile = () => {
           correo: response.data.correo || ""
         });
         initialLoadRef.current = true; // Marca que la carga inicial ha ocurrido
+      }
+      // Si el rol es cliente, traer pedidos
+      if (response.data.rol === "cliente") {
+        try {
+          const ordersResponse = await api.get("/pedidos-usuario/");
+          setOrdersData(ordersResponse.data || []);
+        } catch (ordersErr) {
+          console.error("Error al cargar los pedidos:", ordersErr);
+          setOrdersData([]);
+        }
+      } else {
+        setOrdersData([]);
       }
       setLoading(false);
     } catch (err) {
@@ -384,34 +397,29 @@ const Profile = () => {
         )}
       </div>
 
-      {isClient && userData.orders && userData.orders.length > 0 && (
+      {isClient && ordersData && ordersData.length > 0 && (
         <div className="orders-section">
           <h3>Tus Pedidos</h3>
           <div className="orders-list">
-            {userData.orders
-              .filter(order => !["pendiente", "rechazado"].includes(order.status))
-              .map(order => {
-                console.log("Estado del pedido:", order.status);
-                return (
-                  <div key={order.id} className="order-item">
-                    <span className="order-date">{new Date(order.order_date).toLocaleDateString("es-CO")}</span>
-                    <span className="order-name">{order.items.map(item => item.producto.nombre).join(", ")}</span>
-                    <span className="order-total">
-                      $
-                      {parseFloat(order.total_amount).toLocaleString("es-CO", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })}
-                    </span>
-                    <span className={`order-status ${order.status}`}>{formatStatus(order.status)}</span>
-                    <div className="order-actions">
-                      <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-details">
-                        Ver Detalles
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
+            {ordersData.map(order => (
+              <div key={order.id} className="order-item">
+                <span className="order-date">{new Date(order.order_date).toLocaleDateString("es-CO")}</span>
+                <span className="order-name">{order.producto_nombre}</span>
+                <span className="order-total">
+                  $
+                  {parseFloat(order.total_amount).toLocaleString("es-CO", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}
+                </span>
+                <span className={`order-status ${order.status}`}>{formatStatus(order.status)}</span>
+                <div className="order-actions">
+                  <Link to={`/cliente/pedidos/${order.id}`} className="btn btn-details">
+                    Ver Detalles
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

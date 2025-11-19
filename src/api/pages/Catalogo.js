@@ -37,7 +37,10 @@ const Catalogo = () => {
     setLoadingProductos(true);
     try {
       const response = await api.get(`productos-por-categoria/${categoria.id}/`);
-      const productosActivos = response.data.filter(p => p.estado && p.categoriaProductoBase.estado);
+      // La nueva respuesta ya viene filtrada por categoría activa,
+      // y el producto no tiene un estado individual en este endpoint.
+      // Asumimos que si la categoría está activa, los productos mostrados también lo están.
+      const productosActivos = response.data.filter(p => p.categoria_estado);
       setProductos(productosActivos);
     } catch (error) {
       console.error("Error al cargar productos", error);
@@ -82,7 +85,7 @@ const Catalogo = () => {
               <div key={producto.id} className="producto-card">
                 <Link to={`/producto/${producto.id}`} title={producto.nombre}>
                   <img
-                    src={producto.imagen || "/placeholder.jpg"} // usa una imagen por defecto si no hay
+                    src={producto.imagen_url || "/placeholder.jpg"} // usa una imagen por defecto si no hay
                     alt={producto.nombre}
                   />
                 </Link>

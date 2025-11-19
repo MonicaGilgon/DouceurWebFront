@@ -18,7 +18,7 @@ const ClienteList = () => {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const response = await api.get("/listar-clientes/");
+        const response = await api.get("/usuarios-sin-pedidos/");
         setClientes(response.data);
       } catch (error) {
         console.error("Error al cargar los clientes", error);

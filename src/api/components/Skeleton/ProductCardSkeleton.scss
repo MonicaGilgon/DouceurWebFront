@@ -1,0 +1,41 @@
+.product-card-skeleton {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+
+  .skeleton-image {
+    height: 180px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: skeleton-shine 1.5s infinite linear;
+  }
+
+  .skeleton-text {
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    animation: skeleton-shine 1.5s infinite linear;
+  }
+
+  .skeleton-price {
+    width: 50%;
+  }
+}
+
+@keyframes skeleton-shine {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f0f0f0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}

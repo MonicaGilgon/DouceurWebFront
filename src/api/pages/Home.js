@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import banner from "../images/banner-desayuno.png";
 import "./scss/Home.scss";
-import ProductGridSkeleton from "../components/Skeleton/ProductGridSkeleton";
+import ProductCardSkeleton from "../components/Skeleton/ProductCardSkeleton";
+import CategorySkeleton from "../components/Skeleton/CategorySkeleton";
 
 const Home = () => {
   const [loadingCategorias, setLoadingCategorias] = useState(true);
@@ -69,7 +70,7 @@ const Home = () => {
       <div className="categorias-section">
         <h3>Categorías</h3>
         {loadingCategorias ? (
-          <p>Cargando categorías...</p>
+          <CategorySkeleton count={7} />
         ) : (
           <div className="categorias">
             {categoriasHabilitadas.map(categoria => (
@@ -90,7 +91,13 @@ const Home = () => {
       <div className="productos-section">
         <h3>Productos</h3>
         {loadingProductos ? (
-          <ProductGridSkeleton count={8} />
+          <div className="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div className="col" key={index}>
+                <ProductCardSkeleton />
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
             {productos.map(p => (
@@ -98,7 +105,7 @@ const Home = () => {
                 <div className="product-item">
                   <figure>
                     <Link to={`/producto/${p.id}`} title={p.nombre}>
-                      <img src={p.imagen?.startsWith("http") ? p.imagen : "/placeholder.svg"} alt={p.nombre} className="tab-image" />
+                      <img src={p.imagen_url || "/placeholder.svg"} alt={p.nombre} className="tab-image" />
                     </Link>
                   </figure>
                   <div className="d-flex flex-column">
