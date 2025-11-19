@@ -15,6 +15,7 @@ const PublicHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { clearCart, cartItems } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   const [userName, setUserName] = useState(() => {
     try {
@@ -99,6 +100,24 @@ const PublicHeader = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  // Sincroniza el campo de búsqueda con el parámetro `search` en la URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const s = params.get("search") || "";
+    setSearchInput(s);
+  }, [location.search]);
+
+  const handleSearchSubmit = e => {
+    e.preventDefault();
+    const term = (searchInput || "").trim();
+    if (term === "") {
+      navigate("/catalogo");
+    } else {
+      navigate(`/catalogo?search=${encodeURIComponent(term)}`);
+    }
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="public-header">
       <div className="header-left">
@@ -118,8 +137,13 @@ const PublicHeader = () => {
 
       {/* Desktop: barra de búsqueda y botones separados */}
       <div className="header-center">
-        <form className="search-bar">
-          <input type="text" placeholder="Buscar" />
+        <form className="search-bar" onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            placeholder="Buscar"
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+          />
           <button type="submit">
             <FaSearch />
           </button>
@@ -163,8 +187,13 @@ const PublicHeader = () => {
 
       {/* Mobile: barra de búsqueda y botones juntos */}
       <div className="header-actions">
-        <form className="search-bar">
-          <input type="text" placeholder="Buscar" />
+        <form className="search-bar" onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            placeholder="Buscar"
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+          />
           <button type="submit">
             <FaSearch />
           </button>
