@@ -24,11 +24,11 @@ const Catalogo = () => {
         const response = await api.get("listar-categoria-producto-base/");
         const activas = response.data.filter(cat => cat.estado);
         setCategorias(activas);
-        // Solo seleccionar la primera categoría automáticamente si no hay búsqueda global
+        // Seleccionar "Todos los productos" por defecto si no hay búsqueda global
         const params = new URLSearchParams(location.search);
         const s = params.get("search") || "";
-        if (!s && activas.length > 0) {
-          handleSeleccionarCategoria(activas[0]);
+        if (!s) {
+          await handleSeleccionarTodos();
         }
       } catch (error) {
         console.error("Error al cargar las categorías", error);
