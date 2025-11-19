@@ -43,3 +43,8 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+// Método para obtener todos los productos (endpoint público)
+// Obtener todos los productos: usar el endpoint público que existe en el backend.
+// El backend expone `catalogo-productos/` que devuelve una lista plana de productos.
+export const getTodosProductos = () => api.get("catalogo-productos/");

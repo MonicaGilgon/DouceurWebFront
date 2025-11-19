@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../../api/axios";
+import api, { getTodosProductos } from "../../api/axios";
 import "./scss/Catalogo.scss";
 import { Link } from "react-router-dom";
 import "./scss/Home.scss";
@@ -9,6 +9,8 @@ const Catalogo = () => {
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
   const [productos, setProductos] = useState([]);
+  const [todosTotal, setTodosTotal] = useState(null);
+  const [todosError, setTodosError] = useState(null);
   const [loadingCategorias, setLoadingCategorias] = useState(true);
   const [loadingProductos, setLoadingProductos] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,6 +102,41 @@ const Catalogo = () => {
     }
   };
 
+  // Cargar todos los productos (categoría especial)
+  const handleSeleccionarTodos = async () => {
+    const special = { id: 'todos', nombre: 'Todos los productos' };
+    setCategoriaSeleccionada(special);
+    setLoadingProductos(true);
+    setTodosError(null);
+    try {
+      const resp = await getTodosProductos();
+      console.log("getTodosProductos response:", resp);
+      // El backend puede devolver dos formas:
+      // 1) Array plano de productos (como `catalogo-productos/`) -> resp.data is array
+      // 2) Objeto { meta: { total }, items: [...] } -> resp.data.items
+      const data = resp.data;
+      if (resp.status && resp.status !== 200) {
+        throw new Error(`Status ${resp.status}`);
+      }
+      if (Array.isArray(data)) {
+        setTodosTotal(data.length);
+        setProductos(data);
+      } else {
+        setTodosTotal(data?.meta?.total ?? (Array.isArray(data?.items) ? data.items.length : null));
+        setProductos(Array.isArray(data?.items) ? data.items : []);
+      }
+    } catch (err) {
+      console.error("Error al cargar todos los productos", err);
+      // Try to extract backend message if available
+      const backendMsg = err?.response?.data?.error || err?.message || String(err);
+      setTodosError(backendMsg);
+      setProductos([]);
+      setTodosTotal(null);
+    } finally {
+      setLoadingProductos(false);
+    }
+  };
+
 
   // Sincroniza `searchTerm` con el parámetro `search` en la URL
   useEffect(() => {
@@ -136,11 +173,16 @@ const Catalogo = () => {
           {loadingCategorias ? (
             <li>Cargando...</li>
           ) : (
-            categorias.map(cat => (
-              <li key={cat.id} className={categoriaSeleccionada?.id === cat.id ? "activa" : ""} onClick={() => handleSeleccionarCategoria(cat)}>
-                {cat.nombre.toUpperCase()}
+            <>
+              <li key="todos" className={categoriaSeleccionada?.id === 'todos' ? "activa" : ""} onClick={handleSeleccionarTodos}>
+                TODOS LOS PRODUCTOS
               </li>
-            ))
+              {categorias.map(cat => (
+                <li key={cat.id} className={categoriaSeleccionada?.id === cat.id ? "activa" : ""} onClick={() => handleSeleccionarCategoria(cat)}>
+                  {cat.nombre.toUpperCase()}
+                </li>
+              ))}
+            </>
           )}
         </ul>
 
@@ -174,7 +216,17 @@ const Catalogo = () => {
       <main className="catalogo-productos">
         {categoriaSeleccionada && (
           <div className="catalogo-header">
-            <h2>{categoriaSeleccionada.nombre.toUpperCase()}</h2>
+            <h2>
+              {categoriaSeleccionada.nombre.toUpperCase()}
+              {categoriaSeleccionada.id === 'todos' && todosTotal != null ? ` (${todosTotal})` : ''}
+            </h2>
+          </div>
+        )}
+
+        {categoriaSeleccionada?.id === 'todos' && todosError && (
+          <div className="catalogo-error" style={{ margin: '8px 0', color: '#a00' }}>
+            <p>Error al cargar todos los productos: {todosError}</p>
+            <button className="btn btn-rosado" onClick={handleSeleccionarTodos}>Reintentar</button>
           </div>
         )}
 
@@ -194,7 +246,7 @@ const Catalogo = () => {
                 </Link>
                 <h3>{producto.nombre.toUpperCase()}</h3>
                 <p>{producto.descripcion}</p>
-                <p className="precio">${producto.precio.toLocaleString()}</p>
+                <p className="precio">${Number(producto.precio).toLocaleString()}</p>
                 {/*<div className="button-area p-0">
                   <div className="">
                     <div className="d-flex justify-content-center mt-2 gap-3">
