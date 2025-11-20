@@ -21,7 +21,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
 
   // Número de WhatsApp de la tienda (reemplazar con el número real)
-  const whatsappNumber = "573142853147"; // Ejemplo: 573001234567 para Colombia
+  const whatsappNumber = "573124132200"; // Ejemplo: 573001234567 para Colombia
 
   // Verificar si el usuario está autenticado
   useEffect(() => {
